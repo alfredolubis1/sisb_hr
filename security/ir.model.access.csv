@@ -1,0 +1,192 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hr_action_reason_late_manager,hr.action.reason.late.user,model_hr_action_reason_late,base.group_hr_manager,1,1,1,1
+access_hr_action_reason_late_hr_officer,hr.action.reason.late.user,model_hr_action_reason_late,base.group_hr_user,1,1,1,0
+access_hr_action_reason_late_system_user,hr.action.reason.late.system.user,model_hr_action_reason_late,base.group_user,1,0,0,0
+
+access_hr_action_reason_leave_early_manager,hr.action.reason.leave.early.user,model_hr_action_reason_leave_early,base.group_hr_manager,1,1,1,1
+access_hr_action_reason_leave_early_hr_officer,hr.action.reason.leave.early.user,model_hr_action_reason_leave_early,base.group_hr_user,1,1,1,0
+access_hr_action_reason_leave_early_system_user,hr.action.reason.leave.early.system.user,model_hr_action_reason_leave_early,base.group_user,1,0,0,0
+
+access_hr_attendance_manager,hr.attendance.manager,model_hr_attendance,base.group_hr_manager,1,1,1,1
+hr_attendance.access_hr_attendance_user,hr.attendance.user,model_hr_attendance,base.group_hr_user,1,1,1,0
+hr_attendance.access_hr_attendance_system_user,hr.attendance.system.user,model_hr_attendance,base.group_user,1,1,1,0
+
+access_working_time_conf_user,working.time.conf.user,model_working_time_conf,base.group_hr_manager,1,1,1,1
+access_working_time_conf_officer,working.time.conf.user,model_working_time_conf,base.group_hr_user,1,1,1,1
+access_working_time_conf_employee,working.time.conf.employee,model_working_time_conf,base.group_user,1,0,0,0
+
+access_allocate_leaves_run_manager,allocate.leaves.run.manager,model_allocate_leaves_run,base.group_hr_manager,1,1,1,1
+access_allocate_leaves_run_hr_officer,allocate.leaves.run.officer,model_allocate_leaves_run,base.group_hr_user,1,0,0,0
+access_allocate_leaves_employee_manager,allocate.leaves.employee.manager,model_allocate_leaves_employee,base.group_hr_manager,1,1,1,1
+
+access_allocate_compensatory_days_manager,allocate.compensatory.days.manager,model_allocate_compensatory_days,base.group_hr_manager,1,1,1,1
+access_allocate_compensatory_days_hr_officer,allocate.compensatory.days.officer,model_allocate_compensatory_days,base.group_hr_user,1,0,0,0
+access_allocate_leaves_employee_manager,allocate.leaves.employee.manager,model_allocate_leaves_employee,base.group_hr_manager,1,1,1,1
+
+access_employee_add_schedule_manager,employee.add.schedule.manager,model_employee_add_schedule,base.group_hr_manager,1,1,1,1
+access_employee_add_schedule_hr_officer,employee.add.schedule.officer,model_employee_add_schedule,base.group_hr_user,1,1,1,1
+
+
+access_hr_job_employee,hr.job.employee,model_hr_job,base.group_user,1,0,0,0
+
+
+access_hr_applicant_employee,hr.applicant.employee,model_hr_applicant,base.group_user,1,1,1,0
+
+
+
+access_hr_recruitment_stage_employee,hr.recruitment.stage.employee,model_hr_recruitment_stage,base.group_user,1,0,0,0
+
+
+access_hr_position_manager,hr.position.employee,model_hr_position,base.group_user,1,1,1,1
+access_hr_position_officer,hr.position.employee,model_hr_position,base.group_user,1,0,0,0
+access_hr_position_employee,hr.position.employee,model_hr_position,base.group_user,1,0,0,0
+
+access_work_time_line_hr_manager,work.time.line.manager,model_work_time_line,base.group_hr_manager,1,1,1,1
+access_employee_curr_overtime_manager,employee.curr.overtime,model_employee_curr_overtime,base.group_hr_manager,1,1,1,1
+
+access_hr_department_employee,hr.department.employee,model_hr_department,base.group_user,1,1,0,0
+
+access_hr_employee_hr_manager,hr.employee hr_manager,model_hr_employee,base.group_hr_manager,1,1,1,1
+access_hr_employee_hr_user,hr.employee hr_user,model_hr_employee,base.group_hr_user,1,1,1,1
+access_hr_employee_system_user,hr.employee system user,model_hr_employee,base.group_user,1,1,0,0
+
+access_employee_job_detail_line_hr_user,employee.job.detail.line hr_user,model_employee_job_detail_line,base.group_hr_user,1,1,1,1
+access_employee_job_detail_line_system_user,employee.job.detail.line,model_employee_job_detail_line,base.group_user,1,0,0,0
+
+access_hr_overtime_request_hr_user,hr.overtime.request hr_user,model_hr_overtime_request,base.group_hr_user,1,1,1,1
+access_hr_overtime_request_system_user,hr.overtime.request,model_hr_overtime_request,base.group_user,1,1,1,0
+
+access_overtime_list_line_user,overtime.list.line hr_user,model_overtime_list_line,base.group_hr_user,1,1,1,1
+access_overtime_list_line_system_user,overtime.list.line,model_overtime_list_line,base.group_user,1,1,1,0
+
+access_hr_overtime_request_line_hr_user,hr.overtime.request.line hr_user,model_hr_overtime_request_line,base.group_hr_user,1,1,1,1
+access_hr_overtime_request_line_system_user,hr.overtime.request.line,model_hr_overtime_request_line,base.group_user,1,1,1,1
+
+access_hr_overtime_history_hr_user,hr.overtime.history hr_user,model_hr_overtime_history,base.group_hr_user,1,1,1,1
+access_hr_overtime_history_system_user,hr.overtime.history,model_hr_overtime_history,base.group_user,1,0,0,0
+
+access_employee_schedule_hr_user,employee.schedule hr_user,model_employee_schedule,base.group_hr_user,1,1,1,1
+access_employee_schedule_system_user,employee.schedule,model_employee_schedule,base.group_user,1,0,0,0
+
+access_work_time_structure_hr_user,work.time.structure hr_user,model_work_time_structure,base.group_hr_user,1,1,1,1
+access_work_time_structure_system_user,work.time.structure,model_work_time_structure,base.group_user,1,1,0,0
+
+access_hr_employee_transfer_hr_manager,hr.employee.transfer hr_manager,model_hr_employee_transfer,base.group_hr_manager,1,1,1,1
+access_hr_employee_transfer_hr_user,hr.employee.transfer hr_user,model_hr_employee_transfer,base.group_hr_user,1,1,1,0
+access_hr_employee_transfer_system_user,hr.employee.transfer employee,model_hr_employee_transfer,base.group_user,1,1,1,0
+
+access_hr_transfer_reason_hr_manager,hr.transfer.reason hr_manager,model_hr_transfer_reason,base.group_hr_manager,1,1,1,1
+access_hr_transfer_reason_hr_user,hr.transfer.reason hr_user,model_hr_transfer_reason,base.group_hr_user,1,1,1,0
+access_hr_transfer_reason_system_user,hr.transfer.reason employee,model_hr_transfer_reason,base.group_user,1,1,1,0
+
+access_allowance_type_hr_manager,allowance.type hr_manager,model_allowance_type,base.group_hr_manager,1,1,1,1
+access_allowance_type_hr_user,allowance.type hr_user,model_allowance_type,base.group_hr_user,1,1,1,1
+access_allowance_type_system_user,allowance.type,model_allowance_type,base.group_user,1,0,0,0
+
+access_allowance_type_line_hr_manager,allowance.type.line hr_manager,model_allowance_type_line,base.group_hr_manager,1,1,1,1
+access_allowance_type_line_hr_user,allowance.type.line hr_user,model_allowance_type_line,base.group_hr_user,1,1,1,1
+access_allowance_type_line_system_user,allowance.type.line,model_allowance_type_line,base.group_user,1,1,1,0
+
+access_hr_information_hr_manager,hr.information hr_manager,model_hr_information,base.group_hr_manager,1,1,1,1
+access_hr_information_hr_user,hr.information hr_user,model_hr_information,base.group_hr_user,1,1,1,1
+access_hr_information_system_user,hr.information,model_hr_information,base.group_user,1,0,0,0
+
+access_hr_information_line_hr_manager,hr.information.line hr_manager,model_hr_information_line,base.group_hr_manager,1,1,1,1
+access_hr_information_line_hr_user,hr.information.line hr_user,model_hr_information_line,base.group_hr_user,1,1,1,1
+access_hr_information_line_system_user,hr.information.line,model_hr_information_line,base.group_user,1,1,1,0
+
+access_hr_contract_history_hr_manager,hr.contract.history hr_manager,model_hr_contract_history,base.group_hr_manager,1,1,1,1
+access_hr_contract_history_hr_user,hr.contract.history hr_user,model_hr_contract_history,base.group_hr_user,1,0,0,0
+access_hr_contract_history_system_user,hr.contract.history,model_hr_contract_history,base.group_user,1,0,0,0
+
+access_employee_schedule_line_hr_user,employee.schedule.line hr_user,model_employee_schedule_line,base.group_hr_user,1,1,1,1
+access_employee_schedule_line_system_user,employee.schedule.line,model_employee_schedule_line,base.group_user,1,0,0,0
+
+access_hr_holidays_curr_leaves_hr_manager,hr.holidays.curr.leaves hr_manager,model_hr_holidays_curr_leaves,base.group_hr_manager,1,1,1,1
+access_hr_holidays_curr_leaves_hr_user,hr.holidays.curr.leaves hr_user,model_hr_holidays_curr_leaves,base.group_hr_user,1,1,1,1
+access_hr_holidays_curr_leaves_system_user,hr.holidays.curr.leaves,model_hr_holidays_curr_leaves,base.group_user,1,0,0,0
+
+access_hr_holidays_structure_manager,hr.holidays.structure hr_manager,model_hr_holidays_structure,base.group_hr_manager,1,1,1,1
+access_hr_holidays_structure_line_manager,hr.holidays.structure.line hr_manager,model_hr_holidays_structure_line,base.group_hr_manager,1,1,1,1
+
+access_hr_year_all,hr.year.all,model_hr_year,,1,1,1,1
+
+access_hr_boarding_list_line_manager,hr.boarding.list.line manager,model_hr_boarding_list_line,base.group_hr_manager,1,1,1,1
+access_hr_boarding_list_line_user,hr.boarding.list.line user,model_hr_boarding_list_line,base.group_hr_user,1,1,1,1
+access_hr_boarding_list_line_system_user,hr.boarding.list.line system user,model_hr_boarding_list_line,base.group_user,1,1,1,0
+
+access_hr_boarding_list_manager,hr.boarding.list manager,model_hr_boarding_list,base.group_hr_manager,1,1,1,1
+access_hr_boarding_list_user,hr.boarding.list user,model_hr_boarding_list,base.group_hr_user,1,1,0,0
+access_hr_boarding_list_system_user,hr.boarding.list system user,model_hr_boarding_list,base.group_user,1,0,0,0
+
+access_hr_authority_matrix_all,hr.authority.matrix.all,model_hr_authority_matrix,,1,1,1,1
+
+access_hr_resign_structure_manager,hr.resign.structure.manager,model_hr_resign_structure,base.group_hr_manager,1,1,1,1
+access_hr_resign_structure_officer,hr.resign.structure.officer,model_hr_resign_structure,base.group_hr_user,1,0,0,0
+access_hr_resign_structure_employee,hr.resign.structure.employee,model_hr_resign_structure,base.group_user,1,0,0,0
+
+
+access_hr_resign_reason_manager,hr.resign.reason.manager,model_hr_resign_reason,base.group_hr_manager,1,1,1,1
+access_hr_resign_reason_officer,hr.resign.reason.officer,model_hr_resign_reason,base.group_hr_user,1,0,0,0
+access_hr_resign_reason_employee,hr.resign.reason.employee,model_hr_resign_reason,base.group_user,1,0,0,0
+
+access_hr_schedule_allocation_manager,hr.schedule.allocation.manager,model_hr_schedule_allocation,base.group_hr_manager,1,1,1,1
+access_hr_schedule_allocation_officer,hr.schedule.allocation.officer,model_hr_schedule_allocation,base.group_hr_user,1,1,1,1
+access_hr_schedule_allocation_employee,hr.schedule.allocation.employee,model_hr_schedule_allocation,base.group_user,1,1,1,0
+
+access_hr_schedule_running_shift_manager,hr.schedule.running.shift.manager,model_hr_schedule_running_shift,base.group_hr_manager,1,1,1,1
+access_hr_schedule_running_shift_officer,hr.schedule.running.shift.officer,model_hr_schedule_running_shift,base.group_hr_user,1,1,1,1
+access_hr_schedule_running_shift_employee,hr.schedule.running.shift.employee,model_hr_schedule_running_shift,base.group_user,1,1,0,0
+
+access_hr_schedule_shift_list_manager,hr.schedule.shift.list.manager,model_hr_schedule_shift_list,base.group_hr_manager,1,1,1,1
+access_hr_schedule_shift_list_officer,hr.schedule.shift.list.officer,model_hr_schedule_shift_list,base.group_hr_user,1,1,1,1
+access_hr_schedule_shift_list_employee,hr.schedule.shift.list.employee,model_hr_schedule_shift_list,base.group_user,1,1,0,0
+
+
+access_hr_resignation_manager,hr.resignation manager,model_hr_resignation,base.group_hr_manager,1,1,1,1
+access_hr_resignation_officer,hr.resignation officer,model_hr_resignation,base.group_hr_user,1,1,1,0
+access_hr_resignation_user,hr.resignation user,model_hr_resignation,base.group_user,1,1,1,0
+
+access_hr_holidays_leaves_balance_manager,hr.holidays.leaves.balance manager,model_hr_holidays_leaves_balance,base.group_hr_manager,1,1,1,1
+access_hr_holidays_leaves_balance_officer,hr.holidays.leaves.balance officer,model_hr_holidays_leaves_balance,base.group_hr_user,1,1,1,0
+access_hr_holidays_leaves_balance_user,hr.holidays.leaves.balance user,model_hr_holidays_leaves_balance,base.group_user,1,1,1,0
+
+access_hr_schedule_shift_request_manager,hr.schedule.shift.request manager,model_hr_schedule_shift_request,base.group_hr_manager,1,1,1,1
+access_hr_schedule_shift_request_officer,hr.schedule.shift.request officer,model_hr_schedule_shift_request,base.group_hr_user,1,1,1,1
+access_hr_schedule_shift_request_user,hr.schedule.shift.request user,model_hr_schedule_shift_request,base.group_user,1,1,1,0
+
+
+access_hr_schedule_change_request_manager,hr.schedule.change.request manager,model_hr_schedule_change_request,base.group_hr_manager,1,1,1,1
+access_hr_schedule_change_request_officer,hr.schedule.change.request officer,model_hr_schedule_change_request,base.group_hr_user,1,1,1,1
+access_hr_schedule_change_request_user,hr.schedule.change.request user,model_hr_schedule_change_request,base.group_user,1,1,1,0
+
+
+access_res_partner,res.partner,base.model_res_partner,base.group_user,1,1,0,0
+
+access_overtime_type_all,overtime.type,model_overtime_type,,1,1,1,1
+access_demographic_age_all,demographic.age,model_demographic_age,,1,1,1,1
+access_employee_report_all,employee.report,model_employee_report,,1,1,1,1
+access_shift_list_request_all,shift.list.request,model_shift_list_request,,1,1,1,1
+access_hr_schedule_change_shift_line_all,hr.schedule.change.shift.line,model_hr_schedule_change_shift_line,,1,1,1,1
+
+access_school_holidays_line_all,school.holidays.line.all,model_school_holidays_line,,1,1,1,1
+access_sisb_mail_log_all,sisb.mail.log.all,model_sisb_mail_log,,1,1,1,1
+access_res_users_all,res.users.all,model_res_users,,1,1,1,1
+access_hr_holidays_type_all,hr.holidays.type.all,model_hr_holidays_type,,1,1,1,1
+access_hr_holidays_type_line_all,hr.holidays.type.all,model_hr_holidays_type_line,,1,1,1,1
+access_day_of_week_all,day.of.week.all,model_day_of_week,,1,1,1,1
+access_probation_completion_letter_all,probation.completion.letter.all,model_probation_completion_letter,,1,1,1,1
+access_reference_letter_all,reference.letter.all,model_reference_letter,,1,1,1,1
+
+access_appraisals_structure_general_staff_all,appraisals.structure.general.staff.all,model_appraisals_structure_general_staff,,1,1,1,1
+access_general_staff_appraisals_kpi_line_all,general.staff.appraisals.kpi.line.all,model_general_staff_appraisals_kpi_line,,1,1,1,1
+access_general_staff_appraisals_evaluation_line_all,general.staff.appraisals.evaluation.line.all,model_general_staff_appraisals_evaluation_line,,1,1,1,1
+access_general_staff_appraisals_criteria_line_all,general.staff.appraisals.criteria.line.all,model_general_staff_appraisals_criteria_line,,1,1,1,1
+
+
+
+access_appraisals_structure_nongeneral_staff_all,appraisals.structure.nongeneral.staff.all,model_appraisals_structure_nongeneral_staff,,1,1,1,1
+access_nongeneral_staff_appraisals_kpi_line_all,nongeneral.staff.appraisals.kpi.line.all,model_nongeneral_staff_appraisals_kpi_line,,1,1,1,1
+access_nongeneral_staff_appraisals_evaluation_line_all,nongeneral.staff.appraisals.evaluation.line.all,model_nongeneral_staff_appraisals_evaluation_line,,1,1,1,1
+access_nongeneral_staff_appraisals_criteria_line_all,nongeneral.staff.appraisals.criteria.line.all,model_nongeneral_staff_appraisals_criteria_line,,1,1,1,1

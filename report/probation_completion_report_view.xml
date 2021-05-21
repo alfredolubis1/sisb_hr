@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="sisb_probation_completion_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div class="col-xs-12" style="margin-top: 3mm; text-align:center;">
+                            <h2 style="font-size:22px; font-weight:bold;">Probation Completion Letter</h2>
+                        </div>
+                    </div>
+                    <div class="page" style="font-family: 'Times New Roman';border-collapse: collapse;">
+                        <div class="col-xs-12" style="font-size:12px;">
+                            <span style="font-size:18px; font-weight:bold;" t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/> 
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px; font-weight:bold;">Private and Confidental</span>
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px; font-weight:bold;" t-field="o.name"/>
+                            <br/>
+                            <br/>
+                            <span style="font-size:16px;" t-field="o.department_id.name"/>
+                            <br/><br/>
+                            <div style="font-size:16px;">
+                                <p>Dear <span t-field="o.name"/></p>
+                                <br/>
+                                <br/>
+                                <p>As you are aware, your employment was subject to a probationary period.</p>
+                                <br/>
+                                <p>During this period your performance has been assessed against the Company’s standard of conduct, attendance and job performance. I am pleased to confirm that you have successfully completed your probation.</p>
+                                <br/>
+                                <p>This letter is a confirmation of your appointment to the position of 
+                                <t t-if=" not o.employee_position_id">
+                                    <span>_______________________</span>
+                                </t>
+                                <t t-if="o.employee_position_id">
+                                    <span t-field="o.employee_position_id.name"/>
+                                </t>
+                                as of date <span t-field="o.probation_end_date"/></p> 
+                                <br/>
+                                <br/>
+                                <p>Thank you for your contribution to SISB.</p>
+                                <br/><br/>
+                                <br/>
+                                <p>Yours sincerely,</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="sisb_probation_appraisals_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <style type="text/css">
+                            .table1 th,
+                            .table1 td  {
+                                width: 1%;
+                                padding: 10px;
+                            }
+
+                            .row1 td{
+                                padding: 10px;
+                                font-size: 15px;
+                            }
+                            .row2 td{
+                                border: 1px solid black;
+                                padding : 7px;
+                                font-size: 13px;
+                            }
+
+                            .table2 td{
+                                font-size: 13px;
+                                padding: 7px;
+                            }
+
+                            .table3 td {
+                                padding: 10px;
+                            }
+
+                            .table4 td{
+                                padding: 17px;
+                            }
+                        </style>
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div class="col-xs-12">
+                            <div>
+                                <center>
+                                    <div>
+                                        <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                        <strong><h4><b>Performance Appraisals For Probationary Period Form</b></h4></strong>
+                                    </div>
+                                </center>
+                            </div>
+                            <br/>
+                            <div>
+                                <span>STAFF ID</span>
+                                <span>:</span>
+                                <span t-field="o.employee_no"/>
+                            </div>
+                            <br/>
+                            <table class="table1">
+                                <tr class="row1">
+                                    <td>
+                                        Name 
+                                    </td>
+                                    <td style="text-align: left;">
+                                        : <span t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        Position 
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <t t-if="not o.employee_position_id">
+                                            <span>:_______________</span>
+                                        </t>
+                                        <t t-if="o.employee_position_id">
+                                            : <span t-field="o.employee_position_id.name"/>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        Department 
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <t t-if="not o.department_id">
+                                            <span>:_______________</span>
+                                        </t>
+                                        <t t-if="o.department_id">
+                                            : <span t-field="o.department_id.name"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr style="padding-bottom: 5px;" class="row1">
+                                    <td>
+                                        Date of Emp
+                                    </td>
+                                    <td style="text-align: left;">
+                                        :_______________
+                                    </td>
+                                    <td>
+                                        Due Date 
+                                    </td>
+                                    <td style="text-align: left;">
+                                        :_______________
+                                    </td>
+                                    <td>
+                                        Evaluator 
+                                    </td>
+                                    <td style="text-align: left;">
+                                        :_______________
+                                    </td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td style="text-align: center; border: 1px solid black;">
+                                        Key Factor
+                                    </td>
+                                    <td style="text-align: center; border: 1px solid black;">
+                                        Unacceptable
+                                    </td>
+                                    <td style="text-align: center; border: 1px solid black;">
+                                        Fair
+                                    </td>
+                                    <td style="text-align: center; border: 1px solid black;">
+                                        Competent
+                                    </td>
+                                    <td style="text-align: center; border: 1px solid black;">
+                                        Commendable
+                                    </td>
+                                    <td style="text-align: center; border: 1px solid black;">
+                                        Outstanding
+                                    </td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td>Job Knowledge/Technical Skill</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td class="l">Quality of Work</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td>Quantity of Work</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td>Attendance/Punctuality</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td>Ability to work with other</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td>Degree of Innovation</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td>Analytical Ability</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="border: 1px solid black;" class="row2">
+                                    <td>Communication Ability</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+                            <center>
+                                <h4>
+                                    OVERALL RATING (Check Appropriate Box)
+                                </h4>
+                            </center>
+                            <br/>
+                            <table width="100%" class="table2">
+                                <tr>
+                                    <td colpsan="2">
+                                        Unacceptable
+                                    </td>
+                                    <td colspan="2">
+                                        :
+                                    </td>
+                                    <td colspan="2">
+                                        Performance has consistently fallen below expectations.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colpsan="2">
+                                        Fair
+                                    </td>
+                                    <td colspan="2">
+                                        :
+                                    </td>
+                                    <td colspan="2">
+                                        Performance does not meet performance standards.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colpsan="2">
+                                        Competent
+                                    </td>
+                                    <td colspan="2">
+                                        :
+                                    </td>
+                                    <td colspan="2">
+                                        Meets all performance objectves and requirements and expected level of supervision to achieve result
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colpsan="2">
+                                        Commendable
+                                    </td>
+                                    <td colspan="2">
+                                        :
+                                    </td>
+                                    <td colspan="2">
+                                        Performance is consistently above standard for meeting performance
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colpsan="2">
+                                        Outstanding
+                                    </td>
+                                    <td colspan="2">
+                                        :
+                                    </td>
+                                    <td colspan="2">
+                                        Performance consistently exceeds both objectives and manager's general 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colpsan="2">
+                                        Comments
+                                    </td>
+                                    <td colspan="2">
+                                        :
+                                    </td>
+                                    <td colspan="2">
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+                            <table class="table3">
+                                <tr>
+                                    <td>
+                                        Confirm For Permanent Status
+                                    </td>
+                                    <td>
+                                        :
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Not to confirm for Permanent Status because
+                                    </td>
+                                    <td>
+                                        :
+                                    </td>
+                                </tr>
+                            </table>
+                    
+                            <br/>
+                            <br/>
+                            <br/>
+                            <table class="table4">
+                                <tr>
+                                    <td>
+                                        <b>
+                                            EVALUATOR'S SIGNATURE
+                                        </b>
+                                    </td>
+                                    <td>
+                                        <b>
+                                            : ______________________
+                                        </b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>
+                                            DATE OF EVALUATION
+                                        </b>
+                                    </td>
+                                    <td>
+                                        <b>
+                                            : ______________________
+                                        </b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="generate_on_board_item">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div class="col-xs-12" style="margin-top: 3mm; text-align:center;">
+                            <h2 style="font-size:22px; font-weight:bold;">Staff Onboarding Checklist</h2>
+                        </div>
+                    </div>
+                    <div class="page" style="font-family: 'Times New Roman';border-collapse: collapse;">
+                        <style type="text/css">
+                            .intro_table {
+                                width: 100%;
+                                table-layout: fixed;    
+                                font-size: 14px;
+                            }
+                            
+                            .intro_table td {
+                                padding-top: 10px;
+                                padding-bottom: 10px;
+                            }
+
+                            .main_table {
+                                width: 100%;
+                                border: 1px solid black;
+                                
+                            }
+
+                            .main_table th {
+                                border: 1px solid black;
+                                padding: 7px;
+                                font-size: 11px;
+                                text-align: center;
+                            }
+
+                            .main_body td {
+                                border: 1px solid black;
+                                padding: 5px;
+                                font-size: 10px;
+                                text-align: center;
+                            }
+
+                            .last_table {
+                                width: 100%;
+                                color: grey;
+                                font-size: 14px;
+                                text-align: left;
+                            }
+
+                            .last_table td {
+                                padding: 25px;
+                            }
+                        </style>
+                        <br/>
+                        <table class="intro_table">
+                            <tr>
+                                <td>Name</td>
+                                <td style="text-align: left;">: <span t-field="o.name"/></td>
+                                <td>Campus/Corporate</td>
+                                <td style="text-align: left;">: <span t-field="o.company_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td>Position</td>
+                                <td style="text-align:left;">: <span t-field="o.employee_position_id.name"/></td>
+                                <td>First day of employment</td>
+                                <td style="text-align: left;">: <span t-field="o.join_date"/></td>
+                            </tr>
+                            <tr>
+                                <td>Staff ID</td>
+                                <td style="text-align: left;">: <span t-field="o.employee_no"/></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table class="main_table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Department</th>
+                                    <th>Note</th>
+                                    <th>Requested</th>
+                                    <th>Request Date</th>
+                                    <th>Received</th>
+                                    <th>Received Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.boarding_list_ids" t-as="item" class="main_body">
+                                    <td style="text-align: left;"><span t-esc="item.boarding_id.name"/></td>
+                                    <!-- <td><span t-esc="item.department_id.name"/></td> -->
+                                    <td>
+                                        <t t-if="not item.department_id">
+                                            <p>Department Manager</p>
+                                            <!-- <span t-esc="item.department_id.name"/> -->
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="item.department_id.name"/>
+                                        </t>
+                                    </td>
+                                    <td><span t-esc="item.note"/></td>
+                                    <td>
+                                        <t t-if="item.req == True">
+                                            <input type="checkbox" checked="checked"/>
+                                        </t>
+                                        <t t-if="item.req == False">
+                                            <input type="checkbox"/>
+                                        </t>
+                                    </td>
+                                    <td><span t-esc="item.req_date"/></td>
+                                    <td >
+                                        <t t-if="item.is_received == True">
+                                            <input type="checkbox" checked="checked"/>
+                                        </t>
+                                        <t t-if="item.is_received == False">
+                                            <input type="checkbox"/>
+                                        </t>
+                                    </td>
+                                    <td><span t-esc="item.date_is_received"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <table class="last_table">
+                            <tr>
+                                <td>Additional Comments</td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom: 3px dotted grey;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom: 3px dotted grey;"></td>
+                            </tr>
+                            <tr>
+                                <td style="border-bottom: 3px dotted grey;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        
+        <!-- Reference Letter -->
+        <template id="generate_reference_letter">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div class="col-xs-12" style="margin-top: 3mm; text-align:center;">
+                            <h2 style="font-size:22px; font-weight:bold;">Employment Reference Letter</h2>
+                        </div>
+                    </div>
+                    <div class="page" style="font-family: 'Times New Roman';border-collapse: collapse;">
+                        <div class="col-xs-12" style="font-size:12px;">
+                            <span style="font-size:18px; font-weight:bold;" t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/> 
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px;">Certificate of Employment</span>
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px;">PRIVATE and CONFIDENTIAL</span>
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px;">To Whom It May Concern</span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div style="font-size:16px;">
+                                <p>This is to certify that <span style="font-weight:bold;" t-field="o.name"/> <span style="font-weight:bold;" t-field="o.surname"/>
+                                    has been employed with <span style="font-weight:bold;" t-field="o.company_id.name"/> 
+                                </p>
+                                <br/>
+                                <p>from <span style="font-weight:bold;" t-field="o.join_date"/> until the present in the position of  <span style="font-weight:bold;" t-field="o.employee_position_id.name"/></p>
+                                <br/>
+                                <p>of Department <span style="font-weight:bold;" t-field="o.department_id.name"/></p>
+                                <br/>
+                                <p>I hereby certify that the above mentioned information is true and correct.</p>
+                                <br/><br/>
+                                <br/>
+                                <p>Signature,</p>
+                                <br/>
+                                <p>Designation</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <!-- ################ -->
+
+
+        <!-- Reference Letter -->
+        <template id="generate_reference_letter_with_salary">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div class="col-xs-12" style="margin-top: 3mm; text-align:center;">
+                            <h2 style="font-size:22px; font-weight:bold;">Employment Reference Letter</h2>
+                        </div>
+                    </div>
+                    <div class="page" style="font-family: 'Times New Roman';border-collapse: collapse;">
+                        <div class="col-xs-12" style="font-size:12px;">
+                            <span style="font-size:18px; font-weight:bold;" t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/> 
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px;">Certificate of Employment</span>
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px;">PRIVATE and CONFIDENTIAL</span>
+                            <br/>
+                            <br/>
+                            <span style="font-size:18px;">To Whom It May Concern</span>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div style="font-size:16px;">
+                                <p>This is to certify that <span style="font-weight:bold;" t-field="o.name"/> <span style="font-weight:bold;" t-field="o.surname"/>
+                                    has been employed with <span style="font-weight:bold;" t-field="o.company_id.name"/> 
+                                </p>
+                                <br/>
+                                <p>from <span style="font-weight:bold;" t-field="o.join_date"/> until the present in the position of  <span style="font-weight:bold;" t-field="o.employee_position_id.name"/></p>
+                                <br/>
+                                <p>of Department <span style="font-weight:bold;" t-field="o.department_id.name"/></p>
+                                <br/>
+                                <p><span style="font-weight:bold;" t-field="o.name"/> current monthly salary is THB <span style="font-weight:bold;" t-field="o.salary"/>.</p>
+                                <br/>
+                                <p>I hereby certify that the above mentioned information is true and correct.</p>
+                                <br/><br/>
+                                <br/>
+                                <p>Signature,</p>
+                                <br/>
+                                <p>Designation</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+        <!-- ################ -->
+    </data>
+</openerp>

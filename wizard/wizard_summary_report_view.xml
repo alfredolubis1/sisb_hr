@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="employee_summary_report" model="ir.ui.view">
+            <field name="name">Individual Summary Attendance</field>
+            <field name="model">summary.report</field>
+            <field name="arch" type="xml">
+                <form string="Attendance Summary Report">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="employee_id" string="Select Employee" required="1"/>
+                            <field name="academic_year_id" string="Academic Year" required="1"/>
+                            <!-- <field name="term_ids" widget="many2many_tags" required="1"/> -->
+                            <newline/>
+                            <field name="date_from" required="1"/>
+                            <field name="date_to" required="1"/>
+                        </group>
+                        <footer>
+                         <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="sisb_action_attendance_summary_report" model="ir.actions.act_window">
+            <field name="name">Individual Summary Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">summary.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_summary_report"/>
+            <field name="target">new</field>
+        </record>
+
+         <menuitem name="Individual Summary Attendance" action="sisb_action_attendance_summary_report" id="menu_sisb_summary_attendance_report" parent="menu_sisb_attendance_report" sequence="3"/>
+    </data>
+</openerp>

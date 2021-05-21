@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="staff_tf_checklist_form">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div>
+                            <center>
+                                <div>
+                                    <strong><h1>Staff Transfer Checklist</h1></strong>
+                                </div>
+                            </center>
+                        </div>
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M')" style="float: right; font-size: 14px;"/>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .st_table {
+                            width: 100%;
+                        }
+
+                        .st_table td {
+                            text-align: right;
+                            font-size: 15px;
+                            padding: 10px;
+                        }
+
+                        .nd_table {
+                            width: 100%;
+                        }
+
+                        .nd_table td {
+                            text-align: left;
+                            font-size: 15px;
+                            padding: 10px;
+                        }
+
+                        .main_table {
+                            width: 100%;
+                        }
+
+                        .main_table th {
+                            font-size: 17px;
+                            text-align: center;
+                            border: 1px solid black;
+                            padding: 10px;
+                        }
+
+                        .main_table td {
+                            font-size: 15px;
+                            border: thin solid black;
+                            padding: 10px;
+                            text-align: left;
+                        }
+
+                        .last_table {
+                            width: 100%;
+                            color: grey;
+                            font-size: 20px;
+                            test-align: left;
+                        }
+
+                        .last_table td {
+                            padding: 30px;
+                        }
+                        </style>
+                        <br/>
+                        <div>
+                            <table class="st_table">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>:__________________________________</td>
+                                    <td>Position</td>
+                                    <td>:__________________________________</td>
+                                </tr>
+                            </table>
+                            <table class="nd_table">
+                                <tr>
+                                    <td><input type="checkbox"/> Transfer from Campus/Corporate</td>
+                                    <td>___________________</td>
+                                    <td>to</td>
+                                    <td>___________________</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/> Transfer from Department</td>
+                                    <td>___________________</td>
+                                    <td>to</td>
+                                    <td>___________________</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"/> Position change (specify new position)</td>
+                                    <td colspan="3">___________________</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <p style="font-size: 15px;">Transfer Effective Date : _____________________________</p>
+                            <br/>
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th>ITEM</th>
+                                        <th>Department</th>
+                                        <th>Date completed</th>
+                                        <th>Signature</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            1) Technology Request <br/>
+                                            <ul style="padding-left: 20px;">
+                                                <li>PC/Laptop</li>
+                                                <li>Desk Telephone</li>
+                                                <li>Mobile Phone</li>
+                                            </ul>
+                                        </td>
+                                        <td style="text-align: center;">IT</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2) Work Station</td>
+                                        <td style="text-align: center;">Dept Manager</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3) Keys(specify:......................)</td>
+                                        <td style="text-align: center;">Dept Manager</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4) Finger/Face Scan</td>
+                                        <td style="text-align: center;">HR</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>5) Medical Card</td>
+                                        <td style="text-align: center;">HR</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-style: italic;">For Non-Thai only:</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Non "B" Visa</td>
+                                        <td style="text-align: center;">HR</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Work Permit</td>
+                                        <td style="text-align: center;">HR</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <table class="last_table">
+                                <tr>
+                                    <td>Additional Comments</td>
+                                </tr>
+                                <tr>
+                                    <td style="border-bottom: 3px dotted grey;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-bottom: 3px dotted grey;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="border-bottom: 3px dotted grey;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+    <openerp>
+        <data>
+
+        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="hr.menu_hr_root" sequence="1" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+
+        <record model="ir.ui.view" id="hr_applicant_calendar_view">
+            <field name="name">Hr Applicants Calendar</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_applicant_calendar_view"/>
+            <!-- <field name="priority" eval="2"/> -->
+            <field name="arch" type="xml">
+                <calendar string="Applicants" position="replace">
+                    <calendar string="Applicants"
+                        date_start="create_date" color="name">
+                        <field name="name"/>
+                        <field name="partner_name"/>
+                        <field name="title_action"/>
+                    </calendar>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="sisb_hr_crm_case_form_view_job" model="ir.ui.view">
+            <field name="name">sisb.hr.crm.case.form.view.job</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="sisb_project.sisb_crm_case_form_view_job"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="before">
+                    <field name="is_existing_employee"/>
+                    <field name="employee_no" attrs="{'invisible': [('is_existing_employee', '=', False)], 'required': [('is_existing_employee', '=', True)]}"/>
+                    <!-- <button name="get_url" string="TEST" type="object" class="oe_highlight" invisible="True"/>
+                    <button name="notif_for_new_applicant" string="TEST EMAIL" type="object" class="oe_highlight" invisible="True"/> -->
+                </field>
+                <field name="partner_name" position="after">
+                    <field name="existing_employee_id" on_change="on_change_participant(existing_employee_id)" attrs="{'invisible':[('is_existing_employee', '=', False)], 'required': [('is_existing_employee','=',True)]}" 
+                            options="{'no_create': True}" class="oe_inline" string="Employee"/>
+                </field>
+                <field name="partner_name" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_existing_employee','=',True)], 'required': [('is_existing_employee','=',False)]}</attribute>
+                </field>
+                <button name="create_employee_from_applicant" position="attributes">
+                    <attribute name="attrs">{'invisible':[('is_existing_employee', '=', True)]}</attribute>
+                    <attribute name="groups">base.group_hr_manager</attribute>
+                </button>
+                <field name="existing_employee_id" position="after">
+                    <button string="Process Transfer" name="submit_transfer" type="object"
+                                        class="oe_highlight oe_inline" style="margin-left: 8px;"
+                                        attrs="{'invisible': ['|',('is_existing_employee','=', False), ('detect_transfer','=', True)]}"/>
+                </field>
+                <field name="emp_id" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </field>
+                <field name="job_id" position="after">
+                    <field name="job_title_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="detect_transfer" invisible="True"/>
+                </field>
+                <field name="categ_ids" position="before">
+                    <field name="apply_notes" col="4" colspan="4" readonly="1" nolabel="1"/>
+                </field>
+                <button name="action_get_attachment_tree_view" position="after">
+                    <button name="go_to_transfer_menu"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('detect_transfer', '=', False)]}"
+                            icon="fa-expand">
+                            <field name="transfer_state" widget="statinfo" string="Transfer Applicant" help="Transfer Applicant"/>
+                    </button>
+                </button>
+            </field>
+        </record>
+
+        <!-- <record model="ir.actions.act_window" id="hr_recruitment.crm_case_categ0_act_job">
+            <field name="name">Applications</field>
+            <field name="res_model">hr.applicant</field>
+            <field name="view_mode">kanban,tree,form,graph,calendar</field>
+            <field name="view_id" ref="sisb_hr_crm_case_form_view_job"/>
+            <field name="search_view_id" ref="hr_recruitment.view_crm_case_jobs_filter"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p>
+                TigernixERP helps you track applicants in the recruitment
+                process and follow up all operations: meetings, interviews, etc.
+              </p><p>
+                Applicants and their attached CV are created automatically when an email is sent.
+                If you install the document management modules, all resumes are indexed automatically, 
+                so that you can easily search through their content.
+              </p>
+            </field>
+        </record> -->
+
+        <!-- <record model="ir.actions.act_window.view" id="sisb_action_hr_sec_form_view_act_job">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_hr_crm_case_form_view_job"/>
+            <field name="act_window_id" ref="hr_recruitment.crm_case_categ0_act_job"/>
+        </record> -->
+
+        <menuitem
+            name="Applications"
+            parent="base.menu_crm_case_job_req_main"
+            id="hr_recruitment.menu_crm_case_categ0_act_job" 
+            action="hr_recruitment.crm_case_categ0_act_job" 
+            groups="base.group_hr_manager"
+            sequence="2"/>
+
+        <menuitem
+            name="Applications Analysis"
+            parent="base.menu_crm_case_job_req_main"
+            id="sisb_project.sisb_menu_crm_case_categ0_act_job" 
+            groups="base.group_hr_user,base.group_hr_manager" 
+            action="sisb_project.sisb_crm_case_categ0_act_job" 
+            sequence="5"/>
+        
+        <menuitem
+            name="Resumes and Letters"
+            parent="base.menu_crm_case_job_req_main"
+            id="hr_applicant_document.menu_crm_case_categ0_act_job02" 
+            action="hr_applicant_document.hr_applicant_resumes" 
+            groups="base.group_hr_user,base.group_hr_manager"
+            sequence="3"/>  
+
+
+
+
+        <record model="ir.ui.view" id="sisb_hr_kanban_view_applicant">
+            <field name="name">Hr Applicants kanban inherit</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_kanban_content']" position="before">
+                    <t t-if="record.existing_employee_id.raw_value"><b><field name="existing_employee_id"/></b><br/></t>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_job_custom">
+            <field name="name">Job</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="sisb_project.sisb_1hr_job_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <button name="set_recruit" position="replace">
+                    <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_hr_manager"/>
+                </button>
+                <button name="set_open" position="replace">
+                    <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_hr_manager"/>
+                </button>
+                <field name="website_published" position="attributes">
+                    <attribute name="groups">base.group_hr_manager</attribute>
+                </field>
+                <xpath expr="/form/sheet/div[@name='buttons']" position="attributes">
+                    <attribute name="groups">base.group_hr_manager</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/group/div[3]" position="attributes">
+                    <attribute name="groups">base.group_hr_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_job_kanban_custom">
+            <field name="name">Job</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/kanban[@class='oe_background_grey']" position="replace">
+                    <kanban class="oe_background_grey" create="false">
+                    <field name="name"/>
+                    <field name="alias_name"/>
+                    <field name="alias_domain"/>
+                    <field name="department_id"/>
+                    <field name="no_of_recruitment"/>
+                    <field name="color"/>
+                    <field name="application_ids"/>
+                    <field name="document_ids"/>
+                    <field name="no_of_hired_employee"/>
+                    <field name="manager_id"/>
+                    <field name="survey_id"/>
+                    <field name="state"/>
+                    <field name="user_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban oe_custom">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Edit...</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <t t-if="record.user_id.raw_value">
+                                        <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <t t-if="record.user_id.raw_value === false">
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <div class="oe_job_detail">
+                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
+                                            <field name="name"/>
+                                        </div>
+                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                            <strong><field name="department_id"/>
+                                            <span t-if="record.manager_id.value" class="oe_manager_name">
+                                                (<t t-esc="record.manager_id.value"/>)
+                                            </span></strong>
+                                        </div>
+                                        <div class="text-center oe_job_alias oe_kanban_ellipsis" t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'">
+                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                        </div>
+
+                                    </div>
+                                    <t t-if="record.state.raw_value == 'recruit'" groups="base.group_hr_manager">
+                                        <div class="oe_applications">
+                                            <a name="%(hr_recruitment.action_hr_job_applications)d" type="action">
+                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
+                                            </a>
+                                            <br/>
+                                            <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
+                                                <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
+                                                <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
+                                            </a>
+                                        </div>
+                                        <div class="oe_job_justgage">
+                                            <field state="recruit" name="no_of_hired_employee" widget="gauge"
+                                                style="margin-top:7px; width:160px; height: 120px;"
+                                                options="{
+                                                    'max_field': 'no_of_recruitment',
+                                                    'label': 'Hired Employees',
+                                                    'on_change': 'action_set_no_of_recruitment',
+                                                    'on_click_label': 'employee(s) to recruit',
+                                                    'force_set': False,
+                                                    'gauge_value_field': 'no_of_recruitment',
+                                                }">
+                                                Hired Employees
+                                            </field>
+                                        </div>
+                                    </t>
+                                    <t t-if="record.state.raw_value == 'open'" groups="base.group_hr_manager">
+                                        <div class="oe_start_recruitment">
+                                            <p><b>click here</b>, To start the recruitment</p>
+                                            <img src="/hr_recruitment/static/src/img/down1.png"/>
+                                        </div>
+                                    </t>
+                                    <div class="oe_launch_recruitment" groups="base.group_hr_manager">
+                                        <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
+                                        <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
+                                        <a t-if="record.survey_id.raw_value"> | </a>
+                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- My Application Employee Side -->
+
+        <record model="ir.ui.view" id="my_application_custom_view">
+            <field name="name">Jobs - Recruitment Form</field>
+            <field name="model">hr.applicant</field>
+            <field name="arch" type="xml">
+            <form string="Jobs - Recruitment Form">
+                <header>
+                    <field name="stage_id" widget="statusbar" clickable="True" invisible="True"/>
+                    <button name="submit_transfer" states="draft" type="object" string="Submit" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,process,confirmed,transferred" nolabel="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_right oe_button_box">
+                        <button name="hr_recruitment.action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
+                            help="Schedule interview with this applicant" invisible="1">
+                            <div>Schedule<br/>Meeting</div>
+                        </button>
+                        <button name="hr_recruitment.action_start_survey" 
+                            class="oe_stat_button"
+                            icon="fa-user" 
+                            type="object"
+                            help="Answer related job question"
+                            context="{'survey_id': survey}"
+                            attrs="{'invisible':[('survey','=',False)]}"
+                            invisible="1">
+                            <div>Start<br/>Interview</div>
+                        </button>
+                        <button name="hr_recruitment.action_print_survey" 
+                            class="oe_stat_button"
+                            icon="fa-print"
+                            type="object"
+                            help="Print interview report"
+                            attrs="{'invisible':[('survey','=',False)]}"
+                            invisible="1">
+                            <div>Print<br/>Interview</div>
+                        </button>
+                        <button name="hr_recruitment.action_get_attachment_tree_view" 
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            type="object"
+                            invisible="1">
+                            <field name="attachment_number" widget="statinfo" string="Documents"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="candidate_no" class="oe_edit_only"/>
+                        <h1><field name="candidate_no"/></h1>
+                        <label for="name" class="oe_edit_only"/>
+                        <h2><field name="name"/></h2>
+                        <label for="existing_employee_id" class="oe_edit_only"/>
+                        <h2 style="display: inline-block;">
+                            <field name="existing_employee_id" on_change="on_change_participant(existing_employee_id)" options="{'no_create': True, 'no_open': True}" class="oe_inline" string="Employee's Name" domain="[('user_id.id','=',uid)]"/>
+                            <!-- <button string="Update Employee" name="update_existing_employee" type="object"
+                                        class="oe_highlight oe_inline" style="margin-left: 8px;"
+                                        attrs="{'invisible': [('is_existing_employee', '!=', True)]}"/> -->
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="is_existing_employee" readonly="1"/>
+                            <field name="partner_id"
+                                    on_change="onchange_partner_id(partner_id)" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="email_from" widget="email" required="1"/>
+                            <field name="partner_phone" required="1"/>
+                            <field name="partner_mobile"/>
+                            <field name="type_id" placeholder="Degree" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="citizenship" required="1"/>
+                            <field name="part_media_type_id" required="1" options='{"no_open": True, "no_create": True}'/>
+                            <field name="part_media_no"  attrs="{'required': [('part_required_status','=', True)]}"/>
+                            <field name="part_required_status" invisible="1"/>
+                            <field name="total_applicant" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id"
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}" options="{'no_open': True, 'no_create': True}"/>
+                            <label for="title_action"/>
+                            <div>
+                                <field name="date_action"/>
+                                <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
+                            </div>
+                            <field name="priority" widget="priority" string="Rating"/>
+                            <field name="source_id" string="How do you know this Jobs" required="True" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="nationality_id" options="{'no_create': True,'no_open': True}" required="1"/>
+                            <field name="reference"/>
+                            <field name="hr_create_from" readonly="1"/>
+                            <field name="check_apply_for_more" invisible="1"/>
+                        </group>
+                        <group string="Job">
+                            <field name="survey" invisible="1"/>
+                            <field name="response_id" invisible="1"/>
+                            <field name="company_id" domain="[('id','!=',1)]" required="1" on_change="onchange_campus(company_id)" string="Campus" attrs="{'readonly': [('hr_create_from','=','website')]}" options="{'no_create': True,'no_open': True}"/>
+                            <field name="department_id" required="1" on_change="onchange_department(department_id)" attrs="{'readonly': [('hr_create_from','=','website')]}" options="{'no_create': True,'no_open': True}"/>
+                            <field name="job_track_id" required="1" on_change="onchange_job_track(job_track_id)" attrs="{'readonly': [('hr_create_from','=','website')]}" domain="[('school_id.company_id','=',company_id)]" options="{'no_create': True,'no_open': True}"/>
+                            <field name="job_id" required="1" on_change="onchange_job(job_id)" attrs="{'readonly': [('hr_create_from','=','website')]}" domain="[('department_id','=',department_id),('standard_track_id','=',job_track_id),('state','=','recruit')]" options="{'no_create': True,'no_open': True}"/>
+                            <field name="job_title_id" options="{'no_open': True, 'no_create': True}"/>
+                            <!-- <field name="job_id" on_change="onchange_job(job_id)"/> -->
+                            <!-- <field name="department_id" on_change="onchange_department_id(department_id, stage_id)"/>
+                            <field name="company_id" /> -->
+                            <label for="availability"/>
+                            <div>
+                                <field name="availability" class="oe_inline"/> <label string="Day(s)" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group string="Contract">
+                            <label for="salary_expected"/>
+                            <div>
+                                <field name="salary_expected" class="oe_inline"/>
+                                <span class="oe_inline" attrs="{'invisible':[('salary_expected_extra','=',False)]}"> + </span>
+                                <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                            </div>
+                            <label for="salary_proposed"/>
+                            <div>
+                                <field name="salary_proposed" class="oe_inline"/>
+                                <span class="oe_inline" attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
+                                <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                            </div>
+                            <!-- <field name="emp_id" readonly="1"/> -->
+                        </group>
+                    </group>
+                    <group>
+                        <field name="categ_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                        <separator string="Agreement Notes" colspan="4"/>
+                        <!-- <field name="agreement"/>
+                        <newline/>
+                        <field name="agreement_notes" readonly="1" nolabel="1" colspan="4"/> -->
+                    </group>
+                    <separator string="Application Summary"/>
+                    <field name="description" placeholder="Feedback of interviews..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="my_applicants_tree_custom">
+            <field name="name">My Applicants</field>
+            <field name="model">hr.applicant</field>
+            <field name="arch" type="xml">
+                <tree string="Applicants" fonts="bold:message_unread==True">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="last_stage_id" invisible="1"/>
+                    <field name="candidate_no"/>
+                    <field name="existing_employee_id" string="Applicant's Name"/>
+                    <field name="email_from"/>
+                    <field name="partner_phone"/>
+                    <field name="source_id" String="How do you know this Jobs?"/>
+                    <field name="priority"/>
+                    <field name="job_track_id"/>
+                    <field name="job_id"/>
+                    <field name="job_title_id"/>
+                    <field name="company_address_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="my_application_custom_act_windows">
+            <field name="name">My Applications</field>
+            <field name="res_model">hr.applicant</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="my_application_custom_view"/>
+            <field name="search_view_id" ref="hr_recruitment.view_crm_case_jobs_filter"/>
+            <field name="domain">[('existing_employee_id.user_id.id','=',uid)]</field>
+            <field name="context">{'default_is_existing_employee':1}</field>
+            <field name="help" type="html">
+              <p>
+                TigernixERP helps you track applicants in the recruitment
+                process and follow up all operations: meetings, interviews, etc.
+              </p><p>
+                Applicants and their attached CV are created automatically when an email is sent.
+                If you install the document management modules, all resumes are indexed automatically, 
+                so that you can easily search through their content.
+              </p>
+            </field>
+        </record>
+
+        <!-- <record model="ir.actions.act_window.view" id="hr_recruitment.action_hr_sec_kanban_view_act_job">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+            <field name="act_window_id" ref="my_application_custom_act_windows"/>
+        </record> -->
+
+        <record model="ir.actions.act_window.view" id="hr_recruitment.action_hr_sec_tree_view_act_job">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="my_applicants_tree_custom"/>
+            <field name="act_window_id" ref="my_application_custom_act_windows"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="hr_recruitment.action_hr_sec_form_view_act_job">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="my_application_custom_view"/>
+            <field name="act_window_id" ref="my_application_custom_act_windows"/>
+        </record>
+
+        <!-- <record model="ir.actions.act_window.view" id="hr_recruitment.action_hr_sec_graph_view_act_job">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="hr_recruitment.crm_case_graph_view_job"/>
+            <field name="act_window_id" ref="my_application_custom_act_windows"/>
+        </record> -->
+
+        <menuitem
+            name="My Applications"
+            parent="base.menu_crm_case_job_req_main"
+            id="menu_my_application" action="my_application_custom_act_windows" sequence="2" groups="base.group_user"/>
+
+        </data>
+    </openerp>

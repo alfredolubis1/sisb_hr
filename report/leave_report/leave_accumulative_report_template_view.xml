@@ -1,0 +1,151 @@
+<openerp>
+    <data>
+        <template id="leave_accumulative_per_allocated">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-call="sisb_hr.sisb_hr_report_layout"> -->
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                                <div>
+                                    <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                    <strong>
+                                        <h4><b>Report for Accumulative Leave from <span t-field="o.allocated_leave_id.name"/></b></h4>
+                                    </strong>
+                                </div>
+                        </center>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <br/>
+                            <span class="text-right"><span style="text-align: right;" class="page"/></span>
+                        </div>
+                        <!-- <b><span t-esc="get_section_code(o.company_id)"/></b> -->
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                            .main_table {
+                                width: 100%;
+                                border: 1px solid black;
+                                border-collapse: collapse;
+                                font-size: 10px;
+                            }
+
+                            .main_table th {
+                                text-align: center;
+                                font-size: 15px;
+                                border: 1px solid black;
+                                padding-top: 20px;
+                                padding-bottom: 20px;
+                            }
+
+                            .main_table td {
+                                padding-top: 8px;
+                                padding-bottom: 8px;
+                                border: 1px solid black;
+                                text-align: center;
+                                font-size: 10px;
+                            }
+
+                            .row_value td {
+                                width: 3.5%;
+                                padding-top: 10px;
+                                padding-bottom: 10px; 
+                                bgcolor: #808080;
+                            }
+                        </style>
+                        <div class="col-xs-12">                        
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th width="16%"></th>
+                                        <t t-foreach="get_leave_to_display(data['form'])" t-as="lv_name">
+                                            <th colspan="4" width="14%"><span t-esc="lv_name['hd_name']"/></th>
+                                        </t>
+                                        <!-- <th colspan="4" width="14%">ลากิจ</th>
+                                        <th colspan="4" width="14%">ลาคลอดสําหรับคุณพ่อ</th>
+                                        <th colspan="4" width="14%">ลาหักเงิน</th>
+                                        <th colspan="4" width="14%">ลาแต่งงาน</th>
+                                    <th colspan="4" width="14%">ลาอบรม</th> -->
+                                    </tr>
+                                    <tr class="row_value">
+                                        <td width="16%" style="text-align: right;">Hour/Day</td>
+                                        <td>Status</td>
+                                        <td>Used</td>
+                                        <td>Remain</td>
+                                        <td>Over</td>
+                                        <td>Status</td>
+                                        <td>Used</td>
+                                        <td>Remain</td>
+                                        <td>Over</td>
+                                        <td>Status</td>
+                                        <td>Used</td>
+                                        <td>Remain</td>
+                                        <td>Over</td>
+                                        <td>Status</td>
+                                        <td>Used</td>
+                                        <td>Remain</td>
+                                        <td>Over</td>
+                                        <td>Status</td>
+                                        <td>Used</td>
+                                        <td>Remain</td>
+                                        <td>Over</td>
+                                        <td>Status</td>
+                                        <td>Used</td>
+                                        <td>Remain</td>
+                                        <td>Over</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="get_employee(data['form'])" t-as="emp">
+                                        <tr class="row_value">
+                                            <td width="16%" style="text-align: left;"><b><span t-esc="emp['employee_name']"/></b></td>
+                                            <t t-foreach="get_emp_detail_leave(emp['employee_id'], emp['hd_to_display'])" t-as="accum_lv">
+                                                <td><span t-esc="accum_lv['leave_total']"/></td>
+                                                <td><span t-esc="accum_lv['leave_used']"/></td>
+                                                <td><span t-esc="accum_lv['leave_remain']"/></td>
+                                                <td><span t-esc="accum_lv['leave_over']"/></td>
+                                            </t>
+                                            <!-- <td><span t-esc="accu['sick_leave_total']"/></td>
+                                            <td><span t-esc="accu['sick_leave_used']"/></td>
+                                            <td><span t-esc="accu['sick_leave_remain']"/></td>
+                                            <td><span t-esc="accu['sick_leave_over']"/></td>
+                                            <td><span t-esc="accu['unpain_leave_total']"/></td>
+                                            <td><span t-esc="accu['unpain_leave_used']"/></td>
+                                            <td><span t-esc="accu['unpain_leave_remain']"/></td>
+                                            <td><span t-esc="accu['unpain_leave_over']"/></td>
+                                            <td><span t-esc="accu['compensated_leave_total']"/></td>
+                                            <td><span t-esc="accu['compensated_leave_used']"/></td>
+                                            <td><span t-esc="accu['compensated_leave_remain']"/></td>
+                                            <td><span t-esc="accu['compensated_leave_over']"/></td>
+                                            <td><span t-esc="accu['maternity_leave_total']"/></td>
+                                            <td><span t-esc="accu['maternity_leave_used']"/></td>
+                                            <td><span t-esc="accu['maternity_leave_remain']"/></td>
+                                            <td><span t-esc="accu['maternity_leave_over']"/></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td> -->
+                                        </tr>
+                                        <tr t-foreach="check_emp_hd(emp['leave_reset_month'])" t-as="emp_hd">
+                                                <td><span t-esc="emp_hd['month_year']"/></td>
+                                            <t t-foreach="check_hd_ev_month(emp_hd['start_period'], emp_hd['end_period'], emp['employee_id'], emp['hd_to_display'])" t-as="hd">
+                                                <td><span t-esc="hd['status']"/></td>
+                                                <td><span t-esc="hd['used']"/></td>
+                                                <td><span t-esc="hd['remain']"/></td>
+                                                <td><span t-esc="hd['over']"/></td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- </t> -->
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

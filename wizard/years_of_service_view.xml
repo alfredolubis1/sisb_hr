@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="years_of_service_wizard_view" model="ir.ui.view">
+            <field name="name">Years Of Service</field>
+            <field name="model">years.of.service</field>
+            <field name="arch" type="xml">
+                <form string="Attendance Summary Report">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="options" required="1"/>
+                            <field name="company_id" attrs="{'invisible': [('options', '=', 'multi_comp')], 'required': [('options', '=', 'one_comp')]}"/>
+                            <field name="company_ids" attrs="{'invisible': [('options', '=', 'one_comp')], 'required': [('options', '=', 'multi_comp')]}" widget="many2many_tags" colspan="4"/>
+                            <separator string="Set Year Range" colspan="4"/>
+                            <field name="from_year_th" required="1"/>
+                            <field name="to_year_th" required="1"/>
+                        </group>
+                        <footer>
+                         <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_years_of_service_wizard_view" model="ir.actions.act_window">
+            <field name="name">Years Of Service</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">years.of.service</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="years_of_service_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+         <menuitem name="Years Of Service Report" action="action_years_of_service_wizard_view" id="menu_years_of_service_report" parent="sisb_hr_general_report_menu" sequence="12"/>
+    </data>
+</openerp>

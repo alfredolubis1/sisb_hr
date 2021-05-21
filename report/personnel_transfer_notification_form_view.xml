@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="personel_tf_notification_form">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div>
+                            <center>
+                                <div>
+                                    <strong><h1>Personnel Transfer Notification Form</h1></strong>
+                                </div>
+                            </center>
+                        </div>
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M')" style="float: right; font-size: 14px;"/>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .st_table {
+                            width: 100%;
+                        }
+
+                        .st_table td {
+                            font-size: 14px;
+                            padding: 7px;
+                        }
+                        
+                        .nd_table {
+                            width: 100%;
+                        }
+
+                        .nd_table td {
+                            text-align: left;
+                            font-size: 14px;
+                            padding: 7px;
+                        }
+
+                        .rd_table {
+                            width: 100%;
+                        }
+
+                        .rd_table td {
+                            padding: 7px;
+                            font-size: 14px;
+                            text-align: centre;
+                            padding-left: 14px;
+                        }
+
+                        .fourth_table {
+                            width: 100%;
+                        }
+
+                        .fourth_table td {
+                            padding: 7px;
+                            font-size: 14px;
+                            text-align: left;
+                        }
+                        .fifth_table {
+                                width: 100%;
+                            }
+
+                            .fifth_table td {
+                                padding: 7px;
+                                font-size: 14px;
+                                text-align: left;
+                            }
+
+                            .last_table {
+                                width: 100%;
+                                font-weight: bold;
+                                font-size: 14px;
+                            }
+                        </style>
+                        <br/>
+                        <div class="col-xs-12">
+                            <table class="st_table">
+                                <tr>
+                                    <td>Campus/HQ</td>
+                                    <td colspan="5">
+                                        <t t-if="not o.company_id">
+                                            <span>........................................</span>
+                                        </t>
+                                        <t t-if="o.company_id">
+                                            <span t-field="o.company_id.name"/>
+                                        </t>
+                                    </td>
+                                    <!-- <td colspan="5">........................................</td> -->
+                                </tr>
+                                <tr>
+                                    <td>Department</td>
+                                    <td colspan="5">
+                                        <t t-if="not o.department_id">
+                                            <span>........................................</span>
+                                        </t>
+                                        <t t-if="o.department_id">
+                                            <span t-field="o.department_id.name"/>
+                                        </t>
+                                    </td>
+                                    <!-- <td colspan="5">........................................</td> -->
+                                </tr>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>: <span t-esc="time.strftime('%d', time.strptime(o.tf_date, '%Y-%m-%d'))"/></td>
+                                    <td>Month</td>
+                                    <td>: <span t-esc="time.strftime('%m', time.strptime(o.tf_date, '%Y-%m-%d'))"/></td>
+                                    <td>Year</td>
+                                    <td>: <span t-esc="time.strftime('%Y', time.strptime(o.tf_date, '%Y-%m-%d'))"/></td>
+                                </tr>
+                            </table>
+                            <p style="font-size: 14px;">
+                            To the Attention of Corporate Human Resources
+                            </p>
+                            <table class="nd_table">
+                                <tr>
+                                    <td width="20%;">Mr./ Mrs./Miss/</td>
+                                    <td>: <span t-field="o.employee_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="20%;">Staff ID No.</td>
+                                    <td>: <span t-field="o.employee_id.employee_no"/></td>
+                                </tr>
+                                <tr>
+                                    <td width="20%;">Position Title</td>
+                                    <td>: <span t-field="o.position_id.name"/></td>
+                                </tr>
+                            </table>
+                            <p style="font-size: 14px;">is to be transferred to :</p>
+                            <table class="rd_table"> 
+                                <tr>
+                                    <td>
+                                        <t t-if="o.company_code == 'PU'">
+                                            <input type="checkbox" checked="checked"/>  PU
+                                        </t>
+                                        <t t-if="o.company_code != 'PU'">
+                                            <input type="checkbox"/>  PU
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-if="o.company_code == 'EK'">
+                                            <input type="checkbox" checked="checked"/>  EK
+                                        </t>
+                                        <t t-if="o.company_code != 'EK'">
+                                            <input type="checkbox"/>  EK
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-if="o.company_code == 'SV'">
+                                            <input type="checkbox" checked="checked"/>  SV
+                                        </t>
+                                        <t t-if="o.company_code != 'SV'">
+                                            <input type="checkbox"/>  SV
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <t t-if="o.company_code == 'TR'">
+                                            <input type="checkbox" checked="checked"/>  TR
+                                        </t>
+                                        <t t-if="o.company_code != 'TR'">
+                                            <input type="checkbox"/>  TR
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-if="o.company_code == 'CM'">
+                                            <input type="checkbox" checked="checked"/>  CM
+                                        </t>
+                                        <t t-if="o.company_code != 'CM'">
+                                            <input type="checkbox"/>  CM
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-if="o.company_code == 'HQ'">
+                                            <input type="checkbox" checked="checked"/>  HQ
+                                        </t>
+                                        <t t-if="o.company_code != 'HQ'">
+                                            <input type="checkbox"/>  HQ
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="fourth_table">
+                                <tr>
+                                    <td colspan="2">Department</td>
+                                    <td colspan="4">
+                                        <t t-if="not o.department_destination_id">
+                                            <span>: ........................................</span>
+                                        </t>
+                                        <t t-if="o.department_destination_id">
+                                            : <span t-field="o.department_destination_id.name"/>
+                                        </t>
+                                    </td>
+                                    <!-- <td colspan="4">.................................................................................................................</td> -->
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Position Title</td>
+                                    <td colspan="4">
+                                        <t t-if="not o.new_position_id">
+                                            <span>: ........................................</span>
+                                        </t>
+                                        <t t-if="o.new_position_id">
+                                            : <span t-field="o.new_position_id.name"/>
+                                        </t>
+                                    </td>
+                                    <!-- <td colspan="4">.................................................................................................................</td> -->
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Replace</td>
+                                    <td colspan="4">: .................................................................................................................</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Effective From</td>
+                                </tr>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>: <span t-esc="time.strftime('%d', time.strptime(o.effective_date, '%Y-%m-%d'))"/></td>
+                                    <td>Month</td>
+                                    <td>: <span t-esc="time.strftime('%m', time.strptime(o.effective_date, '%Y-%m-%d'))"/></td>
+                                    <td>Year</td>
+                                    <td>: <span t-esc="time.strftime('%Y', time.strptime(o.effective_date, '%Y-%m-%d'))"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 25px;">Reason</td>
+                                    <td colspan="5">
+                                        <t t-if="not o.transfer_reason">
+                                            <span>:  _______________________________________________________________________</span>
+                                        </t>
+                                        <t t-if="o.transfer_reason">
+                                            : <span t-field="o.transfer_reason.name"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <td colspan="6">__________________________________________________________________________________</td>
+                                </tr> -->
+                            </table>
+                            <table class="fifth_table">
+                                <tr>
+                                    <td width="20%;">Approved</td>
+                                    <td colspan="3">:</td>
+                                </tr>
+                                <tr>
+                                    <td width="40%;">Dispatching Principal/Head of Department</td>
+                                    <td>........................</td>
+                                    <td>Date</td>
+                                    <td>........................</td>
+                                </tr>
+                                <tr>
+                                    <td width="20%;">Approved</td>
+                                    <td colspan="3">:</td>
+                                </tr>
+                                <tr>
+                                    <td width="40%;">Dispatching Principal/Head of Department</td>
+                                    <td>........................</td>
+                                    <td>Date</td>
+                                    <td>........................</td>
+                                </tr>
+                                <tr>
+                                </tr>
+                                <tr>
+                                    <td width="20%;">Acknowledged</td>
+                                    <td colspan="3">:</td>
+                                </tr>
+                                <tr>
+                                    <td width="40%;">Dispatching School Director</td>
+                                    <td>........................</td>
+                                    <td>Date</td>
+                                    <td>........................</td>
+                                </tr>
+                                <tr>
+                                    <td width="20%;">Acknowledged</td>
+                                    <td colspan="3">:</td>
+                                </tr>
+                                <tr>
+                                    <td width="40%;">Receiving School Director</td>
+                                    <td>........................</td>
+                                    <td>Date</td>
+                                    <td>........................</td>
+                                </tr>
+                                <tr>
+                                    <td width="20%;">Acknowledged</td>
+                                    <td colspan="3">:</td>
+                                </tr>
+                                <tr>
+                                    <td width="40%;">Corporate HR</td>
+                                    <td>........................</td>
+                                    <td>Date</td>
+                                    <td>........................</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+                            <table class="last_table">
+                                <tr>
+                                    <td>Remarks</td>
+                                    <td>:</td>
+                                    <td style="padding-left: 14px;">1. Transfer date must be 1st of the month</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="padding-left: 14px;">2.  Submit this form to Corporate HR before the effective transfer date</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

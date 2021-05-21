@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<openerp>
+    <data>
+
+        <menuitem id="employee_movement_report_parent_menu" parent="hr_employee_transfer_menu" sequence="4" name="Employee Movement Report"/>
+
+        <record id="individual_detailed_employee_movement" model="ir.ui.view">
+            <field name="name">Individual Detailed Employee Movement</field>
+            <field name="model">individual.detailed.employee.movement</field>
+            <field name="arch" type="xml">
+                <form string="Individual Detailed Employee Movement">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="company_id" required="True"/>
+                            <field name="employee_id" attrs="{'readonly': [('company_id','=',False)]}" required="1"/>
+                            <field name="date_from" required="True"/>
+                            <field name="date_to" required="True"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>            
+		        </form>
+            </field>
+        </record>
+
+        <record id="action_individual_detailed_employee_movement" model="ir.actions.act_window">
+            <field name="name">Individual Detailed Employee Movement</field>
+            <field name="res_model">individual.detailed.employee.movement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="individual_detailed_employee_movement"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="individual_detail_movement" name="Individual Detailed Employee Movement" action="action_individual_detailed_employee_movement" parent="employee_movement_report_parent_menu" sequence="1"/>
+
+        <record id="summary_employee_movement" model="ir.ui.view">
+            <field name="name">Summary Employee Movement</field>
+            <field name="model">summary.employee.movement</field>
+            <field name="arch" type="xml">
+                <form string="Summary Employee Movement">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="company_id" required="False"/>
+                            <field name="date_from" required="True"/>
+                            <field name="date_to" required="True"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>            
+		        </form>
+            </field>
+        </record>
+
+        <record id="action_summary_employee_movement" model="ir.actions.act_window">
+            <field name="name">Summary Employee Movement</field>
+            <field name="res_model">summary.employee.movement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="summary_employee_movement"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="summary_detail_movement" name="Summary Employee Movement" action="action_summary_employee_movement" parent="employee_movement_report_parent_menu" sequence="2"/>
+    </data>
+</openerp>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="leave_accumulative_wiz_view" model="ir.ui.view">
+            <field name="name">Leave Accumulative</field>
+            <field name="model">leave.accumulative.wizard</field>
+            <field name="type">form</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Leave Accumulative">
+                    <group>
+                        <group colspan="4" col="4">
+                            <field name="company_id" required="1"/>
+                            <field name="allocated_leave_id" required="1" domain="[('company_id', '=', company_id)]"/>
+                            <newline/>
+                            <separator colspan="4" string="Select 6 Leave type to display in Accumulative Report"/>
+                            <field name="leave_acc_select" required="1" widget="many2many_tags" colspan="4"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        <button string="Close" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_leave_accumulative_wiz_view" model="ir.actions.act_window">
+            <field name="name">Leave Accumulative</field>
+            <field name="res_model">leave.accumulative.wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="leave_accumulative_wiz_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Leave Accmulative Report" action="action_leave_accumulative_wiz_view" id="menu_sisb_leave_accumulative_report" parent="menu_open_leaves_report_wizard" sequence="3"/>
+    </data>
+</openerp>

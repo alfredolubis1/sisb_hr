@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="employee_attendance_summary_report">
+            <t t-call="report.html_container">
+                <div class="page">
+                    <t t-call="sisb_hr.sisb_hr_default_report_header"/>
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <center>
+                                <div><strong><h4>Attendance Report</h4></strong></div>
+                                <t t-if="data['form']['start_date'] != data['form']['end_date']">
+                                    <p style="font-size:16px;">Date : <b><span t-esc="time.strftime('%d %B %Y', 
+                                        time.strptime(data['form']['start_date'], '%Y-%m-%d'))"/>
+                                    </b> to <b><span t-esc="time.strftime('%d %B %Y', 
+                                        time.strptime(data['form']['end_date'], '%Y-%m-%d'))"/></b></p>
+                                </t>
+                                <t t-if="data['form']['start_date'] == data['form']['end_date']">
+                                    <p style="font-size:16px;">Date : <b><span t-esc="time.strftime('%d %B %Y', 
+                                        time.strptime(data['form']['start_date'], '%Y-%m-%d'))"/></b></p>
+                                </t>
+                            </center>
+                            <br/>
+                            
+                            <p style="font-size:14px;">Employee : 
+                                <t t-foreach="data['form']['employee_name_s']" t-as="emp">
+                                    <span t-esc="emp"></span>
+                                </t>
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')" style="float: right;"/>
+                            </p>
+                            <table class="table table-condensed mt32" style="font-size:12px;">
+                                <thead align="center">
+                                    <tr>
+                                        <th align="center">Employee</th>
+                                        <th t-if="data['form']['action']== 'sign_in' or data['form']['action']== 'sign_in_and_sign_out' " align="center">Sign in</th>
+                                        <th t-if="data['form']['action']== 'sign_out' or data['form']['action']== 'sign_in_and_sign_out' " align="center">Sign Out</th>
+                                        <th align="center">Workhour</th>
+                                        <th t-if="data['form']['action']== 'sign_in' or data['form']['action']== 'sign_in_and_sign_out' " align="center">Reason (sign-in)</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr t-foreach="attend_emp_print(data['form'])" t-as="attn" >
+                                        <td><span t-esc="attn['employee']"/></td>
+                                        <td t-if="data['form']['action']== 'sign_in' or data['form']['action']== 'sign_in_and_sign_out' ">
+                                            <t t-if="attn['total_of_late'] != 0">
+                                                <span style="color:red !important;" 
+                                                    t-esc="formatLang(attn['sign_in_time'],date_time=True)"/>
+                                            </t>
+                                            <t t-if="attn['total_of_late'] == 0">
+                                                <span style="color:black !important;" 
+                                                    t-esc="formatLang(attn['sign_in_time'],date_time=True)"/>
+                                            </t>
+                                        </td>
+                                        <td t-if="data['form']['action']== 'sign_out' or data['form']['action']== 'sign_in_and_sign_out' ">
+                                            <t t-if="attn['so_reason'] and attn['is_holiday'] == False">
+                                                <span style="color:red !important;" 
+                                                    t-esc="formatLang(attn['sign_out_time'],date_time=True)"/>
+                                            </t>
+                                            <t t-if="attn['so_reason'] and attn['is_holiday'] == True ">
+                                                <span style="color:black !important;" 
+                                                    t-esc="formatLang(attn['sign_out_time'],date_time=True)"/>
+                                            </t>
+                                            <t t-if="not attn['so_reason'] ">
+                                                <span style="color:black !important;" 
+                                                    t-esc="formatLang(attn['sign_out_time'],date_time=True)"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-if="attn['workhour_total'] >= 8.0 and attn['is_holiday'] == False">
+                                                <span style="color:black !important;" 
+                                                    t-esc="attn['workhour']" />
+                                            </t>
+                                            <t t-if="not attn['workhour_total'] >= 8.0 and attn['is_holiday'] == False">
+                                                <span style="color:red !important;" 
+                                                    t-esc="attn['workhour']"/>
+                                            </t>
+                                            <t t-if="attn['workhour_total'] >= 4.0 and attn['is_holiday'] == True">
+                                                <span style="color:black !important;" 
+                                                    t-esc="attn['workhour']"/>
+                                            </t>
+                                            <t t-if="not attn['workhour_total'] >= 4.0 and attn['is_holiday'] == True">
+                                                <span style="color:red !important;" 
+                                                    t-esc="attn['workhour']"/>
+                                            </t>
+                                        </td>
+                                        <td t-if="data['form']['action']== 'sign_in' or data['form']['action']== 'sign_in_and_sign_out' "><span t-esc="attn['si_reason']"/></td>
+                                        <!--<td><span t-esc="attn['is_holiday']"/></td>-->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>

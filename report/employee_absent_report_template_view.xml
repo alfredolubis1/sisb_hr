@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="sisb_employee_absent_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-call="sisb_hr.sisb_hr_report_layout"> -->
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div>
+                            <center>
+                                <div>
+                                    <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                    <strong>
+                                        <h4>
+                                            <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                                <p style="font-size:16px;">
+                                                    <b>
+                                                        Absent Report date Between <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                    </b> 
+                                                    <b>Until</b>
+                                                    <b>
+                                                        <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/>
+                                                    </b>
+                                                </p>
+                                            </t>
+                                            <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                                <p style="font-size:16px;">
+                                                    <b>
+                                                        Absent Report date Between <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                    </b>
+                                                </p>
+                                            </t>
+                                        </h4>
+                                    </strong>
+                                </div>
+                            </center>
+                        </div>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <br/>
+                            <span class="text-right"><span style="text-align: right;" class="page"/></span>
+                        </div>
+                        <hr style="border-top: 1px dashed grey"/>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                            .main_table {
+                                width: 100%;
+                            }
+
+                            .main_table th{
+                                padding: 10px;
+                                font-size: 15px;
+                                text-align: center;
+                            }
+
+                            .main_table td{
+                                font-size: 13px;
+                                padding: 7px;
+                                text-align: center;
+                            }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Absent</th>
+                                    </tr>
+                                </thead>
+                                    <tr>
+                                        <td colspan="4" style="text-align:left"><b><span t-esc="get_section_code(o.company_id)"/></b></td>
+                                    </tr>
+                                <tbody>
+                                    <tr t-foreach="track_absent(data['form'])" t-as="absent">
+                                        <td width="5%"></td>
+                                        <td>
+                                            <span t-esc="absent['employee_number']"/>
+                                        </td>
+                                        <td style="text-align: left; padding-left: 70px;">
+                                            <span t-esc="absent['employee_name']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="absent['absent_amount']"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- </t> -->
+                </t>
+            </t>
+        </template>
+
+
+
+
+        <template id="employee_irregular_absent_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-call="sisb_hr.sisb_hr_report_layout"> -->
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div>
+                            <center>
+                                <strong><h4><b><span t-field="o.company_id"/></b></h4></strong>
+                                <strong><h4><b>Absent Report</b></h4></strong>
+                            </center>
+                        </div>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <br/>
+                            <span class="text-right"><span style="text-align: right;" class="page"/></span>
+                        </div>
+                        <hr style="border-top: 1px dashed grey"/>
+                    </div>
+                    <div class="page">
+                        <style class="text/css">
+                            .main_table {
+                                width: 100%;
+                            }
+
+                            .main_table th {
+                                text-align: left;
+                            }
+
+                            .main_body td {
+                                padding: 10px;
+                            }
+                        </style>
+                        <table class="main_table">
+                            <thead>
+                                <tr>
+                                    <th colspan="3">
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                            <p style="font-size:16px; padding: 10px;">
+                                                <b>Date Between
+                                                    <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                </b> 
+                                                <b>Until</b>
+                                                <b>
+                                                    <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/>
+                                                </b>
+                                            </p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px; padding: 10px;">
+                                                <b>
+                                                    <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                </b>
+                                            </p>
+                                        </t>
+                                        <th colspan="2" style="text-align: center; padding: 10px;">
+                                            Absent
+                                        </th>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td></td>
+                                <td colspan="3" style="text-align: left; padding: 10px;"><b><span t-esc="get_section_code(o.company_id)"/></b></td>
+                            </tr>
+                            <tbody>
+                                <tr class="main_body" t-foreach="track_irregular_absent(data['form'])" t-as="absent">
+                                    <td width="5%"></td>
+                                    <td width="20%">
+                                        <span t-esc="absent['employee_number']"/>
+                                    </td>
+                                    <td width="30%">
+                                        <span t-esc="absent['employee_name']"/>
+                                    </td>
+                                    <td width="25%" style="text-align: right;">
+                                        <span t-esc="absent['date_only']"/>
+                                    </td>
+                                    <td width="20%" style="text-align: right;">
+                                        <span t-esc="absent['absent_amount']"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- </t> -->
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

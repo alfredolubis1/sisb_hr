@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+    <data >
+
+        <menuitem id="sisb_hr_resign_parent" name="Resign" parent="hr.menu_hr_root" sequence="19"/>
+        <record id="hr_resign_structure_tree_view" model="ir.ui.view">
+            <field name="name">Resign Structure Tree View</field>
+            <field name="model">hr.resign.structure</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="survey_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+         <record id="hr_resign_structure_form_view" model="ir.ui.view">
+            <field name="name">Resign Structure Form View</field>
+            <field name="model">hr.resign.structure</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Resign Structure">
+                    <sheet>
+                        <group>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <field name="company_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="survey_id" required="1" domain="[('res_model', '=', 'hr_resign_structure')]"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="hr_resign_structure_action" model="ir.actions.act_window">
+            <field name="name">Resign Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.resign.structure</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a Resign Structure.
+                </p>
+            </field>
+        </record>
+
+
+
+        <menuitem id="hr_resign_structure_action_menu" action="hr_resign_structure_action" name="Resign Structure" parent="sisb_hr_resign_parent" sequence="3" groups="base.group_hr_user"/>
+
+
+
+        <record id="hr_my_resign_tree_view" model="ir.ui.view">
+            <field name="name">Resign List View</field>
+            <field name="model">hr.resignation</field>
+            <field name="arch" type="xml">
+                <tree string="Resignation" colors="red:state=='refuse'; green:state=='validated'">
+                    <field name="name"/>
+                    <field name="emp_id"/>
+                    <field name="employee_id" invisible="True"/>
+                    <field name="surname"/>
+                    <field name="date_join"/>
+                    <field name="position_id"/>
+                    <field name="department_id"/>
+                    <field name="date_resign" string="Resign Date"/>
+                    <field name="effective_date" string="Effective Date"/>
+                    <field name="reason_id"/>
+                    <field name="resign_reason" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sisb_my_hr_resign_form_view">
+            <field name="name">Resign Form View</field>
+            <field name="model">hr.resignation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Resignation">
+                    <header>
+                        <button name="confirm_resign" string="Submit" states="draft" class="oe_highlight" type="object"/>
+                        <button name="confirm_resign_to_hr" string="1st Approve" states="wait_1st_apprv" class="oe_highlight" type="object" groups="base.group_hr_user"/>
+                        <button name="validated_resign" string="2nd Approve" states="wait_2nd_apprv" class="oe_highlight" type="object" groups="base.group_hr_user"/>
+                        <button name="reset_draft" string="Set Draft" states="refuse" class="oe_highlight" type="object" groups="base.group_hr_user"/>
+                        <button name="generate_off_board" string="Generate Off Boarding" attrs="{'invisible': ['|', ('state','=','wait_2nd_apprv'),('generated','=', True)]}" class="oe_highlight" type="object" groups="base.group_hr_user"/>
+                        <button name="refuse_resign" string="Reject" states="wait_1st_apprv,wait_2nd_apprv" class="oe_highlight" type="object" groups="base.group_hr_user"/>
+                        <button name="action_view_result" string="View Survey Result" states="wait_2nd_apprv" class="oe_highlight" type="object" groups="base.group_hr_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,wait_1st_apprv,wait_2nd_apprv,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <div class="oe_right oe_button_box">
+                            <button name="action_start_survey" 
+                                class="oe_stat_button"
+                                icon="fa-user" 
+                                type="object"
+                                help="Exit Interview"
+                                context="{'survey_id': survey_id}"
+                                attrs="{'invisible':[('survey_id','=',False)]}">
+                                <div>Start<br/>Exit Interview</div>
+                            </button>
+
+                            <button name="action_send_survey" 
+                                class="oe_stat_button"
+                                icon="fa-send-o" 
+                                type="object"
+                                help="Send Email"
+                                context="{'survey_id': survey_id}"
+                                groups="base.group_hr_user,base.group_hr_manager"
+                                attrs="{'invisible':[('survey_id','=',False)]}">
+                                <div>Send<br/>Exit Interview Link</div>
+                            </button>
+                        </div>
+                        <group>
+                            <group col="4" colspan="4" string="Employee Information">
+                                <field name="employee_id" invisible="True" colspan="4"/>
+                                <field name="emp_id" options="{'no_create': True, 'no_open': True}" readonly="True"/>
+                                <field name="related_employee_no" readonly="1"/>
+                                <field name="related_position_id" readonly="1"/>
+                                <field name="related_company_id" readonly="1"/>
+                                <field name="related_department_id" readonly="1"/>
+                                <field name="surname" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="attention" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="date_resign" required="True" string="Resign Date"/>
+                                <!-- <field name="date_join" attrs="{'readonly':[('state','in',('wait_1st_apprv','wait_2nd_apprv','approved'))]}"/> -->
+                                <field name="date_join" readonly="1"/>
+                                <field name="effective_date" attrs="{'required': [('state','!=','draft')]}" groups="base.group_hr_user,base.group_hr_manager"/>
+                                <field name="survey_id" readonly="1" attrs="{'readonly': [('state' ,'in' , ('wait_2nd_apprv', 'approved'))]}"/>
+                                <field name="employee_last_state" invisible="1"/>
+                                <field name="survey_check" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="employee_no" invisible="1"/>
+                                <field name="position_id" invisible="1"/>
+                                <field name="department_id" invisible="1"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <separator string="Would like to request for resigning from the School/Company under the reason(s) of:" colspan="4"/>
+                                <field name="reason_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="resign_reason" attrs="{'invisible': [('reason_related','!=','Other')], 'required': [('reason_related','=','Other')]}"/>
+                                <field name="reason_related" invisible="1"/>
+                                <separator string="Off Boarding List" colspan="4" states="wait_2nd_apprv,approved"/>
+                                <field name="off_boarding_list_ids" nolabel="1" widget="one2many_list" col="4" colspan="4" states="wait_2nd_apprv,approved" groups="base.group_hr_user">
+                                    <tree string="Boarding List Off" editable="bottom" colors="gray:amount==0">
+                                        <field name="boarding_id"/>
+                                        <field name="department_id"/>
+                                        <field name="amount"/>
+                                        <!-- <field name="code" invisible="1"/> -->
+                                        <field name="is_returned"/>
+                                        <field name="date_is_returned" attrs="{'required': [('is_returned','=',True)]}"/>
+                                    </tree>
+                                </field>
+                                <newline/>
+                                <group string="Approval Info" colspan="4" col="4">
+                                    <field name="spv_appv_id" readonly="1"/>
+                                    <field name="spv_appv_date" readonly="1"/>
+                                    <field name="final_appv_id" readonly="1"/>
+                                    <field name="final_appv_date" readonly="1"/>
+                                    <field name="generated" invisible="1"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_resignation_search_view" model="ir.ui.view">
+            <field name="name">HR Resign Search View</field>
+            <field name="model">hr.resignation</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="emp_id"/>
+                    <field name="name"/>
+                    <field name="effective_date"/>
+                    <group string="Group By" expand="0">
+                        <filter name="filter_by_state" string="State" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- <menuitem id="sisb_hr_resign_parent" name="Resign" parent="hr.menu_hr_root" sequence="19"/> -->
+
+
+
+        <record id="hr_resignation_action" model="ir.actions.act_window">
+            <field name="name">Resign Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.resignation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[('employee_id.user_id.id', '=', uid)]</field>
+            <field name="search_view_id" ref="hr_resignation_search_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a Resign Request.
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="hr_resign_my_request_action_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_my_resign_tree_view"/>
+                <field name="act_window_id" ref="hr_resignation_action"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="hr_resign_my_request_action_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_my_hr_resign_form_view"/>
+            <field name="act_window_id" ref="hr_resignation_action"/>
+        </record>
+
+        <menuitem id="hr_resign_action_my" action="hr_resignation_action" name="Resign Request" parent="sisb_hr_resign_parent" sequence="1"/>
+
+        <record id="hr_all_resign_tree_view" model="ir.ui.view">
+            <field name="name">Resign List View</field>
+            <field name="model">hr.resignation</field>
+            <field name="arch" type="xml">
+                <tree string="Resignation" colors="red:state=='refuse';green:state=='validated'">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="surname"/>
+                    <field name="date_join"/>
+                    <field name="position_id"/>
+                    <field name="department_id"/>
+                    <field name="date_resign" string="Resign Date"/>
+                    <field name="effective_date" string="Effective Date"/>
+                    <field name="reason_id"/>
+                    <field name="resign_reason" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sisb_all_resign_form_view">
+            <field name="name">Resign Form View</field>
+            <field name="model">hr.resignation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Resignation">
+                    <header>
+                        <button name="confirm_resign" string="Submit" states="draft" class="oe_highlight" type="object"/>
+                        <button name="confirm_resign_to_hr" string="1st Approve" states="wait_1st_apprv" class="oe_highlight" type="object"/>
+                        <button name="validated_resign" string="2nd Approve" states="wait_2nd_apprv" class="oe_highlight" type="object"/>
+                        <button name="reset_draft" string="Set Draft" states="refuse" class="oe_highlight" type="object"/>
+                        <button name="generate_off_board" string="Generate Off Boarding" attrs="{'invisible': ['|', ('state','=','approved'),('generated','=', True)]}" class="oe_highlight" type="object"/>
+                        <button name="refuse_resign" string="Reject" states="wait_1st_apprv,wait_2nd_apprv" class="oe_highlight" type="object"/>
+                        <button name="cancel_resign" string="Cancel Resign" class="oe_highlight" type="object"/>
+                        <button name="print_survey_result" string="Print Survey Result" class="oe_highlight" type="object" attrs="{'invisible': [('survey_check', '=', False)]}"/>
+                        <button name="action_view_result" string="View Survey Result" states="wait_2nd_apprv" class="oe_highlight" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,wait_1st_apprv,wait_2nd_apprv,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <div class="oe_right oe_button_box">
+                            <button name="action_start_survey" 
+                                class="oe_stat_button"
+                                icon="fa-user" 
+                                type="object"
+                                help="Exit Interview"
+                                context="{'survey_id': survey_id}"
+                                attrs="{'invisible':[('survey_id','=',False)]}">
+                                <div>Start<br/>Exit Interview</div>
+                            </button>
+
+                            <button name="action_send_survey" 
+                                class="oe_stat_button"
+                                icon="fa-send-o" 
+                                type="object"
+                                help="Send Email"
+                                context="{'survey_id': survey_id}"
+                                attrs="{'invisible':[('survey_id','=',False)]}">
+                                <div>Send<br/>Exit Interview Link</div>
+                            </button>
+                        </div>
+                        <group>
+                            <group col="4" colspan="4" string="Employee Information">
+                                <field name="employee_id"/>
+                                <!-- <field name="emp_id" options="{'no_create': True, 'no_open': True}" readonly="True"/> -->
+                                <field name="related_employee_no" readonly="1"/>
+                                <field name="related_position_id" readonly="1"/>
+                                <field name="related_company_id" readonly="1"/>
+                                <field name="related_department_id" readonly="1"/>
+                                <field name="surname"/>
+                                <field name="attention"/>
+                                <field name="date_resign" required="True" string="Resign Date"/>
+                                <!-- <field name="date_join" attrs="{'readonly':[('state','in',('wait_1st_apprv','wait_2nd_apprv','approved'))]}"/> -->
+                                <field name="date_join" readonly="1"/>
+                                <field name="effective_date" attrs="{'required': [('state','!=','draft')]}" groups="base.group_hr_user,base.group_hr_manager"/>
+                                <field name="survey_id" readonly="1" attrs="{'readonly': [('state' ,'in' , ('wait_2nd_apprv', 'approved'))]}"/>
+                                <field name="employee_last_state" invisible="1"/>
+                                <field name="survey_check" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="employee_no" invisible="1"/>
+                                <field name="position_id" invisible="1"/>
+                                <field name="department_id" invisible="1"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <separator string="Would like to request for resigning from the School/Company under the reason(s) of:" colspan="4"/>
+                                <field name="reason_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="resign_reason" attrs="{'invisible': [('reason_related','!=','Other')], 'required': [('reason_related','=','Other')]}"/>
+                                <field name="reason_related" invisible="1"/>
+                                <separator string="Off Boarding List" colspan="4" states="wait_2nd_apprv,approved"/>
+                                <field name="off_boarding_list_ids" nolabel="1" widget="one2many_list" col="4" colspan="4" states="wait_2nd_apprv,approved">
+                                    <tree string="Boarding List Off" editable="bottom" colors="gray:amount==0">
+                                        <field name="boarding_id"/>
+                                        <field name="department_id"/>
+                                        <field name="amount"/>
+                                        <!-- <field name="code" invisible="1"/> -->
+                                        <field name="is_returned"/>
+                                        <field name="date_is_returned" attrs="{'required': [('is_returned','=',True)]}"/>
+                                    </tree>
+                                </field>
+                                <newline/>
+                                <group string="Approval Info" colspan="4" col="4">
+                                    <field name="spv_appv_id" readonly="1"/>
+                                    <field name="spv_appv_date" readonly="1"/>
+                                    <field name="final_appv_id" readonly="1"/>
+                                    <field name="final_appv_date" readonly="1"/>
+                                    <field name="generated" invisible="1"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="all_hr_resignation_action" model="ir.actions.act_window">
+            <field name="name">All Resign Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.resignation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr_resignation_search_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a Resign Request.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="hr_resign_al_request_action_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_all_resign_tree_view"/>
+                <field name="act_window_id" ref="all_hr_resignation_action"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="hr_resign_all_request_action_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_all_resign_form_view"/>
+            <field name="act_window_id" ref="all_hr_resignation_action"/>
+        </record>
+
+        <menuitem id="hr_all_resign_action" name="All Resign Request" action="all_hr_resignation_action" parent="sisb_hr_resign_parent" sequence="2" groups="base.group_hr_user"/>
+        
+
+
+        <record id="resign_reason_tree_view" model="ir.ui.view">
+            <field name="name">Resign Reason Tree View</field>
+            <field name="model">hr.resign.reason</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+         <record id="resign_reason_form_view" model="ir.ui.view">
+            <field name="name">Resign Reason Form View</field>
+            <field name="model">hr.resign.reason</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Resign Structure">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="resign_reason_action" model="ir.actions.act_window">
+            <field name="name">Resign Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.resign.reason</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a Resign Structure.
+                </p>
+            </field>
+        </record>
+
+
+
+        <menuitem id="resign_reason_action_menu" action="resign_reason_action" name="Resign Reason" parent="sisb_hr_resign_parent" sequence="4" groups="base.group_hr_user"/>
+       
+    </data>
+</openerp>

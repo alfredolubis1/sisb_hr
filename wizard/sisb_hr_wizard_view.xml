@@ -1,0 +1,575 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<openerp>
+    <data>
+    
+        <record id="hr_refuse_overtime_req" model="ir.ui.view">
+            <field name="name">Refuse Request</field>
+            <field name="model">hr.refused.request</field>
+            <field name="arch" type="xml">
+                <form string="Description">
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <newline/>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="confirm_refused" string="Confirm Reject" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>            
+		        </form>
+            </field>
+        </record>
+
+        <record id="action_hr_refuse_overtime_req" model="ir.actions.act_window">
+            <field name="name">Refuse Overtime Request</field>
+            <field name="res_model">hr.refused.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_refuse_overtime_req"/>
+            <field name="target">new</field>
+        </record>
+            
+    	<!--<act_window name="Import Lines" res_model="wizard.import" src_model="sale.order" view_mode="form" target="new" key2="client_action_multi" id="action_sale_line_import" groups="group_wizard_import_line"/>-->
+
+
+
+        <record id="employee_timesheet_wiz_report" model="ir.ui.view">
+            <field name="name">Generate Employee Timesheet</field>
+            <field name="model">employee.timesheet.report</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_user') ])]"/>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <group colspan="4" col="4">
+                        <field name="employee_id" required="True" domain="[('user_id.id','=',uid)]" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="month" requred="True"/>
+                        <field name="option" required="True"/>
+                        <field name="month_in_str" invisible="True"/>
+                        <field name="name" required="True" invisible="True"/>
+                    </group>
+		            <footer>
+                        <button name="generate_timesheet" string="Generate Timesheet" class="oe_highlight" type="object"/>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+		            </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="officer_employee_timesheet_wiz_report" model="ir.ui.view">
+            <field name="name">Generate Employee Timesheet</field>
+            <field name="model">employee.timesheet.report</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user') ])]"/>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <group colspan="4" col="4">
+                        <group col="4" colspan="4">
+                            <field name="employee_id" domain="[('supervisor_id.user_id.id','=',uid)]" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <newline/>
+                        <group col="4" colspan="4">
+                            <field name="month" requred="True"/>
+                            <field name="month_in_str"/>
+                            <field name="name" required="True" invisible="True"/>
+                        </group>
+                    </group>
+		            <footer>
+                        <button name="generate_timesheet" string="Generate Timesheet" class="oe_highlight" type="object"/>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+		            </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="manager_employee_timesheet_wiz_report" model="ir.ui.view">
+            <field name="name">Generate Employee Timesheet</field>
+            <field name="model">employee.timesheet.report</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_hr_manager') ])]"/>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <group colspan="4" col="4">
+                        <group col="4" colspan="4">
+                            <field name="employee_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <newline/>
+                        <group col="4" colspan="4">
+                            <field name="month" requred="True"/>
+                            <field name="month_in_str"/>
+                            <field name="name" required="True" invisible="True"/>
+                        </group>
+                    </group>
+		            <footer>
+                        <button name="generate_timesheet" string="Generate Timesheet" class="oe_highlight" type="object"/>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+		            </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="employee_timesheet_wiz_report_action" model="ir.actions.act_window">
+            <field name="name">Generate Employee Timesheet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.timesheet.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <!-- <field name="multi">True</field> -->
+        </record>
+
+
+        <menuitem name="Generate Timesheet" id="menu_sisb_employee_timesheet_report" action="employee_timesheet_wiz_report_action" parent="hr_attendance.menu_hr_attendance" sequence="31" />
+        <!-- <act_window id="act_open_wizard_timesheet_employee"
+            multi="False"
+            key2="client_action_multi"
+            context="{'default_name': context.get('active_id')}"
+            name="Generate Employee Timesheet"
+            res_model="employee.timesheet.report"
+            src_model="hr.employee"
+            view_mode="form"
+            target="new"
+            view_type="form"/> -->
+
+
+        <record id="request_onboarding_item" model="ir.ui.view">
+            <field name="name">Request ON Boarding Item</field>
+            <field name="model">req.onboard.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <group colspan="4" col="4">
+                        <group col="4" colspan="4">
+                            <field name="employee_id" options="{'no_create': True, 'no_open': True}" readonly="True"/>
+                            <field name="department_id" options="{'no_create': True, 'no_open': True}" required="True"/>
+                            <newline/>
+                            <separator string="Select Item to request" colspan="4"/>
+                            <field colspan="4" name="on_boarding_list_ids" nolabel="1" string="ON Boarding List" options="{'no_create': True}">
+                                <tree>
+                                    <field name="boarding_id"/>
+                                    <field name="department_id"/>
+                                    <field name="amount"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+		            <footer>
+                        <button name="send_request" string="Send Request" class="oe_highlight" type="object"/>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+		            </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_request_onboarding_item" model="ir.actions.act_window">
+            <field name="name">Request ON Boarding Item</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">req.onboard.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <!-- <field name="multi">True</field> -->
+        </record>
+
+
+
+        <record id="view_onboard_item" model="ir.ui.view">
+            <field name="name">Print Boarding Item</field>
+            <field name="model">onboard.item.wizard</field>
+            <field name="arch" type="xml">
+            <form string="Print Boarding Item">
+                <group col="4" colspan="4">
+                    <field name="options"/>
+                    <field name="excel_option" attrs="{'invisible': [('options', '!=', 'excel')], 'required': [('options', '=', 'excel')]}"/>
+                </group>
+                <!-- <label string="Bellow this delay, the error is considered to be voluntary" colspan="2"/> -->
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_onboard_item" model="ir.actions.act_window">
+            <field name="name">Print Boarding Item</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">onboard.item.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="onboard_item_values">
+            <field name="model_id" ref="hr.model_hr_employee" />
+            <field name="name">Print Boarding Item</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_onboard_item'))" />
+            <field name="key">action</field>
+            <field name="model">hr.employee</field>
+        </record>
+        
+
+        <record id="onboarding_item_excel_wizard_view" model="ir.ui.view">
+            <field name="name">onboard.item.excel.wizard.view</field>
+            <field name="model">onboard.item.excel.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Onboarding Excel Report File">
+                    <group colspan="4">
+                        <field name="name" invisible="1"/>    
+                        <field name="file" filename="name"/>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record> 
+
+        <!-- Reference Letter -->
+
+        <record id="view_reference_letter" model="ir.ui.view">
+            <field name="name">Reference Letter</field>
+            <field name="model">employee.reference.letter</field>
+            <field name="arch" type="xml">
+            <form string="Print Reference Letter">
+                <group col="4" colspan="4">
+                    <!-- <field name="name"/> -->
+                    <field name="indicate_salary"/>
+                    <field name="employee_id"/>
+                </group>
+                <!-- <label string="Bellow this delay, the error is considered to be voluntary" colspan="2"/> -->
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_reference_letter" model="ir.actions.act_window">
+            <field name="name">Reference Letter</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.reference.letter</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="reference_letter_values">
+            <field name="model_id" ref="hr.model_hr_employee" />
+            <field name="name">Reference Letter</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_reference_letter'))" />
+            <field name="key">action</field>
+            <field name="model">hr.employee</field>
+        </record>
+        
+
+        <record id="reference_letter_wizard_view" model="ir.ui.view">
+            <field name="name">reference.letter.wizard.view</field>
+            <field name="model">reference.letter.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Onboarding Excel Report File">
+                    <group colspan="4">
+                        <field name="name" invisible="1"/>    
+                        <field name="file" filename="name"/>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record> 
+
+        <!-- ###################################### -->
+
+        <record id="survey_result_wizard_view" model="ir.ui.view">
+            <field name="name">survey.result.wizard.view</field>
+            <field name="model">survey.result.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Survey Result Report File">
+                    <group colspan="4">
+                        <field name="name" invisible="1"/>    
+                        <field name="file" filename="name"/>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_cancel_resign_wizard" model="ir.ui.view">
+            <field name="name">Cancel Resign</field>
+            <field name="model">cancel.resign.wizard</field>
+            <field name="arch" type="xml">
+            <form string="Cancel Resign">
+                <group col="4" colspan="4">
+                    <separator string="No Boarding Item to re-allocated to this Employee" colspan="4" attrs="{'invisible': [('item_exist','=',True)]}"/>
+                    <field name="employee_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="resign_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                    <separator string="Off Boarding item to re-allocated" colspan="4" attrs="{'invisible': [('item_exist','=',False)]}"/>
+                    <field name="boarding_to_reallocated_ids" nolabel="1" colspan="4" attrs="{'invisible': [('item_exist','=',False)]}" options="{'no_create': True, 'no_open': True}">
+                        <tree editable="bottom">
+                            <field name="boarding_id"/>
+                            <field name="department_id"/>
+                            <!-- <field name="amount"/> -->
+                            <field name="is_returned"/>
+                        </tree>
+                    </field>
+                    <field name="item_exist" invisible="True"/>
+                </group>
+                <separator string="Notes" colspan="4"/>
+                <field name="notes" readonly="True"/>
+                <!-- <label string="Bellow this delay, the error is considered to be voluntary" colspan="2"/> -->
+                <footer>
+                    <button name="cancel_resign" string="Cancel Resign" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_cancel_resign_wizard" model="ir.actions.act_window">
+            <field name="name">Cancel Resign</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cancel.resign.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <record id="view_alloc_leave_structure" model="ir.ui.view">
+            <field name="name">Allocate Leave Structure</field>
+            <field name="model">alloc.leave.structure</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <label colspan="4" nolabel="1" string="This wizard will be passing Employee to related Leave Structure User List."/>
+                        </group>
+                        <group>
+                            <separator string="Employees" colspan="4"/>
+                            <newline/>
+                            <field name="employee_ids" nolabel="1" colspan="4">
+                                <tree string="Employee's" options="{'no_create': True, 'no_open': True}">
+                                    <field name="name"/>
+                                    <field name="work_email"/>
+                                    <field name="department_id"/>
+                                    <field name="active"/>
+                                </tree>
+                            </field>
+                            <field name="leave_structure_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="leave_structure_type" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="passing_employee" string="Passing Employee" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_alloc_leave_structure" model="ir.actions.act_window">
+            <field name="name">Allocate Leave Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">alloc.leave.structure</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <!-- Add Schedule Manual -->
+        <record id="employee_add_schedule_form_view" model="ir.ui.view">
+            <field name="name">employee.add.schedule.form.view</field>
+            <field name="model">employee.add.schedule</field>
+            <field name="arch" type="xml">
+                <form string="Schedule">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="employee_id" required="True" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group col="4" colspan="4" string="Schedule List">
+                            <field name="sched_line_ids" widget="one2many_list" nolabel="1">
+                                <tree string="Daily Schedule List" editable="bottom">
+                                    <field name="date"/>
+                                    <field name="start_hour" widget="float_time"/>
+                                    <field name="start_break_hour" widget="float_time"/>
+                                    <field name="end_break_hour" widget="float_time"/>
+                                    <field name="late_tolerance" widget="float_time"/>
+                                    <field name="end_hour" widget="float_time"/>
+                                    <field name="employee_id"/>
+                                    <field name="schedule_id"/>
+                                    <field name="sched_id"/>
+                                    <field name="default_timezone" invisible="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="create_new_sched" string="Create Schedule" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_employee_add_schedule" model="ir.actions.act_window">
+            <field name="name">Add Schedule</field>
+            <field name="res_model">employee.add.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="employee_add_schedule_form_view"/>
+            <field name="target">new</field>
+        </record>
+        <!-- ############################# -->
+
+
+        <record id="probation_completion_letter_wizard_view" model="ir.ui.view">
+            <field name="name">probation.completion.letter.wizard.view</field>
+            <field name="model">probation.completion.letter.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Probation Completion Letter">
+                    <group colspan="4">
+                        <field name="name" invisible="1"/>    
+                        <field name="file" filename="name"/>
+                    </group>
+                    <footer>
+                        <button name="send_to_employee" class="oe_highlight" type="object" string="Send to Employee"/>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record> 
+
+
+
+
+        <!-- Performance Appraisals Form -->
+        <record id="performance_appraisals_report_wizard_form" model="ir.ui.view">
+            <field name="name">Performance Appraisals</field>
+            <field name="model">performance.appraisals.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Performance Appraisals">
+                    <group col="4" colspan="4">
+                        <field name="employee_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="company_id" readonly="True"/>
+                        <field name="academic_year_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="staff_type"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" class="oe_highlight" type="object" string="Print Appraisals Form"/>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_performance_appraisals_report" model="ir.actions.act_window">
+            <field name="name">Performance Appraisals</field>
+            <field name="res_model">performance.appraisals.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="performance_appraisals_report_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Performance Appraisals Report" id="performance_appraisals_form" action="action_performance_appraisals_report" parent="sisb_hr_general_report_menu" sequence="13"/>
+
+
+        <record id="probation_appraisals_wizard_view" model="ir.ui.view">
+            <field name="name">probation.appraisals.form.result.wizard.view</field>
+            <field name="model">probation.appraisals.form.result.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Probation Appraisals Excel Report">
+                    <group colspan="4">
+                        <field name="name" invisible="1"/>    
+                        <field name="file" filename="name"/>
+                    </group>
+                    <footer>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record> 
+        <!-- ########################### -->
+
+
+
+        <!-- Cancel Employee Shift -->
+        <record id="wiz_cancel_shift_view" model="ir.ui.view">
+            <field name="name">Cancel Shift</field>
+            <field name="model">wiz.cancel.shift</field>
+            <field name="arch" type="xml">
+                <form string="Cancel Shift">
+                    <group>
+                        <group>
+                            <field name="cancel_options" widget="radio"/>
+                        </group>
+                        <group>
+                            <div attrs="{'invisible':[('cancel_options','!=','cs')]}" class="oe_grey" colspan="4">
+                            Use this options to cancel this Shift, after you cancel this, the created shift will be on CANCELLED State
+                            </div>
+                            <div attrs="{'invisible':[('cancel_options','!=','ce')]}" class="oe_grey" colspan="4">
+                            Use this options if you want to cancel shift for a certain employee from this Shift.
+                            </div>
+                        </group>
+                    </group>
+                    <group col="4" colspan="4" attrs="{'invisible': [('cancel_options', '=', 'cs')]}">
+                        <field name="shift_source_id" readonly="1"/> 
+                        <separator string="Select Employee" colspan="4"/>
+                        <field name="employee_shift_ids" colspan="4" nolabel="1" string="Employe List">
+                            <tree editable="bottom" create="false">
+                                <field name="name"/>
+                                <field name="employee_id"/>
+                                <field name="company_id"/>
+                                <field name="department_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="shift_id"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="cancel_shift" string="OK" type="object" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- ##################### -->
+
+
+        <!-- Change Employee Shift -->
+        <record id="wiz_change_shift_view" model="ir.ui.view">
+            <field name="name">Change Shift</field>
+            <field name="model">wiz.change.shift</field>
+            <field name="arch" type="xml">
+                <form string="Change Shift">
+                    <group col="4" colspan="4">
+                        <field name="employee_id" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="date" readonly="1"/>
+                        <field name="current_shift_id" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="new_shift_id" options="{'no_open': True, 'no_create': True}" required="1"/>
+                        <field name="description" colspan="4" required="1"/>
+                    </group>
+                    <footer>
+                        <button name="change_shift" string="OK" type="object" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel" colspan="2"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- ##################### -->
+    </data>
+</openerp>

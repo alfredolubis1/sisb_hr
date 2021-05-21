@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<openerp>
+    <data>
+        <record id="lateness_early_wiz_view" model="ir.ui.view">
+            <field name="name">Lateness / Early Checkout Report</field>
+            <field name="model">lateness.early.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Lateness / Early Checkout Report">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="company_id" required="True"/>
+                            <newline/>
+                            <field name="date_from" required="True"/>
+                            <field name="date_to" required="True"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>            
+		        </form>
+            </field>
+        </record>
+
+        <record id="action_lateness_early_wiz_view" model="ir.actions.act_window">
+            <field name="name">Lateness / Early Checkout Report</field>
+            <field name="res_model">lateness.early.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="lateness_early_wiz_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="employee_lateness_early_co_report" parent="sisb_hr.menu_sisb_attendance_report" action="action_lateness_early_wiz_view" sequence="6" name="Lateness / Early Checkout Report"/>
+    </data>
+</openerp>

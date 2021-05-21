@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="lateness_early_checkout_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-call="sisb_hr.sisb_hr_report_layout"> -->
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                            <div>
+                                <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                <strong>
+                                    <h4>
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                        <p style="font-size:16px;"><b>OT Working inspection Report <span t-esc="time.strftime('%d/%b/%Y',
+                                            time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                        </b> - <b><span t-esc="time.strftime('%d/%b/%Y',
+                                            time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;"><b>OT Working inspection Report <span t-esc="time.strftime('%d/%b/%Y',
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                    </h4>
+                                </strong>
+                            </div>
+                        </center>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <span class="text-right" style="text-align: right; padding-top: 3px;">Page <span style="text-align: right;" class="page"/> of <span class="topage"/></span>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

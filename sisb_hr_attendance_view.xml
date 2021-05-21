@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="inherit_view_attendance_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref ="hr_attendance.view_attendance_form"/>
+            <field name="arch" type="xml">
+                <form string="Employee attendances" position="replace">
+                    <form string="Employee attendances">
+                        <sheet>
+                            <group string="Attendance Info" col="4" colspan="4">
+                                <field name="employee_id" readonly="1" on_change="on_change_employee(employee_id)" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="shift_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                                <newline/>
+                                <field name="name" readonly="1"/>
+                                <field name="sign_out" readonly="1"/>
+                                <field name="late_duration" widget="float2_time" readonly="1"/>
+                                <field name="leave_early_duration" widget="float2_time" readonly="1"/>
+                                <field name="action" invisible="True"/>
+                                <field name="worked_hours" widget="float_time"/>
+                                <field name="compensated_days" invisible="True"/>
+                                <field name="overtime" invisible="True"/>
+                                <field name="action_desc" invisible="True"/>
+                                <field name="attendance_options" invisible="True"/>
+                            </group>
+                            <group string="Late or Leave Early Reason" col="4" colspan="4">
+                                <group col="2" colspan="2">
+                                    <field name="late_action_desc_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="other_reason_late" readonly="1" attrs="{'invisible': [('get_reason_late', '=', False)]}" string="Describe"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <field name="leave_early_action_desc_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="other_reason_leave_early" readonly="1" attrs="{'invisible': [('get_reason_leave_early', '=', False)]}" string="Describe"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <field name="get_reason_late" invisible="1"/>
+                                    <field name="get_reason_leave_early" invisible="1"/>
+                                </group>
+                            </group>
+                            <separator string="Overtime Information" colspan="4" attrs="{'invisible': [('overtime','=',False)]}"/>
+                            <field name="overtime_ids" attrs="{'invisible': [('overtime','=',False)]}" colspan="4" nolabel="1" readonly="1">
+                                <tree string="Overtime Detail">
+                                    <field name="name"/>
+                                    <field name="start_ot" widget="float_time" type="char"/>
+                                    <field name="end_ot" widget="float_time" type="char"/>
+                                    <field name="ot_time_in" widget="float_time" type="char"/>
+                                    <field name="ot_time_out" widget="float_time" type="char"/>
+                                    <field name="rate_one" widget="float_time" type="char"/>
+                                    <field name="rate_one_half" widget="float_time" type="char"/>
+                                    <field name="rate_double" widget="float_time" type="char"/>
+                                    <field name="rate_triple" widget="float_time" type="char"/>
+                                    <field name="overtime_rate" invisible="1"/>
+                                    <field name="ot_type_id" options="{'no_create': True,'no_open': True}"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread" />
+                        </div>
+                    </form>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_attendance_hr_views" model="ir.ui.view">
+            <field name="name">All Attendances</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="sisb_hr.inherit_view_attendance_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='sign_out']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='late_duration']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='leave_early_duration']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='compensated_days']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='action']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='late_action_desc_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='leave_early_action_desc_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='other_reason_late']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='other_reason_leave_early']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='overtime_ids']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='overtime']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_view_attendance_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <tree string="Employee attendances" position="replace">
+                    <tree string="Employee attendances">
+                        <field name="employee_id"/>
+                        <field name="shift_id"/>
+                        <field name="name"/>
+                        <field name="sign_out"/>
+                        <field name="late_duration" widget="float2_time"/>
+                        <field name="leave_early_duration"  widget="float2_time"/>
+                        <field name="late_action_desc_id" />
+                        <field name="leave_early_action_desc_id"/>
+                        <field name="compensated_days"/>
+                        <field name="overtime"/>
+                        <field name="action" invisible="1"/>
+                    </tree>
+                </tree>
+            </field>
+        </record>
+
+        <record id="inheit_view_attendance_who" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field eval="3" name="priority"/>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
+            <field name="arch" type="xml">
+                <tree string="Employee attendances" position="replace">
+                    <tree string="Employee attendances">
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                        <field name="sign_out"/>
+                        <!-- <field name="action_desc" string="Reason"/> -->
+                        <field name="action" invisible="1"/>
+                    </tree>
+                    <!-- <field name="employee_id"/>
+                    <field name="name"/>
+                    <field name="action"/> -->
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="hr_attendance_individual_attendance" model="ir.actions.act_window">
+            <field name="name">My Attendance</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('employee_id.user_id','=',uid)]</field>
+            <field name="context">{'search_default_today':1}</field>
+            <field name="view_id" ref="inherit_view_attendance_tree"/>
+            <field name="search_view_id" ref="hr_attendance.view_hr_attendance_filter"/>
+        </record>
+        <record id="individual_attendance_tree" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="inherit_view_attendance_tree"/>
+            <field name="act_window_id" ref="hr_attendance_individual_attendance"/>
+        </record>
+        <record id="individual_attendance_form" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="inherit_view_attendance_form"/>
+            <field name="act_window_id" ref="hr_attendance_individual_attendance"/>
+        </record>
+        <menuitem id="menu_attendance_for_individual" name="My Attendances" action="hr_attendance_individual_attendance"
+                parent="hr_attendance.menu_hr_attendance" groups="base.group_hr_attendance" sequence="1"/>
+
+
+        <record id="hr_attendance.open_view_attendance" model="ir.actions.act_window">
+            <field name="name">All Attendances</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_today":1}</field>
+            <field name="search_view_id" ref="hr_attendance.view_hr_attendance_filter" />
+            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using TigernixERP's web service features.</field>
+        </record>
+        <record id="individual_attendance_tree" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="inherit_view_attendance_tree"/>
+            <field name="act_window_id" ref="hr_attendance.open_view_attendance"/>
+        </record>
+        <record id="individual_attendance_form" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_attendance_hr_views"/>
+            <field name="act_window_id" ref="hr_attendance.open_view_attendance"/>
+        </record>
+        
+        <record model="ir.ui.menu" id="hr_attendance.menu_open_view_attendance">
+            <field name="All Attendances"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager')])]"/>
+        </record>
+
+        <!-- <menuitem name="All Attendances" action="hr_attendance.open_view_attendance" id="hr_attendance.menu_open_view_attendance" parent="hr_attendance.menu_hr_attendance" sequence="20" groups="base.group_hr_manager"/> -->
+
+         <record id="hr_attendance.edit_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.form</field>
+            <field name="model">hr.action.reason</field>
+            <field name="arch" type="xml">
+                <form string="Define attendance reason">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="action_type"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_attendance.view_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.tree</field>
+            <field name="model">hr.action.reason</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance reasons">
+                    <field name="name" />
+                    <field name="action_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_attendance.open_view_attendance_reason" model="ir.actions.act_window">
+            <field name="name">Attendance Reasons</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.action.reason</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_attendance.view_attendance_reason"/>
+        </record>
+
+        <menuitem action="hr_attendance.open_view_attendance_reason" id="hr_attendance.menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" groups="sisb_hr.make_invisible"/>
+
+
+
+        <record id="edit_late_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.late.form</field>
+            <field name="model">hr.action.reason.late</field>
+            <field name="arch" type="xml">
+                <form string="Define attendance reason">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="other"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_late_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.late.tree</field>
+            <field name="model">hr.action.reason.late</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance reasons">
+                    <field name="name" />
+                    <field name="other"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_late_view_attendance_reason" model="ir.actions.act_window">
+            <field name="name">Late Reasons</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.action.reason.late</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_late_attendance_reason"/>
+        </record>
+
+        <menuitem action="open_late_view_attendance_reason" id="menu_open_late_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" sequence="2" groups="base.group_hr_attendance"/>
+
+
+        <record id="edit_leave_early_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.leave.early.form</field>
+            <field name="model">hr.action.reason.leave.early</field>
+            <field name="arch" type="xml">
+                <form string="Define attendance reason">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="other"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_leave_early_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.leave.early.tree</field>
+            <field name="model">hr.action.reason.leave.early</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance reasons">
+                    <field name="name" />
+                    <field name="other"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_leave_early_view_attendance_reason" model="ir.actions.act_window">
+            <field name="name">Leave Early Reasons</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.action.reason.leave.early</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_leave_early_attendance_reason"/>
+        </record>
+
+        <menuitem action="open_leave_early_view_attendance_reason" id="menu_open_leave_early_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" sequence="3" groups="base.group_hr_attendance"/>
+        <!-- This Form Called When Employee Late to Sign In -->
+        <record id="sisb_view_attendance_create_form" model="ir.ui.view">
+            <field name="name">sisb.attendance.employee.form</field>
+            <field name="model">hr.attendance</field>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Employee attendances">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="late_action_desc_id" required="1" colspan="4" on_change="onchange_late_action_desc(late_action_desc_id)" string="Late Reason" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="other_reason_late" string="Describe" colspan="4" attrs="{'invisible': [('get_reason_late', '=', False)], 'required': [('get_reason_late', '=', True)]}"/>
+                        </group>
+                        <group col="4" colspan="4">
+                            <field name="late_duration" widget="float2_time" readonly="1" string="Late Duration"/>
+                            <field name="get_reason_late" invisible="1"/>
+                            <field name="employee_id" invisible="True" on_change="on_change_employee(employee_id)"/>
+                            <field name="name" invisible="True"/>
+                            <field name="sign_out" invisible="True"/>
+                            <field name="action" invisible="True"/>
+                            <field name="shift_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="attendance_save" type="object" string="Save" class="oe_highlight"/>
+                        or
+                        <button name="attendance_cancel" string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="sisb_action_attend_edit_form" model="ir.actions.act_window">
+            <field name="name">Type in your reason....</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="context">{'default_action':'sign_in'}</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record id="action_attend_edit_form_view2" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_view_attendance_create_form"/>
+            <field name="act_window_id" ref="sisb_action_attend_edit_form"/>
+        </record>
+        <!-- ############################################### -->
+
+        <!-- This Form Called When Employee Sign Out Earlier -->
+        <record id="sisb_view_attendance_sign_out_form" model="ir.ui.view">
+            <field name="name">sisb.attendance.employee.sign.out.form</field>
+            <field name="model">hr.attendance</field>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Employee attendances">
+                    <group>
+                        <field name="employee_id" invisible="True" on_change="on_change_employee(employee_id)"/>
+                        <field name="name"/>
+                        <field name="sign_out" invisible="True"/>
+                        <field name="action" invisible="True"/>
+                        <!-- <field name="reason" required="True"/> -->
+                        <!-- <field name="status" invisible="True"/> -->
+                        
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="leave_early_duration" widget="float2_time" readonly="1" string="Leave Early Duration"/>
+                    </group>
+                    <footer>
+                        <button name="attendance_save"  type="object" string="Save"  class="oe_highlight"/>
+                        or
+                        <button name="attendance_cancel" string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="sisb_action_attendance_sign_out_proceed_form" model="ir.actions.act_window">
+            <field name="name">Type in your reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="context">{'default_action':'sign_out'}</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+        <record id="sisb_action_attendance_sign_out_proceed_form2" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_view_attendance_sign_out_form"/>
+            <field name="act_window_id" ref="sisb_action_attendance_sign_out_proceed_form"/>
+        </record>
+        <!-- ################################################## -->
+    </data>
+</openerp>

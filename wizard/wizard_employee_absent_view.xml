@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="employee_absent_report" model="ir.ui.view">
+            <field name="name">Absent Report</field>
+            <field name="model">employee.absent.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Attendance Absent Report">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="company_id" string="Select Company" required="1"/>
+                            <field name="options" string="Options" required="1"/>
+                            <newline/>
+                            <field name="date_from" required="1"/>
+                            <field name="date_to" required="1"/>
+                        </group>
+                        <footer>
+                        <button name="print_absent_report" string="Print" type="object" class="oe_highlight" attrs="{'invisible': [('options', '!=', 'regular')]}"/>
+                        <button name="print_irregular_absent_report" string="Print" type="object" class="oe_highlight" attrs="{'invisible': [('options', '!=', 'irregular')]}"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="sisb_action_attendance_absent_report" model="ir.actions.act_window">
+            <field name="name">Absent Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.absent.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_absent_report"/>
+            <field name="target">new</field>
+        </record>
+
+         <menuitem name="Employee Absent" action="sisb_action_attendance_absent_report" id="menu_sisb_absent_attendance_report" parent="menu_sisb_attendance_report" sequence="6"/>
+    </data>
+</openerp>

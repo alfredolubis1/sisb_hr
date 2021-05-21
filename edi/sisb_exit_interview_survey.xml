@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="exit_interview_email" model="email.template">
+			<field name="name">Exit Interview Invitation</field>
+			<field name="model_id" ref="sisb_hr.model_hr_resignation"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.emp_id.work_email or '')|safe}</field>
+			<field name="subject">Resign request from ${object.emp_id.name}</field>
+			<field name="body_html"><![CDATA[
+			<p>Hello ${object.emp_id.name},</p>
+			<p>Thank You for Work with SISB</p>
+			<p>We have created a short survey and your response would be very helpful</p>
+            <p>We're trying continuously improving our Company and we appreciate if you can spare a few moments to help with the survey </p>
+			<p>Please, Click <a href="${object.survey_id.public_url}" style="color:blue;font-weight:bold;">here</a> to start the Survey!</p>
+			<br/>
+            <p>Thank you for your Participation!</p>
+            <br/>
+            <p>Sincerely,</p>
+            <br/>
+            <p>SISB School</p>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+    </data>
+</openerp>

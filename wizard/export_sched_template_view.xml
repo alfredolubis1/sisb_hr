@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="export_employee_schedule_template_wiz_form_view" model="ir.ui.view">
+            <field name="name">export.employee.schedule.wiz.form.view</field>
+            <field name="model">export.employee.schedule.template.wiz</field>
+            <field name="type">form</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Download Template">
+                    <group>
+                        <group colspan="4" col="4">
+                            <field name="data" filename="filename" readonly="1"/>
+                            <field name="filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Close" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_export_employe_schedule_template_wiz" model="ir.actions.act_window">
+            <field name="name">Export Template</field>
+            <field name="res_model">export.employee.schedule.template.wiz</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <!--<field name="view_id" ref="view_export_move_line_gp"/>-->
+            <field name="context">{}</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

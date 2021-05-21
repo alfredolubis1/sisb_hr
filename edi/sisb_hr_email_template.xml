@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="resign_request" model="email.template">
+			<field name="name">Resign Request</field>
+			<field name="model_id" ref="sisb_hr.model_hr_resignation"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.emp_id.parent_id.work_email or object.emp_id.work_email or '')|safe}</field>
+			<field name="subject">Resign request from ${object.emp_id.name}</field>
+			<field name="body_html"><![CDATA[
+			% set url = object.get_url(object.emp_id, object)
+			<p>Hello ${object.emp_id.parent_id.name},</p>
+			<p>The resign request for ${object.emp_id.name} is waiting for your confirmation.</p>
+			<p>Thank you for your participation!</p>
+			<p>Click <a href="${url}" style="color:blue;font-weight:bold;">here</a> to see the resign Request!</p>
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+		<record id="supervisor_validation_request" model="email.template">
+			<field name="name">Supervisor Validation</field>
+			<field name="model_id" ref="sisb_hr.model_hr_resignation"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.emp_id.parent_id.work_email or object.emp_id.work_email or '')|safe}</field>
+			<field name="subject">Resign request from ${object.emp_id.name}</field>
+			<field name="body_html"><![CDATA[
+			% set url = object.get_url(object.emp_id, object)
+			<p>Hello ${object.emp_id.parent_id.name},</p>
+			<p>The resign request for ${object.emp_id.name} is waiting for your Approval.</p>
+			<p>Please Check The Board List below is returned before you approve!</p>
+			<div style="display:table;">
+				<div style="display:table-header-group;">
+					<div style="display:table-row;">
+						<div style="display:table-cell;">Name</div>
+						<div style="display:table-cell;">Department</div>
+						<div style="display:table-cell;">Quantity</div>
+						<div style="display:table-cell;">Return Date</div>
+					</div>
+				</div>
+				<div style="display:table-row-group;">
+					% for item in object.off_boarding_list_ids:
+					<div style="display:table-row;">
+						<div style="display:table-cell;">${item.boarding_id.name}</div>
+						<div style="display:table-cell;">${item.department_id.name}</div>
+						<div style="display:table-cell;">${item.amount}</div>
+						<div style="display:table-cell;">${item.date_is_returned or ''}</div>
+					</div>
+					% endfor
+				</div>
+			</div>
+			<p>Click <a href="${url}" style="color:blue;font-weight:bold;">here</a> to see the resign Request!</p>
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+		<record id="approved_resign_request" model="email.template">
+			<field name="name">Resign Request</field>
+			<field name="model_id" ref="sisb_hr.model_hr_resignation"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.emp_id.work_email or '')|safe}</field>
+			<field name="subject">Approved Resign ${object.emp_id.name}</field>
+			<field name="body_html"><![CDATA[
+			% set url = object.get_url(object.emp_id, object)
+			<p>Dear ${object.emp_id.name},</p>
+			<p>Thank You For Work With us!.</p>
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+		<record id="passport_expired_notification" model="email.template">
+			<field name="name">Expired Notification</field>
+			<field name="model_id" ref="sisb_hr.model_hr_employee"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.work_email or '')|safe}</field>
+			<field name="subject">Passport Expired Notification For ${object.name}</field>
+			<field name="body_html"><![CDATA[
+			% set day = object.get_day_left(object,type='passport')
+			<p>Hello ${object.name},</p>
+			% if day > 1:
+				<p>Your Passport will be expired in ${day} days.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day == 1:
+				<p>Your Passport will be expired in ${day} day.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day < 1:
+				<p>Your Passport is already expired.</p>
+				<p>Please to renew it</p>
+			% endif
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+
+		<record id="identity_type_expired_notification" model="email.template">
+			<field name="name">Expired Notification</field>
+			<field name="model_id" ref="sisb_hr.model_hr_employee"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to">${(object.work_email or '')|safe}</field>
+			<field name="subject">${(ctx['identity_type'] or 'Identity')} Expired Notification For ${object.name}</field>
+			<field name="body_html"><![CDATA[
+			<p>Hello ${object.name},</p>
+			% if ctx.get('day_left') > 1:
+				<p>Your ${ctx['identity_type']} will be expired in ${ctx['day_left']} days.</p>
+				<p>Please to renew it</p>
+			% elif ctx.get('day_left') == 1:
+				<p>Your ${ctx['identity_type']} is already Expired Today</p>
+				<p>Please to renew it</p>
+			% elif ctx.get('day_left') < 1:
+				<p>Your ${ctx['identity_type']} is already Expired</p>
+				<p>Please to renew it</p>
+			% endif
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+		<record id="visa_expired_notification" model="email.template">
+			<field name="name">Expired Notification</field>
+			<field name="model_id" ref="sisb_hr.model_hr_employee"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.work_email or '')|safe}</field>
+			<field name="subject">Visa Expired Notification For ${object.name}</field>
+			<field name="body_html"><![CDATA[
+			% set day = object.get_day_left(object,type='visa')
+			<p>Hello ${object.name},</p>
+			% if day > 1:
+				<p>Your Visa will be expired in ${day} days.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day == 1:
+				<p>Your Visa will be expired in ${day} day.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day < 1:
+				<p>Your Visa is already expired.</p>
+				<p>Please to renew it</p>
+			% endif
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+		<record id="teaching_license_expired_notification" model="email.template">
+			<field name="name">Expired Notification</field>
+			<field name="model_id" ref="sisb_hr.model_hr_employee"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.work_email or '')|safe}</field>
+			<field name="subject">Teaching License Expired Notification For ${object.name}</field>
+			<field name="body_html"><![CDATA[
+			% set day = object.get_day_left(object,type='teaching')
+			<p>Hello ${object.name},</p>
+			% if day > 1:
+				<p>Your Teaching License will be expired in ${day} days.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day == 1:
+				<p>Your Teaching License will be expired in ${day} day.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day < 1:
+				<p>Your Teaching License is already expired.</p>
+				<p>Please to renew it</p>
+			% endif
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+		<record id="work_permit_expired_notification" model="email.template">
+			<field name="name">Expired Notification</field>
+			<field name="model_id" ref="sisb_hr.model_hr_employee"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to">${(object.work_email or '')|safe}</field>
+			<field name="subject">Work Permit Expired Notification For ${object.name}</field>
+			<field name="body_html"><![CDATA[
+			% set day = object.get_day_left(object,type='permit')
+			<p>Hello ${object.name},</p>
+			% if day > 1:
+				<p>Your Work Permit will be expired in ${day} days.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day == 1:
+				<p>Your Work Permit will be expired in ${day} day.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day < 1:
+				<p>Your Work Permit is already expired.</p>
+				<p>Please to renew it</p>
+			% endif
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+		<record id="request_leave_from_employee" model="email.template">
+			<field name="name">Request Leave</field>
+			<field name="model_id" ref="sisb_hr.model_hr_employee"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.employee_id or '')|safe}</field>
+			<field name="subject">Work Permit Expired Notification For ${object.name}</field>
+			<field name="body_html"><![CDATA[
+			% set day = object.get_day_left(object,type='permit')
+			<p>Hello ${object.name},</p>
+			% if day > 1:
+				<p>Your Work Permit will be expired in ${day} days.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day == 1:
+				<p>Your Work Permit will be expired in ${day} day.</p>
+				<p>Please to renew it</p>
+			% endif
+			% if day < 1:
+				<p>Your Work Permit is already expired.</p>
+				<p>Please to renew it</p>
+			% endif
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+
+
+
+
+
+		<!-- Birthday Reminder Email -->
+		<record id="sisb_hr_birthday_reminder_email" model="email.template">
+			<field name="name">Birthday Reminder</field>
+			<field name="model_id" ref="sisb_hr.model_hr_employee"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to">${(object.work_email or '')|safe}</field>
+			<field name="subject">Happy Birthday ${object.name}</field>
+			<field name="body_html"><![CDATA[
+			<p>Dear ${object.name},</p>
+
+			<p>SISB wish you a happy bday from ${object.company_id.name}: </p>
+
+			<br/>
+    		<p>Regards,</p>
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+		<!-- ####################### -->
+
+
+
+
+		<!-- Overtime Request Template -->
+		<record id="request_overtime_from_employee" model="email.template">
+			<field name="name">Overtime Request</field>
+			<field name="model_id" ref="sisb_hr.model_hr_overtime_request"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.employee_id.supervisor_id.work_email or object.employee_id.supervisor_lvl2_id.work_email)|safe}</field>
+			<field name="subject">Overtime Request From ${object.employee_id.name}</field>
+			<field name="body_html"><![CDATA[
+			% set url = object.get_url(object.employee_id, object)
+			% set receiver = object.get_receiver(object.employee_id)
+
+			<p>Hello ${receiver},</p>
+			<p>Overtime Request From ${object.employee_id.name} is waiting for your Approval</p>
+			<p>Thank you for your participation!</p>
+			<p>Click <a href="${url}" style="color:blue;font-weight:bold;">here</a> to see the Overtime Request!</p>
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+		<!-- ################################### -->
+
+
+		<!-- Overtime Approve Template -->
+		<record id="approved_request_overtime_from_employee" model="email.template">
+			<field name="name">Overtime Request</field>
+			<field name="model_id" ref="sisb_hr.model_hr_overtime_request"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.employee_id.work_email or '')|safe}</field>
+			<field name="subject">Approved Overtime Request</field>
+			<field name="body_html"><![CDATA[
+			% set url = object.get_url(object.employee_id, object)
+			<p>Hello ${object.employee_id.name},</p>
+			<p>Your Overtime Request is already Approved by ${object.approved_by_id.name}</p>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+		<!-- ################################### -->
+    </data>
+</openerp>

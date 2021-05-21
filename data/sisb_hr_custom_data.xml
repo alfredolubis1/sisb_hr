@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+        <record id="sisb_employee_ir_cron" model="ir.cron">
+            <field name="name">Send 1 Year Celebration Email</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <!--<field name="nextcall" >2016-12-31 23:59:59</field>-->
+            <field name="model">hr.employee</field>
+            <field name="function">cron_send_celebrate_one_year_email_emp</field>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <record id="sisb_employee_ir_cron_expired_notif" model="ir.cron">
+            <field name="name">Send Expired Notification</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <!--<field name="nextcall" >2016-12-31 23:59:59</field>-->
+            <field name="model">hr.employee</field>
+            <field name="function">cron_send_notification_for_exp_doc</field>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <record id="sisb_employee_ir_cron_birthday_reminder" model="ir.cron">
+            <field name="name">Birthday Reminder</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <!--<field name="nextcall" >2016-12-31 23:59:59</field>-->
+            <field name="model">hr.employee</field>
+            <field name="function">cron_send_email_birthday_reminder</field>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <record id="sisb_hr_tf_employee_ir_cron_update_emp" model="ir.cron">
+            <field name="name">Update Employee according to Effective Date</field>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <!--<field name="nextcall" >2016-12-31 23:59:59</field>-->
+            <field name="model">hr.employee.transfer</field>
+            <field name="function">update_employee_tf</field>
+            <field eval="'()'" name="args"/>
+        </record>
+
+
+        <record id="sisb_hr_update_resign" model="ir.cron">
+            <field name="name">Update Employee Resign</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <!--<field name="nextcall" >2016-12-31 23:59:59</field>-->
+            <field name="model">hr.resignation</field>
+            <field name="function">update_employee_resign</field>
+            <field eval="'()'" name="args"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,901 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+
+        <menuitem id="hr_schedule_menu" name="Shift" parent="hr.menu_hr_root" sequence="23"/>
+
+        <!-- hr_schedule_allocation model view -->
+        <record id="hr_schedule_allocation_calendar_view" model="ir.ui.view">
+            <field name="name">Shift Allocation</field>
+            <field name="model">hr.schedule.allocation</field>
+            <field name="arch" type="xml">
+                <calendar string="Shift Allocation" date_start="date_from" date_stop="date_to" color="responsible_id" quick_add="False" create="false">
+                    <field name="name"/>
+                    <field name="shift_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="hr_schedule_allocation_search_view" model="ir.ui.view">
+            <field name="name">hr.schedule.allocation.search.view</field>
+            <field name="model">hr.schedule.allocation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="responsible_id"/>
+                    <group string="Group By">
+                        <filter name="by_company" string="Company" context="{'group_by': 'company_id'}"/>
+                        <filter name="by_dept" string="Department" context="{'group_by': 'department_id'}"/>
+                        <filter name="by_responsible" string="Responsible" context="{'group_by': 'responsible_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_schedule_allocation_tree_view" model="ir.ui.view">
+            <field name="name">hr.schedule.allocation.tree.view</field>
+            <field name="model">hr.schedule.allocation</field>
+            <field name="arch" type="xml">
+                <tree string="Shift Allocation">
+                    <field name="name"/>
+                    <field name="responsible_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="shift_id"/>
+                    <field name="company_id"/>
+                    <field name="department_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_schedule_allocation_form_view" model="ir.ui.view">
+            <field name="name">hr.schedule.allocation.form.view</field>
+            <field name="model">hr.schedule.allocation</field>
+            <field name="arch" type="xml">
+                <form string="Shift Allocation">
+                    <header>
+                        <button name="assign_shift" string="Submit" type="object" class="oe_highlight" states="draft"/>
+                        <button name="reassign" string="Re-Draft" type="object" class="oe_highlight" states="submitted,cancel"/>
+                        <button name="cancel_shift" string="Cancel" type="object" class="oe_highlight" states="submitted"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <button type="object"
+                                name="group_generated_shift"
+                                class="oe_stat_button"
+                                icon="fa-calendar">
+                                <field name="count_gener_shift" widget="statinfo" string="Generated Shift" help="Shift Schedule"/>
+                            </button>
+                            <button type="object"
+                                name="group_shift_list"
+                                class="oe_stat_button"
+                                icon="fa-list-alt">
+                                <field name="count_shift_list" widget="statinfo" string="Shift List"/>
+                            </button>
+                        </div>
+                        <group col="4" colspan="4">
+                            <field name="responsible_id" domain="[('user_id.id','=',uid)]" required="1"/>
+                            <field name="rel_department_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="date_from" required="1"/>
+                            <field name="date_to" required="1"/>
+                            <field name="shift_id" domain="[('company_id','=',company_id)]" attrs="{'readonly': [('company_id','=',False)]}" required="1"/>
+                            <field name="rel_company_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="company_id" invisible="True"/>
+                            <field name="department_id" invisible="1"/>
+                        </group>
+                        <separator string="Employee List" colspan="4"/>
+                        <field name="employee_ids" colspan="4" nolabel="1" widget="many2many" mode="tree" domain="['|','|',('supervisor_id','=',responsible_id),('supervisor_lvl2_id','=',responsible_id),('user_id.id','=',uid)]" attrs="{'readonly': [('responsible_id','=',False)]}">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="company_id"/>
+                                <field name="department_id"/>
+                                <field name="active"/>
+                            </tree>
+                        </field>
+                        <separator string="Employee Shift List" colspan="4"/>
+                        <field name="employee_shift_ids" colspan="4" readonly="1" molabel="1">
+                            <tree create="false">
+                                <field name="name"/>
+                                <field name="employee_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="state"/>
+                                <button name="uncancel_shift" string="Re-Submit" class="oe_highlight" type="object" attrs="{'invisible': [('state','!=','cancel')]}"/>
+                            </tree>
+                        </field>
+                        <field name="cancel_before" invisible="0"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="inherit_spv_hr_schedule_allocation_form_view" model="ir.ui.view">
+            <field name="name">inherit.hr.schedule.allocation.form.view</field>
+            <field name="model">hr.schedule.allocation</field>
+            <field name="inherit_id" ref="sisb_hr.hr_schedule_allocation_form_view"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
+            <field name="arch" type="xml">
+                <field name="responsible_id" position="replace">
+                    <field name="responsible_id" required="1" options="{'no_open': True, 'no_create': True}" domain="[('user_id.id','=',uid)]"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="inherit_manager_hr_schedule_allocation_form_view" model="ir.ui.view">
+            <field name="name">inherit.hr.schedule.allocation.form.view</field>
+            <field name="model">hr.schedule.allocation</field>
+            <field name="inherit_id" ref="sisb_hr.inherit_spv_hr_schedule_allocation_form_view"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager')])]"/>
+            <field name="arch" type="xml">
+                <field name="responsible_id" position="replace">
+                    <field name="responsible_id" required="1" options="{'no_open': True, 'no_create': True}" domain="['|',('supervisor','=',True),('user_id.id','=',uid)]"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_schedule_allocation_action" model="ir.actions.act_window">
+            <field name="name">Shift Allocation</field>
+            <field name="res_model">hr.schedule.allocation</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr_schedule_allocation_search_view"/>
+            <field name="context">{}</field>
+        </record>
+
+
+        <record id="hr_schedule_allocation_action_calendar_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="hr_schedule_allocation_calendar_view"/>
+            <field name="act_window_id" ref="hr_schedule_allocation_action"/>
+        </record>
+        <record id="hr_schedule_allocation_action_tree_view" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_schedule_allocation_tree_view"/>
+            <field name="act_window_id" ref="hr_schedule_allocation_action"/>
+        </record>
+        <record id="hr_schedule_allocation_action_form_view" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_schedule_allocation_form_view"/>
+            <field name="act_window_id" ref="hr_schedule_allocation_action"/>
+        </record>
+
+        <menuitem id="hr_schedule_shift_allocation" name="Shift Allocation" parent="hr_schedule_menu" action="hr_schedule_allocation_action" sequence="5" groups="base.group_hr_user,base.group_hr_manager"/>
+        <!-- ############################################################################################################################################ -->
+
+        <!-- hr_schedule_running_shift model view-->
+        <menuitem id="hr_schedule_running_shift" name="Allocated Shift" parent="hr_schedule_menu" sequence="4"/>
+
+        <record id="hr_schedule_running_shift_calendar_view" model="ir.ui.view">
+            <field name="name">Allocated Shift</field>
+            <field name="model">hr.schedule.running.shift</field>
+            <field name="arch" type="xml">
+                <calendar string="Running Shift" date_start="date_from" date_stop="date_to" color="employee_id" quick_add="False" create="false">
+                    <field name="employee_id"/>
+                    <field name="shift_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="hr_schedule_running_shift_search_view" model="ir.ui.view">
+            <field name="name">hr.schedule.running.shift.search.view</field>
+            <field name="model">hr.schedule.running.shift</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="reference_id"/>
+                    <field name="employee_id"/>
+                    <group string="Group By">
+                        <filter name="by_reference" string="Reference" context="{'group_by': 'reference_id'}"/>
+                        <filter name="by_company" string="Company" context="{'group_by': 'company_id'}"/>
+                        <filter name="by_dept" string="Department" context="{'group_by': 'department_id'}"/>
+                        <filter name="by_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                        <filter name="by_state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_schedule_running_shift_tree_view" model="ir.ui.view">
+            <field name="name">hr.schedule.running.shift.tree.view</field>
+            <field name="model">hr.schedule.running.shift</field>
+            <field name="arch" type="xml">
+                <tree string="Running Shift" create="false">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="date_from" />
+                    <field name="date_to"/>
+                    <field name="shift_id"/>
+                    <field name="reference_id"/>
+                    <field name="company_id"/>
+                    <field name="department_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_schedule_running_shift_form_view" model="ir.ui.view">
+            <field name="name">hr.schedule.running.shift.form.view</field>
+            <field name="model">hr.schedule.running.shift</field>
+            <field name="arch" type="xml">
+                <form string="Shift Allocation" create="false" edit="false">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group col="4" colspan="4">
+                            <field name="employee_id" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                            <newline/>
+                            <field name="company_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="department_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="date_from" readonly="1"/>
+                            <field name="date_to" readonly="1"/>
+                            <field name="responsible_id" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="reference_id" string="Allocated From" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                            <newline/>
+                            <field name="shift_id" readonly="1" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <separator string="Shift Detail List" colspan="4"/>
+                        <field name="shift_list_ids" colspan="4" nolabel="1">
+                            <tree editable="bottom" create="false" edit="false">
+                                <field name="name" readonly="1"/>
+                                <field name="employee_id" readonly="1"/>
+                                <field name="notes" readonly="1"/>
+                                <field name="shift_id" readonly="1"/>
+                                <field name="state"/>
+                                <button name="change_shift" string="Change Shift" type="object" class="oe_highlight" groups="base.group_hr_user,base.group_hr_manager"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="inherit_hr_schedule_running_shift_form_view" model="ir.ui.view">
+            <field name="name">hr.schedule.running.shift.form.view</field>
+            <field name="model">hr.schedule.running.shift</field>
+            <field name="inherit_id" ref="sisb_hr.hr_schedule_running_shift_form_view"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager')])]"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name="responsible_id" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name="reference_id" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name="date_from" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+                <field name="date_to" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_schedule_running_shift_action_individual" model="ir.actions.act_window">
+            <field name="name">My Shift</field>
+            <field name="res_model">hr.schedule.running.shift</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+            <field name="search_view_id" ref="hr_schedule_running_shift_search_view"/>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="hr_schedule_running_shift_action_calendar_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="hr_schedule_running_shift_calendar_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_individual"/>
+        </record>
+        <record id="hr_schedule_running_shift_action_tree_view" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_schedule_running_shift_tree_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_individual"/>
+        </record>
+        <record id="hr_schedule_running_shift_action_form_view" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_schedule_running_shift_form_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_individual"/>
+        </record>
+
+        <menuitem id="hr_schedule_running_shift_action_individual_menu" name="My Shift" parent="hr_schedule_running_shift" action="hr_schedule_running_shift_action_individual" sequence="1"/>
+
+
+        <record id="hr_schedule_running_shift_action_spv" model="ir.actions.act_window">
+            <field name="name">My Staff Shift</field>
+            <field name="res_model">hr.schedule.running.shift</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('responsible_id.user_id.id','=',uid)]</field>
+            <field name="search_view_id" ref="hr_schedule_running_shift_search_view"/>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="hr_schedule_running_shift_action_spv_calendar_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="hr_schedule_running_shift_calendar_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_spv"/>
+        </record>
+        <record id="hr_schedule_running_shift_action_spv_tree_view" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_schedule_running_shift_tree_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_spv"/>
+        </record>
+        <record id="hr_schedule_running_shift_action_spv_form_view" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_schedule_running_shift_form_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_spv"/>
+        </record>
+
+        <menuitem id="hr_schedule_running_shift_action_spv_menu" name="My Staff Shift" parent="hr_schedule_running_shift" action="hr_schedule_running_shift_action_spv" sequence="2" groups="base.group_hr_user"/>
+
+
+        <record id="hr_schedule_running_shift_action_all" model="ir.actions.act_window">
+            <field name="name">All Employee Shift</field>
+            <field name="res_model">hr.schedule.running.shift</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr_schedule_running_shift_search_view"/>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="hr_schedule_running_shift_action_mgr_calendar_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="hr_schedule_running_shift_calendar_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_all"/>
+        </record>
+        <record id="hr_schedule_running_shift_action_mgr_tree_view" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_schedule_running_shift_tree_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_all"/>
+        </record>
+        <record id="hr_schedule_running_shift_action_mgr_form_view" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_schedule_running_shift_form_view"/>
+            <field name="act_window_id" ref="hr_schedule_running_shift_action_all"/>
+        </record>
+
+        <menuitem id="hr_schedule_running_shift_action_all_menu" name="All Employee Shift" parent="hr_schedule_running_shift" action="hr_schedule_running_shift_action_all" sequence="3" groups="base.group_hr_manager"/>
+
+        <!-- ############################################################################################################################################ -->
+
+        <!-- hr_schedule_shift_list model view-->
+        <menuitem id="hr_schedule_shift_list_view_menu" name="Shift List" parent="hr_schedule_menu" sequence="3"/>
+
+        <record id="hr_schedule_shift_list_view" model="ir.ui.view">
+            <field name="name">Shift List</field>
+            <field name="model">hr.schedule.shift.list</field>
+            <field name="arch" type="xml">
+                <tree string="Shift List" create="false">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="running_shift_id"/>
+                    <field name="shift_id"/>
+                    <field name="notes"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_schedule_shift_calendar_view" model="ir.ui.view">
+            <field name="name">Shift Calendar</field>
+            <field name="model">hr.schedule.shift.list</field>
+            <field name="arch" type="xml">
+                <calendar string="Shift List" date_start="name" date_stop="name" color="shift_id" create="false">
+                    <field name="employee_id"/>
+                    <field name="shift_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="hr_schedule_shift_list_search_view" model="ir.ui.view">
+            <field name="name">hr.schedule.shift.list.search.view</field>
+            <field name="model">hr.schedule.shift.list</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Date"/>
+                    <field name="employee_id"/>
+                    <field name="running_shift_id"/>
+                    <field name="source_shift_id"/>
+                    <filter string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <group string="Group By">
+                        <filter name="by_running_shift_id" string="Shift Number" context="{'group_by': 'running_shift_id'}"/>
+                        <filter name="by_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                        <filter name="by_source_shift_id" string="Source Document" context="{'group_by': 'source_shift_id'}" groups="base.group_hr_user"/>
+                        <filter name="by_state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_schedule_shift_list_form_view" model="ir.ui.view">
+            <field name="name">Shift List Form</field>
+            <field name="model">hr.schedule.shift.list</field>
+            <field name="arch" type="xml">
+                <form string="Shift List Form" create="false" edit="false">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <separator string="Shift Information" colspan="4"/>
+                            <field name="employee_id" readonly="1" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="name" readonly="1" required="1" options="{'no_open': True, 'no_create': True}" />
+                            <field name="shift_id" readonly="1" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="source_shift_id" readonly="1" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="responsible_id" readonly="1" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="employee_name" invisible="1"/>
+                            <field name="responsible_name" invisible="1"/>
+                            <field name="shift_number" invisible="1"/>
+                            <field name="source_shift_name" invisible="1"/>
+                            <field name="shift_name" invisible="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_schedule_shift_list_view_action_individual" model="ir.actions.act_window">
+            <field name="name">My Shift List</field>
+            <field name="res_model">hr.schedule.shift.list</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+            <field name="search_view_id" ref="hr_schedule_shift_list_search_view"/>
+            <field name="context">{'search_default_today':1}</field>
+        </record>
+
+        <record id="hr_schedule_shift_list_view_action_my_staff" model="ir.actions.act_window">
+            <field name="name">My Staff Shift List</field>
+            <field name="res_model">hr.schedule.shift.list</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[('responsible_id.user_id.id','=',uid)]</field>
+            <field name="search_view_id" ref="hr_schedule_shift_list_search_view"/>
+            <field name="context">{'search_default_today':1}</field>
+        </record>
+
+        <record id="hr_schedule_shift_list_view_action_all" model="ir.actions.act_window">
+            <field name="name">All Shift List</field>
+            <field name="res_model">hr.schedule.shift.list</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr_schedule_shift_list_search_view"/>
+            <field name="context">{'search_default_today':1}</field>
+        </record>
+
+        <menuitem id="my_shift_list_menu" parent="hr_schedule_shift_list_view_menu" name="Shift List" action="hr_schedule_shift_list_view_action_individual" sequence="1"/>
+        <menuitem id="my_staff_shift_list_menu" parent="hr_schedule_shift_list_view_menu" name="My Staff Shift List" action="hr_schedule_shift_list_view_action_my_staff" sequence="2" groups="base.group_hr_user"/>
+        <menuitem id="all_shift_list_menu" parent="hr_schedule_shift_list_view_menu" name="All Shift List" action="hr_schedule_shift_list_view_action_all" sequence="3" groups="base.group_hr_manager"/>
+
+        <!-- ############################################################################################################################################ -->
+
+        <!-- hr_schedule_request_list -->
+        <menuitem id="hr_schedule_shift_request_menu" parent="hr_schedule_menu" name="Shift Request" sequence="1"/>
+
+        <record id="hr_schedule_shift_request_form" model="ir.ui.view">
+            <field name="name">hr.schedule.shift.request.form</field>
+            <field name="model">hr.schedule.shift.request</field>
+            <field name="arch" type="xml">
+                <form string="Shift Request">
+                    <header>
+                        <button name="submit_req" string="Submit" type="object" class="oe_highlight" states="draft"/>
+                        <button name="cancel_req" string="Cancel" type="object" class="oe_highlight" states="1appv"/>
+                        <button name="set_draft" string="Set to Draft" type="object" class="oe_highlight" states="cancel"/>
+                        <button name="reject_req" string="Reject" type="object" class="oe_highlight" states="1appv" groups="base.group_hr_user"/>
+                        <button name="appv_req" string="Approve" type="object" class="oe_highlight" states="1appv"  groups="base.group_hr_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,1appv,appv"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Shift Number" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group col="4" colspan="4">
+                            <field name="employee_id" domain="[('user_id.id','=',uid)]" required="1" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="responsible_id" options="{'no_open': True, 'no_create': True}" readonly="1"/>
+                            <field name="description" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="date_from" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="date_to" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="shift_id" options="{'no_open': True, 'no_create': True}" required="1" attrs="{'readonly': ['|',('employee_id','=',False),('state','!=','draft')]}"/>
+                            <field name="shift_source_id" options="{'no_open': True, 'no_create': True}"/>
+                            <separator string="Shift List" colspan="4"/>
+                            <field name="shift_list_ids" colspan="4" nolabel="1" readonly="1">
+                                <tree create="false">
+                                    <field name="name" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="employee_id" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="shift_id"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                            <field name="related_responsible_id" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="inherit1_hr_schedule_shift_request_form" model="ir.ui.view">
+            <field name="name">inherit.hr.schedule.shift.request.form</field>
+            <field name="model">hr.schedule.shift.request</field>
+            <field name="inherit_id" ref="sisb_hr.hr_schedule_shift_request_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="attributes">
+                    <attribute name="domain">['|','|','|'('supervisor_id.user_id.id','=',uid),('supervisor_lvl2_id.user_id.id','=',uid),('user_id.id','=',uid)]</attribute>
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                    <attribute name="attrs">{'readonly': [('state','!=','draft')]}</attribute>
+                </field>
+                <field name="responsible_id" position="attributes">
+                    <attribute name="domain">[('user_id.id','=',uid)]</attribute>
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                    <attribute name="attrs">{'readonly': [('state','!=','draft')]}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="inherit2_hr_schedule_shift_request_form" model="ir.ui.view">
+            <field name="name">inherit.hr.schedule.shift.request.form</field>
+            <field name="model">hr.schedule.shift.request</field>
+            <field name="inherit_id" ref="sisb_hr.inherit1_hr_schedule_shift_request_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager')])]"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="replace">
+                    <field name="employee_id" required="1" attrs="{'readonly': ['|',('responsible_id','=',False),('state','!=','draft')]}" options="{'no_create': True, 'no_open': True}" domain="['|',('supervisor_id','=',responsible_id),('supervisor_lvl2_id','=',responsible_id)]"/>
+                </field>
+                <field name="responsible_id" position="replace">
+                    <field name="responsible_id" required="1" readonly="0" domain="['|',('supervisor','=',True),('user_id.id','=',uid)]" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_schedule_shift_request_tree" model="ir.ui.view">
+            <field name="name">hr.schedule.shift.request.tree</field>
+            <field name="model">hr.schedule.shift.request</field>
+            <field name="arch" type="xml">
+                <tree string="Shift Request List">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="shift_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_schedule_shift_request_calendar" model="ir.ui.view">
+            <field name="name">hr.schedule.shift.request.calendar</field>
+            <field name="model">hr.schedule.shift.request</field>
+            <field name="arch" type="xml">
+                <calendar string="Shift Request" date_start="date_from" date_stop="date_to" color="shift_id" quick_add="False">
+                    <field name="name"/>
+                    <field name="shift_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="hr_schedule_shift_my_request_action" model="ir.actions.act_window">
+            <field name="name">My Shift Request</field>
+            <field name="res_model">hr.schedule.shift.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="hr_schedule_shift_mystaff_request_action" model="ir.actions.act_window">
+            <field name="name">My Staff Shift Request</field>
+            <field name="res_model">hr.schedule.shift.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[('responsible_id.user_id.id','=',uid)]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="hr_schedule_shift_all_request_action" model="ir.actions.act_window">
+            <field name="name">My Staff Shift Request</field>
+            <field name="res_model">hr.schedule.shift.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem id="hr_schedule_shift_my_request_action_menu" parent="hr_schedule_shift_request_menu" name="My Shift Request" action="hr_schedule_shift_my_request_action" sequence="1"/>
+        <menuitem id="hr_schedule_shift_mystaff_request_action_menu" parent="hr_schedule_shift_request_menu" name="My Staff Shift Request" action="hr_schedule_shift_mystaff_request_action" sequence="2" groups="base.group_hr_user"/>
+        <menuitem id="hr_schedule_shift_all_request_action_menu" parent="hr_schedule_shift_request_menu" name="All Shift Request" action="hr_schedule_shift_all_request_action" sequence="3" groups="base.group_hr_manager"/>
+
+        
+        <!-- ############################################################################################################################################ -->
+
+        <!-- hr_schedule_change_request -->
+        <menuitem id="change_shift_request_menu" parent="hr_schedule_menu" name="Change Shift Request" sequence="2"/>
+
+        <record id="hr_schedule_change_request_form_view" model="ir.ui.view">
+            <field name="name">Change Shift Request</field>
+            <field name="model">hr.schedule.change.request</field>
+            <field name="arch" type="xml">
+                <form string="Change Shift Request">
+                    <header>
+                        <button name="submit_change_req" string="Submit" type="object" class="oe_highlight" states="draft"/>
+                        <button name="cancel_change_req" string="Cancel" type="object" class="oe_highlight" states="1appv"/>
+                        <button name="reject_change_req" string="Reject" type="object" class="oe_highlight" states="1appv" groups="base.group_hr_user"/>
+                        <button name="approve_change_req" string="Approve" type="object" class="oe_highlight" states="1appv" groups="base.group_hr_user"/>
+                        <button name="set_draft" string="submit_req_change" type="object" class="oe_highlight" states="cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,1appv,appv"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="employee_id" required="1" options="{'no_open': True, 'no_create': True}" domain="[('user_id.id','=',uid)]" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="responsible_id" readonly="1" required="1" string="Supervisor/Manager" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <newline/>
+                            <field name="name" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <separator string="Change Shift List" colspan="4"/>
+                            <field name="change_shift_ids" colspan="4" nolabel="1" required="1" context="{'default_employee_id': employee_id}" attrs="{'readonly': [('state','!=','draft')]}">
+                                <tree editable="bottom">
+                                    <field name="name" required="1"/>
+                                    <field name="current_shift_id" options="{'no_open': True, 'no_create': True}" readonly="1" required="1" string="Current Shift"/>
+                                    <field name="new_shift_id" required="1" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('current_shift_id','=',False)]}" string="New Shift"/>
+                                    <field name="state" readonly="1"/>
+                                    <field name="employee_id" invisible="0"/>
+                                    <field name="running_shift_id" invisible="0"/>
+                                    <field name="related_current_shift" invisible="1"/>
+                                </tree>
+                            </field>
+                            <field name="related_responsible_id" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="inherit1_hr_schedule_change_request_form_view" model="ir.ui.view">
+            <field name="name">Change Shift Request</field>
+            <field name="model">hr.schedule.change.request</field>
+            <field name="inherit_id" ref="sisb_hr.hr_schedule_change_request_form_view"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="attributes">
+                    <attribute name="domain">['|','|',('supervisor_id.user_id.id','=',uid),('supervisor_lvl2_id.user_id.id','=',uid),('user_id.id','=',uid)]</attribute>
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </field>
+                <field name="responsible_id" position="attributes">
+                    <attribute name="domain">[('user_id.id','=',uid)]</attribute>
+                    <attribute name="options">{'no_open': True, 'no_create': True}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="inherit2_hr_schedule_change_request_form_view" model="ir.ui.view">
+            <field name="name">Change Shift Request</field>
+            <field name="model">hr.schedule.change.request</field>
+            <field name="inherit_id" ref="sisb_hr.inherit1_hr_schedule_change_request_form_view"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager')])]"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="replace">
+                    <field name="employee_id" required="1" attrs="{'readonly': [('responsible_id','=',False)]}" options="{'no_create': True, 'no_open': True}" domain="['|',('supervisor_id','=',responsible_id),('supervisor_lvl2_id','=',responsible_id)]"/>
+                </field>
+                <field name="responsible_id" position="replace">
+                    <field name="responsible_id" required="1" readonly="0" domain="['|',('supervisor','=',True),('user_id.id','=',uid)]" options="{'no_open': True, 'no_create': True}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_schedule_change_request_search_view" model="ir.ui.view">
+            <field name="name">Change Shift Request</field>
+            <field name="model">hr.schedule.change.request</field>
+            <field name="arch" type="xml">
+                <search string="Change Shift Request Search">
+                    <field name="employee_id"/>
+                    <field name="date"/>
+                    <group string="Group By">
+                        <filter name="by_state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_schedule_change_request_tree_view" model="ir.ui.view">
+            <field name="name">Change Shift Request</field>
+            <field name="model">hr.schedule.change.request</field>
+            <field name="arch" type="xml">
+                <tree string="Change Shift List">
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="name"/>
+                    <field name="responsible_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_schedule_change_request_individual_action" model="ir.actions.act_window">
+            <field name="name">My Change Shift Request</field>
+            <field name="res_model">hr.schedule.change.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+            <field name="search_view_id" ref="hr_schedule_change_request_search_view"/>
+            <field name="context">{'default_employee_id.user_id.id': uid}</field>
+        </record>
+
+        <record id="hr_schedule_change_request_mystaff_action" model="ir.actions.act_window">
+            <field name="name">My Staff Change Shift Request</field>
+            <field name="res_model">hr.schedule.change.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('responsible_id.user_id.id','=',uid)]</field>
+            <field name="search_view_id" ref="hr_schedule_change_request_search_view"/>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="hr_schedule_change_request_all_action" model="ir.actions.act_window">
+            <field name="name">All Change Shift Request</field>
+            <field name="res_model">hr.schedule.change.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr_schedule_change_request_search_view"/>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem id="hr_schedule_change_request_individual_action_menu" parent="change_shift_request_menu" name="My Change Shift Request" action="hr_schedule_change_request_individual_action" sequence="1"/>
+        <menuitem id="hr_schedule_change_request_mystaff_action_menu" parent="change_shift_request_menu" name="My Staff Change Shift Request" action="hr_schedule_change_request_mystaff_action" sequence="2" groups="base.group_hr_user"/>
+        <menuitem id="hr_schedule_change_request_all_action_menu" parent="change_shift_request_menu" name="All Change Shift Request" action="hr_schedule_change_request_all_action" sequence="3" groups="base.group_hr_manager"/>
+        <!-- ############################################################################################################################################ -->
+
+        <!-- Shift List Request Form -->
+        <record id="shift_list_request_form_view" model="ir.ui.view">
+            <field name="name">shift_list_request_form</field>
+            <field name="model">shift.list.request</field>
+            <field name="arch" type="xml">
+                <form string="Request List">
+                    <group col="4" colspan="4">
+                        <field name="employee_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="shift_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="name" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="state" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!-- ############################################################################################################################################ -->
+
+        <!-- Work Time Structure -->
+        <record id="work_time_structure_tree_view" model="ir.ui.view">
+            <field name="name">work.time.structure.tree.view</field>
+            <field name="model">work.time.structure</field>
+            <field name="arch" type="xml">
+                <tree string="Work Time">
+                    <field name="name"/>
+                    <field name="shift_code"/>
+                    <field name="start_hour" widget="float_time"/>
+                    <field name="end_hour" widget="float_time"/>
+                    <field name="start_break_hour" widget="float_time"/>
+                    <field name="end_break_hour" widget="float_time"/>
+                    <field name="late_tolerance" widget="float_time"/>
+                    <field name="shift_option"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_time_structure_form_view" model="ir.ui.view">
+            <field name="name">work.time.structure.form.view</field>
+            <field name="model">work.time.structure</field>
+            <field name="arch" type="xml">
+                <form string="Work Time">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <field name="shift_code"/>
+                            <field name="company_id" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="shift_option" required="1"/>
+                            <field name="default_timezone" required="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Shift Detail">
+                                <group col="4" colspan="4" string="Shift Detail">
+                                    <field name="punch_in" widget="float_time"/>
+                                    <field name="late_tolerance" widget="float_time" required="True"/>
+                                    <field name="start_hour" widget="float_time" required="True"/>
+                                    <field name="end_hour" widget="float_time" required="1"/>
+                                    <field name="start_break_hour" widget="float_time"/>
+                                    <field name="end_break_hour" widget="float_time"/>
+                                    <field name="total_wk_hour" widget="float_time"/>
+                                    <field name="total_break" widget="float_time"/>
+                                    <field name="punch_out" widget="float_time"/>
+                                </group>
+                            </page>
+                            <page string="Work Day">
+                                <button string="Test" name="test_function" type="object" class="oe_highlight"/>
+                                <group string="Work Day" col="4" colspan="4">
+                                    <field name="day_of_wewks_ids" colspan="4" nolabel="1" required="1">
+                                        <tree editable="bottom">
+                                            <field name="day_of_week" string="Day of Week" required="1"/>
+                                            <field name="options"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <separator string="Notes" colspan="4"/>
+                                <field name="notes" colspan="4" nolabel="1" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="work_time_structure_search_view">
+            <field name="name">work.time.structure.search.view</field>
+            <field name="model">work.time.structure</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <group string="Group By">
+                        <filter name="group_by_company" string="Company"
+                                context="{'group_by': 'company_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="working_time_structure_action" model="ir.actions.act_window">
+            <field name="name">Shift Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">work.time.structure</field>
+            <field name="view_type">form</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_hr_working_time_structure" name="Shift Structure" action="working_time_structure_action" parent="hr_schedule_menu"
+                  sequence="6" groups="base.group_hr_manager"/>
+        <!-- ############################################################################################################################################ -->
+    </data>
+</openerp>

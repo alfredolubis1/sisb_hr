@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="employee_overtime_work_inspection">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-call="sisb_hr.sisb_hr_report_layout"> -->
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                            <div>
+                                <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                <strong>
+                                    <h4>
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                        <p style="font-size:16px;"><b>OT Working inspection Report <span t-esc="time.strftime('%d/%b/%Y', 
+                                            time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                        </b> - <b><span t-esc="time.strftime('%d/%b/%Y', 
+                                            time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;"><b>OT Working inspection Report <span t-esc="time.strftime('%d/%b/%Y', 
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                    </h4>
+                                </strong>
+                            </div>
+                        </center>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <span class="text-right" style="text-align: right; padding-top: 3px;">Page <span style="text-align: right;" class="page"/> of <span class="topage"/></span>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width:100%;
+                        }
+
+                        .main_table th {
+                            font-weight: normal;
+                            font-size: 8px;
+                            padding: 9px;
+                            border-top: thin solid grey;
+                            border-bottom: thin solid grey;
+                        }
+
+                        .body_header td {
+                            padding: 5px;
+                            font-size: 8px;
+
+                        }
+
+                        .body_value td {
+                            padding: 6px;
+                            font-size: 8px;
+                            border-top: thin solid grey;
+                            border-bottom: thin solid grey;
+                        }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th style="border-top: none" colspan="16"></th>
+                                        <th style="border-top: thin solid grey; border-left: thin solid grey; text-align: center;" colspan="9">OT Before/After</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="7"></th>
+                                        <th style="text-align: center;">Time In</th>
+                                        <th style="text-align: center;">Time Out</th>
+                                        <th>1</th>
+                                        <th>1.5</th>
+                                        <th>2</th>
+                                        <th>2.5</th>
+                                        <th>3</th>
+                                        <th>OT(6)</th>
+                                        <th style="border-right: thin solid grey;">Baht</th>
+                                        <th style="text-align: right;" colspan="4">1</th>
+                                        <th>1.5</th>
+                                        <th>2</th>
+                                        <th>2.5</th>
+                                        <th>3</th>
+                                        <th>OT(6)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="25" style="text-align: left; padding: 7px;"><b><span t-esc="get_section_code(o.company_id)"/></b></td>
+                                    </tr>
+                                    <t t-foreach="get_employee_ot(data['form'])" t-as="emp_ot">
+                                        <tr class="body_header">
+                                            <td width="3%;" style="border-bottom: none;"></td>
+                                            <td colspan="6" style="text-align: left;"><span t-esc="emp_ot['name']"/></td>
+                                            <td style="text-align: center;">Total</td>
+                                            <td colspan="7"></td>
+                                            <td style="text-align: center;">0</td>
+                                            <td style="border-left: thin solid grey;">Start</td>
+                                            <td>To</td>
+                                            <td>Total</td>
+                                            <td><span t-esc="emp_ot['ot_one']"/></td>
+                                            <td><span t-esc="emp_ot['ot_one_half']"/></td>
+                                            <td><span t-esc="emp_ot['ot_double']"/></td>
+                                            <td></td>
+                                            <td><span t-esc="emp_ot['ot_triple']"/></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr class="body_value" t-foreach="get_daily_overtime(emp_ot['employee_id'], emp_ot['date_from'], emp_ot['date_to'], emp_ot['attendance_id'])" t-as="ot_detail">
+                                            <td width="3%" style="border-top: none; border-bottom: none;"></td>
+                                            <td width="5%"></td>
+                                            <td><span t-esc="ot_detail['type']"/></td>
+                                            <td><span t-esc="ot_detail['date']"/></td>
+                                            <td>1</td>
+                                            <td><span t-esc="ot_detail['schedule']"/></td>
+                                            <td><span t-esc="ot_detail['day']"/></td>
+                                            <td><span t-esc="ot_detail['sign_in']"/></td>
+                                            <td><span t-esc="ot_detail['sign_out']"/></td>
+                                            <td><span t-esc="ot_detail['one']"/></td>
+                                            <td><span t-esc="ot_detail['one_half']"/></td>
+                                            <td><span t-esc="ot_detail['double']"/></td>
+                                            <td></td>
+                                            <td><span t-esc="ot_detail['triple']"/></td>
+                                            <td></td>
+                                            <td>0.00</td>
+                                            <td style="border-left: thin solid grey;"><span t-esc="ot_detail['ot_start']"/></td>
+                                            <td><span t-esc="ot_detail['ot_end']"/></td>
+                                            <td><span t-esc="ot_detail['ot_total']"/></td>
+                                            <td><span t-esc="ot_detail['ot_one']"/></td>
+                                            <td><span t-esc="ot_detail['ot_one_half']"/></td>
+                                            <td><span t-esc="ot_detail['ot_double']"/></td>
+                                            <td>0:00</td>
+                                            <td><span t-esc="ot_detail['ot_triple']"/></td>
+                                            <td>0:00</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- </t> -->
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

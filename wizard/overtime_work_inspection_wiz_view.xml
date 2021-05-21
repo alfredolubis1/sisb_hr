@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="employee_overtime_work_inspection_wiz_view" model="ir.ui.view">
+            <field name="name">Overtime Work Inspection</field>
+            <field name="model">overtime.work.inspection.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Individual Overtime Detai Report">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="date_from" required="1"/>
+                            <field name="date_to" required="1"/>
+                            <field name="company_id" required="1"/>
+                        </group>
+                        <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight" />
+                        <!-- <button name="print_irregular_absent_report" string="Print" type="object" class="oe_highlight" attrs="{'invisible': [('options', '!=', 'irregular')]}"/> -->
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_overtime_work_inspection_report" model="ir.actions.act_window">
+            <field name="name">Overtime Work Inspection</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">overtime.work.inspection.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_overtime_work_inspection_wiz_view"/>
+            <field name="target">new</field>
+        </record>
+
+         <menuitem name="Overtime Work Inspection Report" action="action_overtime_work_inspection_report" id="menu_overtime_work_inspection_report" parent="overtime_report_menu" sequence="3"/>
+    </data>
+</openerp>

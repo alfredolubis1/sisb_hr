@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- <record id="email_notification_from_job_applicant" model="email.template">
+			<field name="name">New Applicant</field>
+			<field name="model_id" ref="sisb_hr.model_hr_applicant"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.get_email_to() or '')|safe}</field>
+			<field name="subject">New Applicant from ${object.partner_name or object.candidate_no}</field>
+			<field name="body_html"><![CDATA[
+			% set url = object.get_url(object)
+			<p>Hello</p>
+			<p>a New Applicant just Apply For ${object.job_id.name}</p>
+			<p>Click <a href="${url}" style="color:blue;font-weight:bold;">here</a> to see Applicant Form!</p>
+			<p>Thank you !</p>
+			
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record> -->
+
+		<record id="email_notification_from_employee_applicant" model="email.template">
+			<field name="name">Employee Applicant</field>
+			<field name="model_id" ref="sisb_hr.model_hr_applicant"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.get_email_to() or '')|safe}</field>
+			<field name="subject">Employee Applicant from ${object.existing_employee_id.name}</field>
+			<field name="body_html"><![CDATA[
+			% set url = object.get_url(object)
+			<p>Hello</p>
+			<p>a Employee Applicant just Apply For ${object.job_id.name}</p>
+			% if object.job_title_id:
+				with Position ${object.job_title_id.name}
+			% endif
+			<p>Click <a href="${url}" style="color:blue;font-weight:bold;">here</a> to see Applicant Form!</p>
+			<p>Thank you !</p>
+			
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+    </data>
+</openerp>

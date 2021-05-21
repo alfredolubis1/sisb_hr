@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="employee_individual_detailed_movement_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div>
+                            <center>
+                                <div>
+                                    <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                    <strong>
+                                        <h4>
+                                            <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                                <p style="font-size:16px;">
+                                                    <b>
+                                                        Employee Movement and Transfer Between <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                    </b> 
+                                                    <b>Until</b>
+                                                    <b>
+                                                        <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/>
+                                                    </b>
+                                                </p>
+                                            </t>
+                                            <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                                <p style="font-size:16px;">
+                                                    <b>
+                                                        Employee Movement and Transfer <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                    </b>
+                                                </p>
+                                            </t>
+                                        </h4>
+                                    </strong>
+                                </div>
+                            </center>
+                            <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                                <br/>
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                                <br/>
+                                <span class="text-right" style="text-align: right; padding-top: 3px;">Page <span style="text-align: right;" class="page"/> of <span class="topage"/></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width: 100%;
+                        }
+
+                        .main_table th {
+                            font-weight: normal;
+                            text-align: center;
+                            border-top: thin solid black;
+                            border-bottom: thin solid black;
+                            padding: 10px;
+                            font-size: 10px;
+                        }
+
+                        .all_border {
+                            border: thin solid black;
+                        }
+
+                        .section td {
+                            padding: 9px;
+                            border-bottom: thin solid black;
+                        }
+
+                        .main_body td {
+                            padding: 7px;
+                            font-size: 10px;
+                            text-align: center;
+                            border-bottom: thin solid black;
+                        }
+                        </style>
+                        <table class="main_table">
+                            <thead>
+                                <tr>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th colspan="3" class="all_border">From</th>
+                                    <th colspan="3" class="all_border">To</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align: left;">Name</th>
+                                    <th>Transfer Date</th>
+                                    <th>Company/Campus</th>
+                                    <th>Department/Section</th>
+                                    <th>Position</th>
+                                    <th>Company/Campus</th>
+                                    <th>Department/Section</th>
+                                    <th>Position</th>
+                                </tr>
+                            </thead>
+                            <tr class="section">
+                                <td colspan="3" style="text-align:left font-size: 5px;"><b><span t-esc="get_section_code(o.company_id)"/></b></td>
+                                <td colspan="8"></td>
+                            </tr>
+                            <tbody>
+                                <tr class="main_body" t-foreach="get_history_data(data['form'])" t-as="ht_data">
+                                    <td style="border-bottom: none;"></td>
+                                    <td style="border-bottom: none;"></td>
+                                    <td style="border-bottom: none;"></td>
+                                    <td style="text-align: left;"><span t-esc="ht_data['name']"/></td>
+                                    <td><span t-esc="ht_data['effective_date']"/></td>
+                                    <td><span t-esc="ht_data['1st_company']"/></td>
+                                    <td><span t-esc="ht_data['1st_department']"/></td>
+                                    <td><span t-esc="ht_data['1st_position']"/></td>
+                                    <td><span t-esc="ht_data['2nd_company']"/></td>
+                                    <td><span t-esc="ht_data['2nd_department']"/></td>
+                                    <td><span t-esc="ht_data['2nd_position']"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="summary_employee_movement_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <div>
+                            <center>
+                                <!-- <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong> -->
+                                <strong>
+                                    <h4>
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                            <p style="font-size:16px;">
+                                                <b>
+                                                    Summary Employee Movement and Transfer Between <br/>
+                                                    <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                </b> 
+                                                <b>Until</b>
+                                                <b>
+                                                    <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/>
+                                                </b>
+                                            </p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;">
+                                                <b>
+                                                    Summary Employee Movement and Transfer <br/>
+                                                    <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                </b>
+                                            </p>
+                                        </t>
+                                    </h4>
+                                </strong>
+                            </center>
+                        </div>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <span class="text-right" style="text-align: right; padding-top: 3px;">Page <span style="text-align: right;" class="page"/> of <span class="topage"/></span>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <style>
+                        .main_table {
+                            width: 100%;
+                        }
+
+                        .main_table th {
+                            font-weight: normal;
+                            font-size: 10px;
+                            border-top: thin solid black;
+                            border-bottom: thin solid black;
+                            padding: 10px;
+                            text-align: center;
+
+                        }
+
+                        .all_border {
+                            border: thin solid black;
+                        }
+
+                        .st_body td {
+                            text-align: left;
+                            padding: 7px;
+                        }
+
+                        .nd_body td {
+                            text-align: center;
+                            padding: 7px;
+                        }
+
+                        .nd_body:last-child {
+                            border-bottom: thin solid black;
+                        }
+
+                        .main_body td{
+                            font-size: 10px;
+
+                        }
+
+                        </style>
+                        <table class="main_table">
+                            <thead>
+                                <tr>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th style="border-top: none;"></th>
+                                    <th colspan="3" class="all_border">From</th>
+                                    <th colspan="3" class="all_border">To</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align: left;">Name</th>
+                                    <th>Transfer Date</th>
+                                    <th>Company/Campus</th>
+                                    <th>Department/Section</th>
+                                    <th>Position</th>
+                                    <th>Company/Campus</th>
+                                    <th>Department/Section</th>
+                                    <th>Position</th>
+                                </tr>
+                            </thead>
+                            <tr class="section">
+                                <td colspan="3" style="text-align:left font-size: 5px;"><b><span t-esc="get_section_code(o.company_id)"/></b></td>
+                                <td colspan="8"></td>
+                            </tr>
+                            <tbody class="main_body">
+                                <t t-foreach="get_transfer_summary_data(data['form'])" t-as="tf">
+                                    <tr class="st_body">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><span t-esc="tf['name']"/></td>
+                                        <td colspan="7"></td>
+                                    </tr>
+                                    <tr class="nd_body" t-foreach="get_transfer(tf['transfer_obj'])" t-as="data">
+                                        <td colspan="4"></td>
+                                        <td><span t-esc="data['effective_date']"/></td>
+                                        <td><span t-esc="data['1st_company']"/></td>
+                                        <td><span t-esc="data['1st_department']"/></td>
+                                        <td><span t-esc="data['1st_position']"/></td>
+                                        <td><span t-esc="data['2nd_company']"/></td>
+                                        <td><span t-esc="data['2nd_department']"/></td>
+                                        <td><span t-esc="data['2nd_position']"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

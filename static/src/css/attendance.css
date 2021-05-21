@@ -1,0 +1,23 @@
+/* .oe_systray #oe_attendance_sign_in_out_icon {
+    color: white;
+} */
+
+.oe_systray #oe_attendance_sign_in_icon .fa-sign-in{
+    background-color: #52f70b;
+    font-size:22px;
+}
+.oe_systray #oe_attendance_sign_out_icon .fa-sign-out{
+    background-color: #f70b56;
+    font-size:22px;
+}
+
+.fa-sign-in {
+    /* color: #27ae60; */
+    color: rgb(0, 255, 8);
+    font-size:22px;
+}
+.fa-sign-out {
+    /* color: #e74c3c; */
+    color: rgb(255, 8, 0);
+    font-size:22px;
+}

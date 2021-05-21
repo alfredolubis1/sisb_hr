@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="active_deactive_employee_form_view" model="ir.ui.view">
+            <field name="name">employee.activation.deactivation.form.view</field>
+            <field name="model">employee.activation.deactivation</field>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <group colspan="4" col="4">
+                        <field name="employee_id" invisible="True"/>
+                        <field name="employee_id_display" readonly="True"/>
+                        <field name="active"/>
+                        <field name="name" attrs="{'invisible': [('active','=',True)], 'required': [('active','=',False)]}"/>
+                    </group>
+		            <footer>
+                        <button name="process_employee" string="Activate" attrs="{'invisible': [('active','=', False)]}" type="object"/>
+                        <button name="process_employee" string="Deactivate" attrs="{'invisible': [('active','=', True)]}" type="object"/>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+		            </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="active_deactive_employee_action" model="ir.actions.act_window">
+            <field name="name">Activate or Deactivate Employee</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.activation.deactivation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="active_deactive_employee_form_view"/>
+            <field name="target">new</field>
+            <!-- <field name="multi">True</field> -->
+        </record>
+
+        <act_window id="act_open_wizard_employee"
+            multi="False"
+            key2="client_action_multi"
+            context="{'default_employee_id': context.get('active_id')}"
+            name="Activate or Deactivate Employee"
+            res_model="employee.activation.deactivation"
+            src_model="hr.employee"
+            view_mode="form"
+            target="new"
+            groups="base.group_hr_manager"
+            view_type="form"/>
+
+    </data>
+</openerp>

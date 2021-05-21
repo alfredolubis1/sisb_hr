@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="employee_individual_detail_ot">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- <t t-call="sisb_hr.sisb_hr_report_layout"> -->
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                            <div>
+                                <strong><h4><b><span t-field="o.employee_id.company_id.name"/></b></h4></strong>
+                                <strong>
+                                    <h4>
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                        <p style="font-size:16px;"><b>Report Overtime <span t-esc="time.strftime('%d/%b/%Y', 
+                                            time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                        </b> - <b><span t-esc="time.strftime('%d/%b/%Y', 
+                                            time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;"><b>Report Overtime <span t-esc="time.strftime('%d/%b/%Y', 
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                    </h4>
+                                </strong>
+                            </div>
+                        </center>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <span class="text-right" style="text-align: right; padding-top: 3px;">Page <span style="text-align: right;" class="page"/> of <span class="topage"/></span>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width: 100%;
+                        }
+
+                        .main_table th {
+                            padding: 8px;
+                            font-size: 10px;
+                            font-weight: normal;
+                            font-family: sans-serif;
+                            border-top: thin dashed black;
+                            border-bottom: thin dashed black;
+                        }
+
+                        .st_tr td {
+                            font-size: 10px;
+                            padding: 5px;
+                        }
+
+                        .tr_body td{
+                            padding: 5px;
+                            font-size: 10px;
+                            text-align: left;
+                        }
+
+                        .nd_tr td {
+                            padding: 5px;
+                            border-bottom: thin dashed black;
+                            font-size: 10px;
+                        }
+
+                        .tr_body2 td {
+                            padding: 5px;
+                            font-size: 10px;
+                            border-top: 1px solid black;
+                        }
+
+                        .tr_body:last-child {
+                            border-bottom: 1px solid black;
+                        }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6"></th>
+                                        <th>Punch In</th>
+                                        <th>Punch Out</th>
+                                        <th>1</th>
+                                        <th>1.5</th>
+                                        <th>2</th>
+                                        <th>2.5</th>
+                                        <th>3</th>
+                                        <th>OT(6)</th>
+                                        <th>Baht</th>
+                                        <th>1</th>
+                                        <th>1.5</th>
+                                        <th>2</th>
+                                        <th>2.5</th>
+                                        <th>3</th>
+                                        <th>Baht</th>
+                                        <th>Total Baht</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="tot_all(o.company_id, o.employee_id, o.date_from, o.date_to)" t-as="total" class="st_tr">
+                                        <td style="text-align: left; padding-top: 10px; padding-bottom: 10px;" colspan="8"><b><span t-esc="get_section_code(o.company_id)"/></b></td>
+                                        <td><span t-esc="total['total_ot_one']"/></td>
+                                        <td><span t-esc="total['total_ot_one_half']"/></td>
+                                        <td><span t-esc="total['total_ot_two']"/></td>
+                                        <td><span t-esc="total['total_ot_two_half']"/></td>
+                                        <td><span t-esc="total['total_ot_three']"/></td>
+                                        <td><span t-esc="total['total_ot_six']"/></td> 
+                                        <td></td>
+                                        <td>0.00</td>
+                                        <td>x.xxx.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>x.xxx00</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr t-foreach="tot_all(o.company_id, o.employee_id, o.date_from, o.date_to)" t-as="total" class="nd_tr">
+                                        <td width="3%" style="border-bottom: none;"></td>
+                                        <td style="padding-left: 10px; padding-top: 5px; padding-bottom: 5px; border-bottom: thin dashed black; text-align: left; font-size: 10px;" colspan="4">
+                                            <t t-if="o.employee_id.gender == 'male'">
+                                                <span t-esc="o.employee_id.employee_no"/> Mr.<span t-esc="o.employee_id.name"/>
+                                            </t>
+                                            <t t-if="o.employee_id.gender == 'female'">
+                                                <span t-esc="o.employee_id.employee_no"/> Mrs.<span t-esc="o.employee_id.name"/>
+                                            </t>
+                                            <t t-if="o.employee_id.gender == False">
+                                                <span t-esc="o.employee_id.employee_no"/> <span t-esc="o.employee_id.name"/>
+                                            </t>
+                                        </td>
+                                        <td style="font-size: 10px; padding-top: 5px; padding-bottom: 5px; border-bottom: thin dashed black; text-align: left;" colspan="2">Salary</td>
+                                        <td><span style="padding-left: 2px;">xx.xxx,00</span> <span style="padding-left: 10px;">Total</span></td>
+                                        <td><span t-esc="total['total_ot_one']"/></td>
+                                        <td><span t-esc="total['total_ot_one_half']"/></td>
+                                        <td><span t-esc="total['total_ot_two']"/></td>
+                                        <td><span t-esc="total['total_ot_two_half']"/></td>
+                                        <td><span t-esc="total['total_ot_three']"/></td>
+                                        <td><span t-esc="total['total_ot_six']"/></td>
+                                        <td style="text-align: center;">0</td>
+                                        <td>0.00</td>
+                                        <td>x.xxx.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>x.xxx00</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="tr_body" t-foreach="individual_employee_ot_det(data['form'])" t-as="emp_ot">
+                                        <td width="3%"></td>
+                                        <td width="3%"></td>
+                                        <td style="text-align: left;"><span t-esc="emp_ot['date']"/></td>
+                                        <td>1</td>
+                                        <td><span t-esc="emp_ot['schedule']"/></td>
+                                        <td>N</td>
+                                        <td><span t-esc="emp_ot['punch_in']"/></td>
+                                        <td><span t-esc="emp_ot['punch_out']"/></td>
+                                        <td>  </td>
+                                        <td><span t-esc="emp_ot['ot_rounded']"/></td>
+                                        <td>  </td>
+                                        <td>  </td>
+                                        <td>  </td>
+                                        <td>  </td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>xxx.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>xxx.00</td> 
+                                        <td></td>
+                                    </tr>
+                                    <t t-set="ot_total" t-value="0"/>
+                                    <t t-foreach="individual_employee_ot_det(data['form'])" t-as="emp_ot">
+                                        <t t-set="ot_total" t-value="emp_ot['ot_length']"/>
+                                    </t>
+                                    <tr class="tr_body2">
+                                        <td style="border-top: none;"></td>
+                                        <td colspan="7"></td>
+                                        <td></td>
+                                        <td><span t-esc="get_ot_total(ot_total)"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>0.00</td>
+                                        <td>Total</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>0.00</td>
+                                        <td>Total</td>
+                                        <td>1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- </t> -->
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>
+
+<!-- <style type="text/css">
+.main_table {
+    width: 100%;
+}
+
+.main_table th {
+    padding: 8px;
+    font-size: 10px;
+    font-weight: normal;
+    font-family: sans-serif;
+    border-top: thin dashed black;
+    border-bottom: thin dashed black;
+    text-align: right;
+}
+
+.st_tr td {
+    font-size: 10px;
+    padding: 5px;
+    text-align: right;
+}
+
+.tr_body td{
+    padding: 5px;
+    text-align: right;
+    font-size: 10px;
+}
+
+.nd_tr td {
+    padding: 5px;
+    text-align: right;
+    border-bottom: thin dashed black;
+    font-size: 10px;
+}
+
+.tr_body2 td {
+    padding: 5px;
+    font-size: 10px;
+    text-align: right;
+    border-top: 1px solid black;
+}
+
+.tr_body:last-child {
+    border-bottom: 1px solid black;
+}
+</style> -->

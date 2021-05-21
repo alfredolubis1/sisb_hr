@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="assets_backend" name="hr_attendance assets" inherit_id="hr_attendance.assets_backend">
+            <!-- <xpath expr="." position="inside">
+                <script type="text/javascript" src="/hr_attendance/static/src/js/attendance.js"></script>
+                <link rel="stylesheet" href="/hr_attendance/static/src/css/attendance.css"/>
+            </xpath> -->
+
+            <xpath expr="//script[@src='/hr_attendance/static/src/js/attendance.js']" position="replace">
+                <script type="text/javascript" src="/sisb_hr/static/src/js/attendance.js"></script>
+            </xpath>
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/sisb_hr/static/src/js/formats.js"></script>
+                <script type="text/javascript" src="/sisb_hr/static/src/js/view_form.js"></script>
+                <link rel="stylesheet" href="/sisb_hr/static/src/css/attendance.css"/>
+            </xpath>
+        </template>
+    </data>
+</openerp>

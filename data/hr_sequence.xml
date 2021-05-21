@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Sequences for Employee Overtime Number --> 
+        <record id="seq_type_emp_overtime_sequence" model="ir.sequence.type">
+            <field name="name">Employee Overtime Number</field>
+            <field name="code">hr.overtime.request</field>
+        </record>
+        <record id="seq_emp_overtime_sequence" model="ir.sequence">
+            <field name="name">Overtime Sequence</field>
+            <field name="code">hr.overtime.request</field>
+            <field name="active">True</field>
+            <field name="prefix">OT</field>
+            <!-- <field name="number_increment">1</field>
+            <field name="number_next">1</field> -->
+            <field name="padding">5</field>
+        </record>
+
+
+        <!-- Sequences for Employee ID Number -->
+        <record id="seq_sisb_employee_no" model="ir.sequence.type">
+            <field name="name">Employee Number</field>
+            <field name="code">hr.employee</field>
+        </record>
+        <record id="seq_sisb_employee_number" model="ir.sequence">
+            <field name="name">Employee Number</field>
+            <field name="code">hr.employee</field>
+            <field name="active">True</field>
+            <!-- <field name="prefix">OT</field> -->
+            <!-- <field name="number_increment">1</field>
+            <field name="number_next">1</field> -->
+            <field name="padding">6</field>
+        </record>
+
+
+        <!-- Sequences for Employee Leave Number -->
+        <record id="seq_sisb_employee_leave_no" model="ir.sequence.type">
+            <field name="name">Employee Leave Number</field>
+            <field name="code">hr.holidays</field>
+        </record>
+        <record id="seq_sisb_employee_leave_number" model="ir.sequence">
+            <field name="name">Employee Number</field>
+            <field name="code">hr.holidays</field>
+            <field name="prefix">LV/</field>
+            <field name="active">True</field>
+            <field name="padding">5</field>
+        </record>
+
+
+        <!-- Sequences for Employee Resign Number -->
+        <record id="seq_sisb_employee_resign_no" model="ir.sequence.type">
+            <field name="name">Employee Resign Number</field>
+            <field name="code">hr.resignation</field>
+        </record>
+        <record id="seq_sisb_employee_resign_number" model="ir.sequence">
+            <field name="name">Employee Resign Number</field>
+            <field name="code">hr.resignation</field>
+            <field name="prefix">RN/</field>
+            <field name="active">True</field>
+            <field name="padding">5</field>
+        </record>
+
+
+        <!-- Sequences for Employee Transfer Number -->
+        <record id="seq_sisb_employee_transfer_no" model="ir.sequence.type">
+            <field name="name">Employee Resign Number</field>
+            <field name="code">hr.employee.transfer</field>
+        </record>
+        <record id="seq_sisb_employee_transfer_number" model="ir.sequence">
+            <field name="name">Employee Resign Number</field>
+            <field name="code">hr.employee.transfer</field>
+            <field name="prefix">TF/</field>
+            <field name="active">True</field>
+            <field name="padding">5</field>
+        </record>
+
+        <!-- Sequences for Employee Shift Number -->
+        <record id="hr_schedule_shift_no" model="ir.sequence.type">
+            <field name="name">Employee Shift Number</field>
+            <field name="code">hr.schedule.allocation</field>
+        </record>
+        <record id="hr_schedule_shift_number" model="ir.sequence">
+            <field name="name">Employee Shift Number</field>
+            <field name="code">hr.schedule.allocation</field>
+            <field name="prefix">SHIFT/</field>
+            <field name="active">True</field>
+            <field name="padding">5</field>
+        </record>
+
+
+        <!-- Sequences for Employee Shift Number -->
+        <record id="hr_schedule_indivisual_shift_no" model="ir.sequence.type">
+            <field name="name">Employee Individual Shift Number</field>
+            <field name="code">hr.schedule.running.shift</field>
+        </record>
+        <record id="hr_schedule_indivisual_shift_number" model="ir.sequence">
+            <field name="name">Employee Individual Shift Number</field>
+            <field name="code">hr.schedule.running.shift</field>
+            <field name="prefix">SHIFT/EMP/</field>
+            <field name="active">True</field>
+            <field name="padding">5</field>
+        </record>
+
+        <record id="hr_schedule_shift_req_no" model="ir.sequence.type">
+            <field name="name">Employee Individual Shift REQ Number</field>
+            <field name="code">hr.schedule.shift.request</field>
+        </record>
+        <record id="hr_schedule_shift_req_number" model="ir.sequence">
+            <field name="name">Employee Individual Shift REQ Number</field>
+            <field name="code">hr.schedule.shift.request</field>
+            <field name="prefix">SHIFT/REQ/</field>
+            <field name="active">True</field>
+            <field name="padding">5</field>
+        </record>
+
+    </data>
+</openerp>

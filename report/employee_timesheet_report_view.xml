@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="generate_timesheet_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                            <div>
+                                <strong><h4><b>Attendance Sheet</b></h4></strong>
+                            </div>
+                        </center>
+                        <table>
+                            <tr>
+                                <td style="padding-left: 10px">Name</td>
+                                <td style="padding-left: 10px">:</td>
+                                <td style="padding-left: 10px"><span t-field="o.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 10px">Month</td>
+                                <td style="padding-left: 10px">:</td>
+                                <td style="padding-left: 10px"><span t-field="o.month_in_str"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width: 100%;
+                        }
+
+                        .main_table th {
+                            font-weight: normal;
+                            font-size: 10px;
+                            padding: 10px;
+                            text-align: center;
+                            border: thin solid black;
+
+                        }
+
+                        .main_body td {
+                            font-size: 10px;
+                            padding: 7px;
+                            text-align: center;
+                            border: thin solid black;
+                        }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th>DATE</th>
+                                        <th>TIME IN</th>
+                                        <th>TIME OUT</th>
+                                        <th>EMPLOYEE'S SIGNATURE</th>
+                                        <th>SUPERVISOR'S SIGNATURE</th>
+                                    </tr>
+                                </thead>
+                                <t t-if="o.option == 'blank'">
+                                    <tbody>
+                                        <tr class="main_body" t-foreach="generate_date(data['form'])" t-as="data">
+                                            <td><span t-esc="data['date']"/></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </t>
+                                <t t-if="o.option == 'data'">
+                                    <tbody>
+                                        <tr class="main_body" t-foreach="get_data(data['form'])" t-as="data">
+                                            <td><span t-esc="data['date']"/></td>
+                                            <td><span t-esc="data['sign_in']"/></td>
+                                            <td><span t-esc="data['sign_out']"/></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

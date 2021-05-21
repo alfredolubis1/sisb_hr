@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="employee_individual_overtaime_detailed_report" model="ir.ui.view">
+            <field name="name">Individual Overtime Detail Report</field>
+            <field name="model">employee.ovetime.detailed.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Individual Overtime Detai Report">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="company_id"/>
+                            <field name="employee_id" domain="[('company_id','=', company_id)]" attrs="{'readonly': [('company_id','=',False)]}"/>
+                            <field name="date_from" required="1"/>
+                            <field name="date_to" required="1"/>]
+                        </group>
+                        <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight" />
+                        <!-- <button name="print_irregular_absent_report" string="Print" type="object" class="oe_highlight" attrs="{'invisible': [('options', '!=', 'irregular')]}"/> -->
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_employee_individual_ot_detail" model="ir.actions.act_window">
+            <field name="name">Individual Overtime Detail Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.ovetime.detailed.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_individual_overtaime_detailed_report"/>
+            <field name="target">new</field>
+        </record>
+
+         <menuitem name="Overtime Individual Report" action="action_employee_individual_ot_detail" id="menu_individual_overtime_detail_report" parent="overtime_report_menu" sequence="1"/>
+    </data>
+</openerp>

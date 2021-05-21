@@ -1,0 +1,1221 @@
+<?xml version="1.0" ?>
+    <openerp>
+        <data>
+            
+
+            <record id="allowance_type_form_view" model="ir.ui.view">
+                <field name="name">Allowance Type Form</field>
+                <field name="model">allowance.type</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form>
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <field name="salary"/>
+                                <field name="description"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+            <record id="allowance_type_tree_view" model="ir.ui.view">
+                <field name="name">Allowance Type Tree</field>
+                <field name="model">allowance.type</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <tree string="Allowance Type">
+                        <field name="name"/>
+                        <field name="description"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="allowance_type_action" model="ir.actions.act_window">
+                <field name="name">Allowance Type</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">allowance.type</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+            </record>
+
+            <menuitem id="menu_allowance_type" action="allowance_type_action" parent="hr.menu_hr_configuration"
+                  sequence="7" groups="base.group_hr_manager"/>
+
+
+            <!-- HR OVERTIME -->
+            <!-- <record id="hr_overtime_request_tree_view" model="ir.ui.view">
+                <field name="name">hr_overtime_request_tree</field>
+                <field name="model">hr.overtime.request</field>
+                <field name="arch" type="xml">
+                    <tree string="Overtime Request" colors="blue:state == 'to_approve';green:state == 'approved';red:state == 'refuse' ">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="department_id"/>
+                        <field name="position_id"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record> -->
+
+            <record id="hr_overtime_request_tree_view" model="ir.ui.view">
+                <field name="name">hr_overtime_request_tree</field>
+                <field name="model">hr.overtime.request</field>
+                <field name="arch" type="xml">
+                    <tree string="Overtime Request" colors="green:state == 'approved';red:state == 'refuse' ">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="department_id"/>
+                        <field name="position_id"/>
+                        <field name="approved_by_id"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+
+            <!-- <record id="hr_overtime_request_tree_view_refused" model="ir.ui.view">
+                <field name="name">hr_overtime_request_tree</field>
+                <field name="model">hr.overtime.request</field>
+                <field name="arch" type="xml">
+                    <tree string="Overtime Request"  colors="blue:state == 'to_approve';green:state == 'approved';red:state == 'refuse' ">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="department_id"/>
+                        <field name="position_id"/>
+                        <field name="state"/>
+                        <field name="refused_by_id"/>
+                        <field name="type" invisible="1"/>
+                    </tree>
+                </field>
+            </record> -->
+
+            <record id="hr_overtime_request_form_view" model="ir.ui.view">
+                <field name="name">hr_overtime_request_form</field>
+                <field name="model">hr.overtime.request</field>
+                <field name="arch" type="xml">
+                    <form string="Overtime Request">
+                        <header>
+                            <button name="confirm_request" string="Confirm" states="draft" type="object" class="oe_highlight"/>
+                            <button name="approve_request" string="Approve" states="to_approve" type="object" class="oe_highlight" groups="base.group_hr_user,base.group_hr_manager"/>
+                            <button name="cancel_request" string="Cancel" states="to_approve" type="object" class="oe_highlight"/>
+                            <!-- <button name="re_compute_ot_hour" string="re-Compute Hour" states="draft,to_approve" type="object" class="oe_highlight"/> -->
+                            <button name="refuse_request" string="Reject" states="to_approve" type="object" class="oe_highlight" groups="base.group_hr_user,base.group_hr_manager"/>
+                            <button name="set_draft_button" string="Set To Draft" states="refuse" type="object" class="oe_highlight" groups="base.group_hr_user,base.group_hr_manager"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,approved"/>
+                        </header>
+                        <sheet>
+                        	<div class="oe_title">
+                                <h1>
+                                    <field name="name" readonly="1"/>
+                                </h1>
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="date" readonly="1"/>
+                                </group>
+                                <newline/>
+                                <group>
+                                    <field name="employee_id" domain="[('overtime', '=', True),('user_id.id','=',uid)]" options="{'no_create': True, 'no_open': True}" required="1" readonly="1"/>
+                                    <field name="rel_comp_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="company_id" invisible="1" options="{'no_create': True, 'no_open': True}"/>
+                                </group>
+                                <group>
+                                    <field name="department_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="position_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="rel_dept_id" invisible="1" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="rel_position_id" invisible="1" options="{'no_create': True, 'no_open': True}"/>
+                                </group>
+                                <!-- Hide Fields -->
+                                <!-- <group>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="department_id" invisible="1"/>
+                                    <field name="position_id" invisible="1"/>
+                                </group> -->
+                            </group>
+                            <notebook>
+                                <page string="Overtime List">
+                                    <!-- <button name="compute_ot_hour" string="Compute Hour" attrs="{'invisible': [('state','in', ['draft','to_approve','approved'])]}" type="object" class="oe_highlight"/> -->
+                                    <button name="compute_ot_hour" string="Compute Hour" invisible="1" type="object" class="oe_highlight"/>
+                                    <field name="request_line_ids" attrs="{'readonly': [('state','in',['approved'])]}" context="{'default_employee_id': employee_id}">
+                                        <tree string="Overtime List" editable="bottom">
+                                            <field name="date_overtime"/>
+                                            <field name="day_related" readonly="1"/>
+                                            <field name="start_hour" widget="float_time" required="1"/>
+                                            <field name="end_hour" widget="float_time" required="1"/>
+                                            <field name="name"/>
+                                            <field name="schedule_id" invisible="1"/>
+                                            <field name="related_schedule_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="start_type" invisible="1"/>
+                                            <field name="overtime_type_id" string="OT Type" required="True" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="hour_span" widget="float_time" sum="OT Hours" invisible="True"/>
+                                            <field name="employee_id" invisible="1"/>
+                                            <field name="day" invisible="1"/>
+                                            <field name="day_type" invisible="1"/>
+                                            <field name="state" invisible="0" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                            <group col="4" colspan="4" string="Notes">
+                                <field name="notes" nolabel="1" readonly="1"/>
+                            </group>
+                            <group col="4" colspan="4" string="Other Information">
+                                <field name="approved_by_id" attrs="{'invisible': [('state', '=' , 'refuse')]}" readonly="1"/>
+                                <field name="refused_by_id" attrs="{'invisible': [('state', '!=' , 'refuse')]}" readonly="1"/>
+                                <newline/>
+                                <field name="approved_date" attrs="{'invisible': [('state', '=' , 'refuse')]}" readonly="1"/>
+                                <field name="refuse_reason" attrs="{'invisible': [('state', '!=' , 'refuse')]}" readonly="1"/>
+                                <newline/>
+                                <field name="total_overtime" widget="float_time" invisible="1"/>
+                                <field name="type" invisible="1"/>
+                            </group>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </form>
+                </field>
+            </record>
+
+            <record id="hr_overtime_request_officer_view" model="ir.ui.view">
+                <field name="name">hr_overtime_request_form</field>
+                <field name="model">hr.overtime.request</field>
+                <field name="inherit_id" ref="sisb_hr.hr_overtime_request_form_view"/>
+                <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
+                <field name="arch" type="xml">
+                    <button name="cancel_request" position="replace">
+                        <button name="cancel_request" string="Cancel" attrs="{'invisible': [('state','=','draft')]}" type="object" class="oe_highlight"/>
+                    </button>
+                    <field name="employee_id" position="attributes">
+                        <attribute name="readonly">False</attribute>
+                        <attribute name="domain">[('overtime', '=', True),'|','|',('user_id.id','=',uid),('supervisor_id.user_id.id','=',uid),('supervisor_lvl2_id.user_id.id','=',uid)]</attribute>
+                    </field>
+                </field>
+            </record>
+
+            <record id="hr_overtime_request_manager_view" model="ir.ui.view">
+                <field name="name">hr_overtime_request_form</field>
+                <field name="model">hr.overtime.request</field>
+                <field name="inherit_id" ref="sisb_hr.hr_overtime_request_form_view"/>
+                <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager')])]"/>
+                <field name="arch" type="xml">
+                    <button name="cancel_request" position="replace">
+                        <button name="cancel_request" string="Cancel" attrs="{'invisible': [('state','=','draft')]}" type="object" class="oe_highlight"/>
+                    </button>
+                    <field name="employee_id" position="attributes">
+                        <attribute name="readonly">False</attribute>
+                        <attribute name="domain">[('overtime', '=', True)]</attribute>
+                    </field>
+                </field>
+            </record>
+
+            <record id="hr_overtime_request_search" model="ir.ui.view">
+                <field name="name">hr.overtime.request.search</field>
+                <field name="model">hr.overtime.request</field>
+                <field name="arch" type="xml">
+                    <search string="Overtime Request">
+                        <field name="name" filter_domain="['|', ('employee_id','ilike',self), ('name','ilike',self)]" string="Name"/>
+                        <field name="employee_id"/>
+                        <group expand="0" string="Group By">
+                            <filter string="State" domain="" context="{'group_by':'state'}"/>
+                        </group>
+                    </search>
+                </field>
+            </record>
+
+            <record id="hr_overtime_request_action" model="ir.actions.act_window">
+                <field name="name">All Overtime Request</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">hr.overtime.request</field>
+                <field name="context">{'default_type': 'add'}</field>
+                <field name="domain">['|',('employee_id.supervisor_id.user_id.id','=', uid),('employee_id.supervisor_lvl2_id.user_id.id', '=', uid)]</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="hr_overtime_request_search"/>
+            </record>
+
+            <record id="hr_my_overtime_request_action" model="ir.actions.act_window">
+                <field name="name">My Overtime</field>
+                <field name="res_model">hr.overtime.request</field>
+                <field name="context">{'default_type': 'add'}</field>
+                <field name="domain">[('employee_id.user_id.id', '=', uid)]</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="hr_overtime_request_search"/>
+            </record>
+
+            <record id="my_overtime_request_action_tree" model="ir.actions.act_window.view">
+                <field eval="1" name="sequence"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_overtime_request_tree_view"/>
+                <field name="act_window_id" ref="hr_my_overtime_request_action"/>
+            </record>
+            <record id="my_overtime_request_action_form" model="ir.actions.act_window.view">
+                <field eval="2" name="sequence"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="hr_overtime_request_form_view"/>
+                <field name="act_window_id" ref="hr_my_overtime_request_action"/>
+            </record>
+
+            
+            <!-- #######################################################################-->            
+
+            <menuitem id="overtime_menu" name="Overtime" sequence="16" parent="hr.menu_hr_root"/>
+            <menuitem id="menu_hr_my_overtime_request" name="My Overtime" action="hr_my_overtime_request_action" parent="overtime_menu" sequence="1"/>
+            <menuitem id="emp_ot_req" name="All Overtime" sequence="2" parent="overtime_menu" action="hr_overtime_request_action" groups="base.group_hr_manager"/>
+            <menuitem id="overtime_report_menu" name="Overtime Report" sequence="4" parent="overtime_menu" groups="base.group_hr_user,base.group_hr_manager"/>
+
+
+            <!-- ############################## HR Department Inherit ############################## -->
+            <record id="inherit_hr_dept_form" model="ir.ui.view">
+                <field name="name">hr.department.form</field>
+                <field name="model">hr.department</field>
+                <field name="inherit_id" ref="hr.view_department_form"/>
+                <field name="arch" type="xml">
+                    <field name="manager_id" position="attributes">
+                        <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                    </field>
+                    <field name="parent_id" position="attributes">
+                        <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                    </field>
+                    <field name="company_id" position="replace">
+                        <field name="company_id" widget="selection"/>
+                    </field>
+                    <field name="company_id" position="before">
+                        <field name="leave_month_reset"/>
+                        <field name="email"/>
+                        <field name="public_holiday_type" string="Holiday Type"/>
+                        <!-- <field name="member_ids"/> -->
+                    </field>
+                </field>
+            </record>
+
+            <record id="inherit_hr_dept_tree" model="ir.ui.view">
+                <field name="name">hr.department.tree</field>
+                <field name="model">hr.department</field>
+                <field name="inherit_id" ref="hr.view_department_tree"/>
+                <field name="arch" type="xml">
+                    <field name="company_id" position="replace">
+                        <field name="company_id" widget="selection"/>
+                    </field>
+                    <field name="manager_id" position="after">
+                        <field name="email" string="Email"/>
+                        <field name="leave_month_reset"/>
+                        <field name="public_holiday_type"/>
+                    </field>
+                </field>
+            </record>
+
+            <!-- ############################## Overtime History List ############################## -->
+            <record id="hr_overtime_request_history_tree_view" model="ir.ui.view">
+                <field name="name">hr_overtime_history_tree</field>
+                <field name="model">hr.overtime.history</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Overtime Request" colors="blue:state == 'to_approve';green:state == 'approved';red:state == 'refuse' ">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="date_overtime"/>
+                        <field name="start_hour" widget="float_time"/>
+                        <field name="end_hour" widget="float_time"/>
+                        <field name="ot_hour" widget="float_time"/>
+                        <field name="desc"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+            
+
+            <record model="ir.ui.view" id="hr_overtime_request_history_form_view">
+                <field name="name">hr_overtime_history_form</field>
+                <field name="model">hr.overtime.history</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Overtime History">
+                        <header>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,approved"/>
+                        </header>
+                        <sheet>
+                            <group col ="4" colspan="4">
+                                <field name="name"/>
+                                <field name="employee_id" select="1"/>
+                                <field name="date_overtime" select="1" />
+                            </group>
+                            <newline/>
+                            <group col="4" colspan="4">
+                                <field name="start_hour" widget="float_time"/>
+                                <field name="end_hour" widget="float_time"/>
+                            </group>
+                            <!-- <field name="holiday_id" mode="tree" colspan="4" nolabel="1"/>
+                            <separator string="Reason(s) for taaking leave(s)" colspan="4" /> -->
+                            <group col="4" colspan="4">
+                                <field name="ot_hour" widget="float_time" col="2" colspan="2"/>
+                                <newline/>
+                                <field name="desc" colspan="4"/>
+                            </group>
+                            <!-- <separator string="Contact Number/s during leave period:" colspan="4" />
+                            <group col="8" colspan="4">
+                                <field name="contactno"/>
+                                <field name="total_half"/>
+                                <field name="total_full"/>
+                                <field name="total_hour"/>
+                            </group>
+                            <newline/>
+                            <group col="2" colspan="4">
+                                <field name="state" select="1"/>
+                            </group> -->
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="action_all_my_overtime_history">
+                <field name="name">My Overtime History</field>
+                <field name="res_model">hr.overtime.history</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="hr_overtime_request_history_tree_view"/>
+                <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+            </record>
+            <menuitem name="Overtime History" parent="overtime_menu" id="action_overtime_history" sequence="2" action="action_all_my_overtime_history"/>
+            <!-- ############################################################################### -->
+
+
+
+            <!-- ############################## Employee Curr Overtime ############################## -->
+            <record id="hr_overtime_per_employee_tree" model="ir.ui.view">
+                <field name="name">employee.curr.overtime.tree</field>
+                <field name="model">employee.curr.overtime</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Overtime Per Employee">
+                        <field name="name"/>
+                        <field name="start_hour" widget="float_time"/>
+                        <field name="end_hour" widget="float_time"/>
+                        <field name="employee_id"/>
+                        <field name="desc"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="hr_overtime_per_employee_form" model="ir.ui.view">
+                <field name="name">employee.curr.overtime.form</field>
+                <field name="model">employee.curr.overtime</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form>
+                        
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <newline/>
+                                <field name="start_hour"/>
+                                <field name="end_hour"/>
+                                <field name="hour_span"/>
+                                <field name="employee_id"/>
+                                <separator string="Reason(s) for Overtime" colspan="4" />
+					            <field name="desc" colspan="4" nolabel="1"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="hr_overtime_per_employee_action">
+                <field name="name">Overtime Per Employee</field>
+                <field name="res_model">employee.curr.overtime</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <!-- <field name="view_id" ref="hr_overtime_request_history_tree_view"/> -->
+                <field name="domain"></field>
+            </record>
+            <!-- ###################################################################################  -->
+
+
+
+            <!-- ############################## Overtime Type #################################  -->
+            <record id="hr_overtime_type_tree_view" model="ir.ui.view">
+                <field name="name">hr.overtime.type.tree</field>
+                <field name="model">overtime.type</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Overtime Per Employee">
+                        <field name="name"/>
+                        <field name="desc"/>
+                    </tree>
+                </field>
+            </record>
+
+
+            <record id="hr_overtime_type_form_view" model="ir.ui.view">
+                <field name="name">hr.overtime.type.tree</field>
+                <field name="model">overtime.type</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form>
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <field name="start_type"/>
+                                <separator string="Overtime Type Description" colspan="4" />
+					            <field name="desc" colspan="4" nolabel="1"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="hr_overtime_type_action">
+                <field name="name">Overtime Type</field>
+                <field name="res_model">overtime.type</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="hr_overtime_type_form_view"/>
+                <field name="domain"></field>
+            </record>   
+
+            <record model="ir.actions.act_window.view" id="hr_overtime_request_action_to_approve_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_overtime_type_tree_view"/>
+                <field name="act_window_id" ref="hr_overtime_type_action"/>
+            </record>
+
+            <record model="ir.actions.act_window.view" id="hr_overtime_request_action_to_approve_form">
+                <field name="sequence" eval="2"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="hr_overtime_type_form_view"/>
+                <field name="act_window_id" ref="hr_overtime_type_action"/>
+            </record>
+
+            <menuitem id="overtime_type_menu" name="Overtime Type" action="hr_overtime_type_action" sequence="3" parent="overtime_menu" groups="base.group_hr_user"/>         
+            <!-- ###################################################################################  -->
+
+
+
+            <!-- ########################## Employee Transfer #######################  -->
+            <record id="hr_employee_transfer_tree_view" model="ir.ui.view">
+                <field name="name">HR Transfer List</field>
+                <field name="model">hr.employee.transfer</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                    <tree string="Employee Transfer List">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="position_id"/>
+                        <field name="department_id"/>
+                        <field name="effective_date"/>
+                        <field name="company_id"/>
+                        <field name="new_position_id"/>
+                        <field name="department_destination_id"/>
+                        <field name="company_destination_id"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+
+
+            <record model="ir.ui.view" id="hr_employee_transfer_calendar_view">
+                <field name="name">Transfer Calendar</field>
+                <field name="model">hr.employee.transfer</field>
+                <field name="arch" type="xml">
+                    <calendar string="Transfer"
+                        date_start="effective_date" color="employee_id">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                    </calendar>
+                </field>
+            </record>
+
+
+            <record id="hr_employee_transfer_form_view" model="ir.ui.view">
+                <field name="name">HR Transfer Form</field>
+                <field name="model">hr.employee.transfer</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form>
+                        <header>
+                            <button name="submit_tf" string="Submit" states="draft" type="object" class="oe_highlight"/>
+                            <button name="print_tf_notif_form" string="Print Transfer Notification Form" states="submit,accept" type="object" class="oe_highlight"/>
+                            <button name="staff_tf_checklist_form" string="Print Staff Transfer Checklist" states="submit,accept" type="object" class="oe_highlight" groups="base.group_hr_user"/>
+                            <!-- <button name="confirm_tf" string="Transfer" states="submit" type="object" class="oe_highlight" groups="base.group_hr_user"/> -->
+                            <button name="accept_tf" string="Accept Transfer" states="submit" type="object" class="oe_highlight" groups="base.group_hr_user"/>
+                            <button name="generate_board_item" string="Generate Board Item" attrs="{'invisible': ['|',('state','not in',('submit','accept')),('generated','=', True)]}" type="object" class="oe_highlight" groups="base.group_hr_user"/>
+                            <button name="cancel_tf" string="Cancel" states="submit" type="object" class="oe_highlight"/>
+                            <button name="set_draft" string="Set to Draft" states="cancel" type="object" class="oe_highlight"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,submit,accept,transferred"/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <group>
+                                    <div class="oe_title">
+                                        <h1>
+                                            <field name="name" readonly="1"/>
+                                        </h1>
+                                    </div>
+                                </group>
+                                <group col="4" colspan="4">
+                                    <field name="employee_id" attrs="{'readonly': [('state','in',('confirm','transfer'))]}" required="1" invisible="True" colspan="4"/>
+                                    <field name="related_employee_id" readonly="True" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="tf_date" attrs="{'readonly': [('state','in',('confirm','transfer'))]}" required="1"/>
+                                    <newline/>
+                                    <field name="related_company_id" required="0" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="company_destination_id" required="1" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <newline/>
+                                    <field name="related_department_id" required="0" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="department_destination_id" required="1" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="department_id" invisible="1"/>
+                                    <newline/>
+                                    <field name="related_job_id" required="0"/>
+                                    <field name="new_job_id" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="related_position_id" required="0"/>
+                                    <field name="new_position_id" attrs="{'readonly': [('state','!=','draft'),('new_job_id','=',False)]}" domain="[('job_position_id','=',new_job_id)]" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="effective_date" attrs="{'readonly': [('state','in',('accept','transferred'))], 'required': [('state','=','submit')]}"/>
+                                    <field name="application_source_id" attrs="{'readonly': [('state','!=','draft')]}" domain="[('existing_employee_id','=',employee_id),('state','=','draft')]" options="{'no_create': True, 'no_open': True}"/>
+                                    <newline/>
+                                    <field name="transfer_reason" colspan="4"/>
+                                    <field name="job_id" invisible="1"/>
+                                    <field name="position_id" invisible="1"/>
+                                    <field name="generated" invisible="1"/>
+                                    <field name="company_code" invisible="1"/>
+
+
+                                </group>
+                                <group col="4" colspan="4">
+                                    <separator string="Notes" colspan="4"/>
+                                    <field name="notes" nolabel="1" colspan="4"/>
+                                    <separator string="Boarding Item to returned" colspan="4" groups="base.group_hr_manager,base.group_hr_user"/>
+                                    <field name="tf_boarding_list_ids" widget="one2many_list" nolabel="1" groups="base.group_hr_manager,base.group_hr_user">
+                                        <tree string="Boarding Item" editable="bottom">
+                                            <field name="boarding_id"/>
+                                            <field name="department_id"/>
+                                            <field name="amount"/>
+                                            <field name="is_returned"/>
+                                            <field name="date_is_returned" attrs="{'required': [('is_returned','=',True)]}"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record id="transfer_employee_search_view" model="ir.ui.view">
+                <field name="name">Employee Transfer Search</field>
+                <field name="model">hr.employee.transfer</field>
+                <field name="arch" type="xml">
+                    <search string="Search Employee Transfer">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="effective_date"/>
+                        <group expand="0" string="Group By">
+                            <filter name="state_filter" string="State" context="{'group_by': 'state'}"/>
+                        </group>
+                </search>
+                </field>
+            </record>
+
+            <menuitem id="hr_employee_transfer_menu" name="Transfer Employee" sequence="1" parent="hr.menu_hr_root" groups="base.group_hr_user,base.group_hr_manager"/> 
+
+            <record model="ir.actions.act_window" id="hr_employee_my_transfer_action">
+                <field name="name">Transfer</field>
+                <field name="res_model">hr.employee.transfer</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="transfer_employee_search_view"/>
+                <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+            </record> 
+
+            <record model="ir.actions.act_window.view" id="hr_my_employee_transfer_action_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_employee_transfer_tree_view"/>
+                <field name="act_window_id" ref="hr_employee_my_transfer_action"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="hr_my_employee_transfer_action_form">
+                <field name="sequence" eval="2"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="hr_employee_transfer_form_view"/>
+                <field name="act_window_id" ref="hr_employee_my_transfer_action"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="hr_my_employee_transfer_action_calendar">
+                <field name="sequence" eval="3"/>
+                <field name="view_mode">calendar</field>
+                <field name="view_id" ref="hr_employee_transfer_calendar_view"/>
+                <field name="act_window_id" ref="hr_employee_my_transfer_action"/>
+            </record>
+
+            <menuitem id="hr_employee_my_transfer_menu" name="Transfer" action="hr_employee_my_transfer_action" sequence="1" parent="hr_employee_transfer_menu"/>     
+
+            <record id="hr_all_employee_transfer_form_view" model="ir.ui.view">
+                <field name="name">hr.employee.transfer.form</field>
+                <field name="model">hr.employee.transfer</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form>
+                        <header>
+                            <button name="submit_tf" string="Submit" states="draft" type="object" class="oe_highlight"/>
+                            <button name="print_tf_notif_form" string="Print Transfer Notification Form" states="submit,accept" type="object" class="oe_highlight"/>
+                            <button name="staff_tf_checklist_form" string="Print Staff Transfer Checklist" states="submit,accept" type="object" class="oe_highlight" groups="base.group_hr_user"/>
+                            <!-- <button name="confirm_tf" string="Transfer" states="submit" type="object" class="oe_highlight" groups="base.group_hr_user"/> -->
+                            <button name="accept_tf" string="Accept Transfer" states="submit" type="object" class="oe_highlight" groups="base.group_hr_user"/>
+                            <button name="generate_board_item" string="Generate Board Item" attrs="{'invisible': ['|',('state','not in',('submit','accept')),('generated','=', True)]}" type="object" class="oe_highlight" groups="base.group_hr_user"/>
+                            <button name="cancel_tf" string="Cancel" states="submit" type="object" class="oe_highlight"/>
+                            <button name="set_draft" string="Set to Draft" states="cancel" type="object" class="oe_highlight"/>
+                            <button name="update_employee_tf" string="Test" states="accept" type="object" class="oe_highlight"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,submit,accept,transferred"/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <group>
+                                    <div class="oe_title">
+                                        <h1>
+                                            <field name="name" readonly="1"/>
+                                        </h1>
+                                    </div>
+                                </group>
+                                <group col="4" colspan="4">
+                                    <field name="employee_id" attrs="{'readonly': [('state','in',('confirm','transfer'))]}" required="1"/>
+                                    <field name="tf_date" attrs="{'readonly': [('state','in',('confirm','transfer'))]}" required="1"/>
+                                    <newline/>
+                                    <field name="related_company_id" required="0"/>
+                                    <field name="company_destination_id" required="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <newline/>
+                                    <field name="related_department_id" required="0"/>
+                                    <field name="department_destination_id" required="1"/>
+                                    <field name="department_id" invisible="1"/>
+                                    <newline/>
+                                    <field name="related_job_id" />
+                                    <field name="new_job_id"/>
+                                    <field name="related_position_id" required="0"/>
+                                    <field name="new_position_id" />
+                                    <field name="effective_date" attrs="{'readonly': [('state','in',('accept','transferred'))], 'required': [('state','=','submit')]}"/>
+                                    <field name="application_source_id"/>
+                                    <newline/>
+                                    <field name="transfer_reason" colspan="4"/>
+                                    <field name="position_id" invisible="1"/>
+                                    <field name="job_id" invisible="1"/>
+                                    <field name="generated" invisible="1"/>
+                                    <field name="company_code" invisible="1"/>
+                                </group>
+                                <group col="4" colspan="4">
+                                    <separator string="Notes" colspan="4"/>
+                                    <field name="notes" nolabel="1" colspan="4"/>
+                                    <separator string="OFF Boarding List" colspan="4"/>
+                                    <field name="tf_boarding_list_ids" widget="one2many_list" nolabel="1">
+                                        <tree string="Boarding Item" editable="bottom">
+                                            <field name="boarding_id"/>
+                                            <field name="department_id"/>
+                                            <field name="amount"/>
+                                            <field name="is_received" readonly="True"/>
+                                            <field name="is_returned" attrs="{'readonly': [('is_received', '=', False)]}"/>
+                                            <field name="date_is_returned" attrs="{'required': [('is_returned','=',True)]}"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="hr_employee_all_transfer_action">
+                <field name="name">All Transfer</field>
+                <field name="res_model">hr.employee.transfer</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="transfer_employee_search_view"/>
+                <field name="domain">[]</field>
+            </record> 
+
+            <record model="ir.actions.act_window.view" id="hr_all_employee_transfer_action_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_employee_transfer_tree_view"/>
+                <field name="act_window_id" ref="hr_employee_all_transfer_action"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="hr_all_employee_transfer_action_form">
+                <field name="sequence" eval="2"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="hr_all_employee_transfer_form_view"/>
+                <field name="act_window_id" ref="hr_employee_all_transfer_action"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="hr_all_employee_transfer_action_calendar">
+                <field name="sequence" eval="3"/>
+                <field name="view_mode">calendar</field>
+                <field name="view_id" ref="hr_employee_transfer_calendar_view"/>
+                <field name="act_window_id" ref="hr_employee_all_transfer_action"/>
+            </record>
+             <menuitem id="hr_employee_all_transfer_menu" name="All Transfer" action="hr_employee_all_transfer_action" sequence="2" parent="hr_employee_transfer_menu"/>     
+           
+            <!-- ###################################################################################  -->
+            
+            <!-- HR Transfer Reason -->
+            <record id="hr_transfer_reason_tree" model="ir.ui.view">
+                <field name="name">Transfer Reason List</field>
+                <field name="model">hr.transfer.reason</field>
+                <field name="arch" type="xml">
+                    <tree string="Transfer Reason List">
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="hr_transfer_reason_form" model="ir.ui.view">
+                <field name="name">Transfer Reason Form</field>
+                <field name="model">hr.transfer.reason</field>
+                <field name="arch" type="xml">
+                    <form string="Transfer Reason Form">
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                            </group>    
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record id="transfer_employee_reason_search_view" model="ir.ui.view">
+                <field name="name">Transfer Reason Search</field>
+                <field name="model">hr.transfer.reason</field>
+                <field name="arch" type="xml">
+                    <search string="Search Transfer Reason">
+                        <field name="name"/>
+                    </search>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="hr_employee_transfer_reason_action">
+                <field name="name">Transfer Reason</field>
+                <field name="res_model">hr.transfer.reason</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="transfer_employee_reason_search_view"/>
+                <field name="domain">[]</field>
+            </record> 
+            <record model="ir.actions.act_window.view" id="hr_employee_transfer_reason_action_form">
+                <field name="sequence" eval="2"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="hr_transfer_reason_form"/>
+                <field name="act_window_id" ref="hr_employee_transfer_reason_action"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="hr_employee_transfer_reason_action_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_transfer_reason_tree"/>
+                <field name="act_window_id" ref="hr_employee_transfer_reason_action"/>
+            </record>
+
+            <menuitem id="hr_employee_transfer_reason" name="Transfer Reason" action="hr_employee_transfer_reason_action" sequence="3" parent="hr_employee_transfer_menu" groups="base.group_hr_user,base.group_hr_manager"/>
+            <!-- ################## -->
+
+            <record id="overtime_list_line_form_view" model="ir.ui.view">
+                <field name="name">overtime.list.line.form</field>
+                <field name="model">overtime.list.line</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form>
+                        <group col="4" colspan="4">
+                            <field name="name" readonly="1"/>
+                            <newline/>
+                            <field name="start_ot" widget="float_time" />
+                            <field name="end_ot" widget="float_time" />
+                            <field name="ot_length" widget="float_time" />
+                            <field name="ot_rounded" widget="float_time" />
+                            <field name="ot_type_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                    </form>
+                </field>
+            </record>
+
+            <!-- Job Detail Line Form View -->
+            <record id="employee_job_detail_line_form_view" model="ir.ui.view">
+                <field name="name">employee.job.detail.line.form</field>
+                <field name="model">employee.job.detail.line</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form>
+                        <group col="4" colspan="4">
+                            <field name="name" readonly="1"/>
+                            <field name="position_id"/>
+                            <field name="employee_id"/>
+                            <field name="effective_date"/>
+                            <field name="type"/>
+                            <field name="job_id" invisible="True"/>
+                        </group>
+                    </form>
+                </field>
+            </record>
+
+            <record id="inherit_hr_contract_form_view" model="ir.ui.view">
+                <field name="name">Contract</field>
+                <field name="model">hr.contract</field>
+                <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+                <field name="arch" type="xml">
+                    <form string="Contract" position="replace">
+                        <form string="Employee Contract">
+                            <header>
+                                <button name="renew_contract" type="object" class="oe_highlight" string="Renew Contract"/>
+                            </header>
+                            <sheet>
+                                <div class="oe_title">
+                                    <label for="name" class="oe_edit_only"/>
+                                    <h1>
+                                        <field name="name" placeholder="Contract Reference"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group>
+                                        <field name="employee_id" on_change="onchange_employee_id(employee_id)" domain="[('employee_state','=','contract')]"/>
+                                        <field name="job_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="type_id"/>
+                                    </group>
+                                </group>
+                                <notebook>
+                                    <page string="Information" name="information">
+                                        <group>
+                                            <group name="salary_and_advantages" string="Salary and Advantages">
+                                                <field name="wage"/>
+                                                <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2"/>
+                                            </group>
+                                            <group name="duration_group" string="Duration">
+                                                <label for="trial_date_start" string="Trial Period Duration"/>
+                                                <div>
+                                                    <field name="trial_date_start" class="oe_inline"/> - <field name="trial_date_end" class="oe_inline"/>
+                                                </div>
+                                                <label for="date_start" string="Duration"/>
+                                                <div>
+                                                    <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
+                                                </div>
+                                                <field name="working_hours" invisible="1"/>
+                                            </group>
+                                        </group>
+                                        <separator string="Notes"/>
+                                        <field name="notes"/>
+                                    </page>
+                                    <!-- <page string="Work Permit">
+                                        <group col="4">
+                                            <field name="visa_no"/>
+                                            <field name="permit_no"/>
+                                            <field name="visa_expire"/>
+                                        </group>
+                                    </page> -->
+                                    <!-- <page string="Contract History">
+                                        <group col="4" colspan="4">
+                                            <separator string="Contract History" colspan="4"/>
+                                            <field name="contract_history_ids" colspan="4" widget="one2many_list" nolabel="1">
+                                                <tree>
+                                                    <field name="name"/>
+                                                    <field name="employee_id"/>
+                                                    <field name="start_date"/>
+                                                    <field name="end_date"/>
+                                                    <field name="contract_attachment"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                    </page> -->
+                                </notebook>
+                            </sheet>
+                        </form>
+                    </form>
+                </field>
+            </record>
+
+            <!-- <record id="inherit_hr_position_form_view" model="ir.ui.view">
+                <field name="name">Position</field>
+                <field name="model">hr.position</field>
+                <field name="inherit_id" ref="sisb_project.sisb_hr_position_form_view"/>
+                <field name="arch" type="xml">
+                    <field name="company_id" position="after">
+                        <field name="job_position_id" domain="[('department_id', '=', department_id)]"/>
+                    </field>
+                </field>
+            </record> -->
+
+
+
+            <menuitem id="sisb_hr_general_report_menu" name="Report" sequence="30" parent="hr.menu_hr_root" groups="base.group_hr_manager"/> 
+
+            <record id="hr_information_tree" model="ir.ui.view">
+                <field name="name">HR Information List</field>
+                <field name="model">hr.information</field>
+                <field name="arch" type="xml">
+                    <tree string="HR Information List">
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="hr_information_form" model="ir.ui.view">
+                <field name="name">HR Information Form</field>
+                <field name="model">hr.information</field>
+                <field name="arch" type="xml">
+                    <form string="HR Information Form">
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <label for="exp_notif"  class="oe_inline" readonly="1"/>
+                                <div>
+                                    <field name="exp_notif" class="oe_inline"/> -
+                                    <span class="oe_inline">Day's</span>
+                                </div>
+                                <newline/>
+                                <separator string="Notes"/>
+                                <field name="notes" readonly="1" nolabel="1" colspan="4"/>
+                            </group>    
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record id="hr_information_search_view" model="ir.ui.view">
+                <field name="name">HR Information Search</field>
+                <field name="model">hr.information</field>
+                <field name="arch" type="xml">
+                    <search string="Search HR Information">
+                        <field name="name"/>
+                        <field name="exp_notif" string="Expired Notification"/>
+                    </search>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="hr_information_action_window">
+                <field name="name">HR Information</field>
+                <field name="res_model">hr.information</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="hr_information_search_view"/>
+                <field name="domain">[]</field>
+                <field name="help" type="html">
+                    <p class="oe_view_nocontent_create">
+                    This module is use to capture Employee Identity Data such a Passport, Visa, Work Permit, Teaching License,etc. and will remind/send notification to employee when the Expired date is almost up
+                    </p>
+                    <br/>
+                    <p>
+                    HR Manager will set the notification Date and System will send Email Notification to related Employee.
+                    </p>
+                </field>
+            </record> 
+            <record model="ir.actions.act_window.view" id="hr_information_action_window_form">
+                <field name="sequence" eval="2"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="hr_information_form"/>
+                <field name="act_window_id" ref="hr_information_action_window"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="hr_information_action_window_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="hr_information_tree"/>
+                <field name="act_window_id" ref="hr_information_action_window"/>
+            </record>
+
+            <menuitem id="menu_hr_information" action="hr_information_action_window" parent="hr.menu_hr_configuration"
+                  sequence="8" groups="base.group_hr_manager"/>
+
+
+
+            
+
+            <!-- Appraisals Form Structure View -->
+            <menuitem id="menu_hr_appraisals_form_structure" name="Appraisals Form Structure" parent="hr.menu_hr_configuration" sequence="10" groups="base.group_hr_manager"/>
+
+
+            <record id="appraisals_structure_general_staff_tree" model="ir.ui.view">
+                <field name="name">Appraisals Structure List</field>
+                <field name="model">appraisals.structure.general.staff</field>
+                <field name="arch" type="xml">
+                    <tree string="Appraisals Structure List">
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                        <field name="importance"/>
+                        <field name="points"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="appraisals_structure_general_staff_form" model="ir.ui.view">
+                <field name="name">Appraisals Structure Form</field>
+                <field name="model">appraisals.structure.general.staff</field>
+                <field name="arch" type="xml">
+                    <form string="Appraisals Structure Form">
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="points"/>
+                                <field name="importance"/>
+                            </group>
+                            <separator string="Key Performance Indicator (KPI)" colspan="4"/>
+                            <group col="4" colspan="4">
+                                <field name="general_kpi_line_ids" colspan="4" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" string="Number"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <separator string="Evaluation" colspan="4"/>
+                            <group col="4" colspan="4">
+                                <field name="general_evaluation_line_ids" colspan="4" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" string="Level"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <separator string="Criteria" colspan="4"/>
+                            <group col="4" colspan="4">
+                                <field name="general_criteria_line_ids" colspan="4" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" string="Level"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record id="appraisals_structure_general_staff_search_view" model="ir.ui.view">
+                <field name="name">Appraisals Structure Search</field>
+                <field name="model">appraisals.structure.general.staff</field>
+                <field name="arch" type="xml">
+                    <search string="Search Appraisals Structure">
+                        <field name="name"/>
+                    </search>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="appraisals_structure_general_staff_action_window">
+                <field name="name">Appraisals Structure</field>
+                <field name="res_model">appraisals.structure.general.staff</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="appraisals_structure_general_staff_search_view"/>
+                <field name="domain">[]</field>
+                <field name="help" type="html">
+                    <p class="oe_view_nocontent_create">
+                        Create Record to show in Appraisals Form
+                    </p>
+                </field>
+            </record> 
+            <record model="ir.actions.act_window.view" id="appraisals_structure_action_window_form">
+                <field name="sequence" eval="2"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="appraisals_structure_general_staff_form"/>
+                <field name="act_window_id" ref="appraisals_structure_general_staff_action_window"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="appraisals_structuren_action_window_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="appraisals_structure_general_staff_tree"/>
+                <field name="act_window_id" ref="appraisals_structure_general_staff_action_window"/>
+            </record>
+
+            <menuitem id="menu_hr_appraisals_form_structure_general" name="General Staff" action="appraisals_structure_general_staff_action_window" parent="menu_hr_appraisals_form_structure" sequence="10"/>
+
+
+
+            <record id="appraisals_structure_nongeneral_staff_tree" model="ir.ui.view">
+                <field name="name">Appraisals Structure List</field>
+                <field name="model">appraisals.structure.nongeneral.staff</field>
+                <field name="arch" type="xml">
+                    <tree string="Appraisals Structure List">
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                        <field name="importance"/>
+                        <field name="points"/>
+                    </tree>
+                </field>
+            </record>
+
+            <record id="appraisals_structure_nongeneral_staff_form" model="ir.ui.view">
+                <field name="name">Appraisals Structure Form</field>
+                <field name="model">appraisals.structure.nongeneral.staff</field>
+                <field name="arch" type="xml">
+                    <form string="Appraisals Structure Form">
+                        <sheet>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="points"/>
+                                <field name="importance"/>
+                            </group>
+                            <separator string="Key Performance Indicator (KPI)" colspan="4"/>
+                            <group col="4" colspan="4">
+                                <field name="non_general_kpi_line_ids" colspan="4" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" string="Number"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <separator string="Evaluation" colspan="4"/>
+                            <group col="4" colspan="4">
+                                <field name="non_general_evaluation_line_ids" colspan="4" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" string="Level"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <separator string="Criteria" colspan="4"/>
+                            <group col="4" colspan="4">
+                                <field name="non_general_criteria_line_ids" colspan="4" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" string="Level"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </record>
+
+            <record id="appraisals_structure_nongeneral_search_view" model="ir.ui.view">
+                <field name="name">Appraisals Structure Search</field>
+                <field name="model">appraisals.structure.nongeneral.staff</field>
+                <field name="arch" type="xml">
+                    <search string="Search Appraisals Structure">
+                        <field name="name"/>
+                    </search>
+                </field>
+            </record>
+
+            <record model="ir.actions.act_window" id="appraisals_structure_nongeneral_action_window">
+                <field name="name">Appraisals Structure</field>
+                <field name="res_model">appraisals.structure.nongeneral.staff</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="appraisals_structure_nongeneral_search_view"/>
+                <field name="domain">[]</field>
+                <field name="help" type="html">
+                    <p class="oe_view_nocontent_create">
+                        Create Record to show in Appraisals Form
+                    </p>
+                </field>
+            </record> 
+            <record model="ir.actions.act_window.view" id="appraisals_structure_action_window_form">
+                <field name="sequence" eval="2"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="appraisals_structure_nongeneral_staff_form"/>
+                <field name="act_window_id" ref="appraisals_structure_nongeneral_action_window"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="appraisals_structuren_action_window_tree">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="appraisals_structure_nongeneral_staff_tree"/>
+                <field name="act_window_id" ref="appraisals_structure_nongeneral_action_window"/>
+            </record>
+
+            <menuitem id="menu_hr_appraisals_form_structure_nongeneral" name="Supervisor and Manager Staff" action="appraisals_structure_nongeneral_action_window" parent="menu_hr_appraisals_form_structure" sequence="20"/>
+    </data>
+</openerp>

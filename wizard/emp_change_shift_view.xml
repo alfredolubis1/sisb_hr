@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<openerp>
+    <data>
+    
+    <record id="sisb_emp_change_shift" model="ir.ui.view">
+            <field name="name">Change Schedule</field>
+            <field name="model">change.schedule</field>
+            <field name="arch" type="xml">
+                <form string="Change Shift">
+                    <group col="4" colspan="4">
+                        <field name="employee_id"/>
+                        <field name="prev_shift_id" />
+                        <field name="name" />
+                        <separator string="Shift Information" colspan="4"/>
+                        <field name="new_shift_id" options="{'no_create': True}"/>
+                        <newline/>
+                        <field name="start_hour" widget="float_time" readonly="1"/>
+                        <field name="end_hour" widget="float_time" readonly="1"/>
+                        <field name="late_tolerance" widget="float_time" readonly="1"/>
+                        <newline/>
+                        <field name="start_break" widget="float_time" readonly="1"/>
+                        <field name="end_break" widget="float_time" readonly="1"/>
+                    </group>
+                    <footer>
+                        <button name="apply_shift" string="Apply Shift" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>            
+		        </form>
+            </field>
+        </record>
+
+           <record id="action_change_emp_shift" model="ir.actions.act_window">
+            <field name="name">Change Shift</field>
+            <field name="res_model">change.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_emp_change_shift"/>
+            <field name="target">new</field>
+        </record>
+        </data>
+</openerp>

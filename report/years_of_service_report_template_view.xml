@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="years_of_service_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                            <div>
+                                <t t-if="o.options == 'one_comp'">
+                                    <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                    <strong><h4><b>Employee Years Of Service</b></h4></strong>
+                                </t>
+                                <t t-if="o.options == 'multi_comp'">
+                                    <strong><h4><b>Employee Years Of Service</b></h4></strong>
+                                </t>
+                            </div>
+                        </center>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <span class="text-right" style="text-align: right; padding-top: 3px;">Page <span style="text-align: right;" class="page"/> of <span class="topage"/></span>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width: 100%;
+                        }
+
+                        .main_table th {
+                            font-weight: normal;
+                            font-size: 10px;
+                            padding: 10px;
+                            text-align: center;
+                            border-top: thin solid black;
+                            border-bottom: thin solid black;
+
+                        }
+
+                        .main_body td {
+                            font-size: 10px;
+                            padding: 7px;
+                            text-align: center;
+                            border-top: thin solid black;
+                            border-bottom: thin solid black;
+                        }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>Job Description</th>
+                                        <th>Date Join</th>
+                                        <th>Gender</th>
+                                        <th>Marital Status</th>
+                                        <th>Nationality</th>
+                                        <th>Company</th>
+                                        <th>Years Of Service</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3" style="text-align: left; padding: 8px; font-size: 10px;"><b><span t-esc="get_section_code(o.company_id)"/></b></td>
+                                        <td colspan="7"></td>
+                                    </tr>
+                                    <tr class="main_body" t-foreach="all_employee(data['form'])" t-as="emp">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="text-align: left"><span t-esc="emp['name']"/></td>
+                                        <td><span t-esc="emp['position']"/></td>
+                                        <td><span t-esc="emp['join_date']"/></td>
+                                        <td><span t-esc="emp['gender']"/></td>
+                                        <td><span t-esc="emp['marital']"/></td>
+                                        <td><span t-esc="emp['country']"/></td>
+                                        <td><span t-esc="emp['company']"/></td>
+                                        <td><span t-esc="emp['yof']"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

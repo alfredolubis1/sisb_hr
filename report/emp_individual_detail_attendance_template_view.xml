@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="employee_individual_attendance_detail_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <div class="row">
+                            <table width="100%" style="text-align:left;">
+                                <tr>
+                                    <td width="10%" style="font-size: 12px;vertical-align: middle;">
+                                        <img src="/sisb_project/static/description/icon.png" style="height:20mm"/>
+                                    </td>
+                                    <td width="1%" style="font-size: 12px;vertical-align: middle;">
+                                    </td>
+                                    <td width="10%" style="font-size: 12px;vertical-align: middle;">
+                                        <img src="http://www.sisb.ac.th/sisb_website/static/src/img/logo.png" style="height:12mm"/>
+                                    </td>
+                                    <td width="1%" style="font-size: 12px;vertical-align: middle;">
+                                    </td>
+                                    <td width="80%" style="font-size: 10px">
+                                        <br/>
+                                        <b>SINGAPORE INTRNATIONAL SCHOOL OF BANGKOK</b><br/>
+                                        498/11 Soi Ramkhamhaeng 39 (Tepleela 1),<br/>
+                                        Wangthonglang, Wangthonglang, Bongkok 10310 Thailand<br/>
+                                        <b>Tel:</b> +66 (0)2 158 9191 | <b>Fax:</b> +66 (0)2 158 9192 | sisb.ac.th<br/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <center>
+                                <strong><h4><b><span t-field="o.employee_id.company_id.name"/></b></h4></strong>
+                                <strong>
+                                    <h4> 
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                            <p style="font-size:16px;">
+                                                <b>
+                                                    Data Report after Processing by Employee <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                </b> - 
+                                                <b>
+                                                    <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/>
+                                                </b>
+                                            </p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;">
+                                                <b>
+                                                    Data Report after Processing by Employee <span t-esc="time.strftime('%d/%b/%Y', time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                                </b>
+                                            </p>
+                                        </t>
+                                    </h4>
+                                </strong>
+                            </center>
+                            <div style="position: absolute; right: 0; top:80px; font-size:15px;">
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                                <br/>
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                                <br/>
+                                <span class="text-right">Page <span class="page"/> of <span class="topage"/></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width: 100%;
+                            font-size: 10px;
+                        }
+
+                        .main_table th {
+                            padding-top: 10px;
+                            padding-bottom: 15px;
+                            font-weight: normal;
+                            text-align: center;
+                            table-layout: fixed;
+                        }
+
+                        .head2 td{
+                            text-align: center; 
+                            padding: 10px;
+                        }
+
+                        .head3 td {
+                            text-align: center;
+                            padding: 10px; 
+                            border-bottom: thin solid grey;
+                        }
+
+                        .main_body td {
+                            text-align: center; 
+                            padding: 5px;
+                        }
+
+                        .main_body:last-child {
+                            border-bottom: 1px solid grey;
+                        }
+
+                        .report_header {
+                            text-align: center;
+                        }
+
+                        .l_header1 {
+                            position: absolute;
+                            font-size: 15px;
+                            right: 0;
+                            top: 33px;
+                        }
+
+                        .l_header2 {
+                            position: absolute;
+                            font-size: 15px;
+                            right: 0;
+                            top: 60px;
+                            font-weight: normal;
+                        }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr style="border-top: 1px solid grey; border-bottom: 1px solid grey; padding-bottom: 10px;">
+                                        <th colspan="4"></th>
+                                        <th>In</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Out</th>
+                                        <th>Late</th>
+                                        <th>Early</th>
+                                        <th>LeaveI</th>
+                                        <th>LeaveD</th>
+                                        <th>Dec</th>
+                                        <th>Inc</th>
+                                        <th>1</th>
+                                        <th>1.5</th>
+                                        <th>2</th>
+                                        <th>2.5</th>
+                                        <th>3</th>
+                                        <th>OT(6)</th>
+                                        <th>Baht</th>
+                                        <th>Shift</th>
+                                        <th>OT</th>
+                                        <th>&gt;OT</th>
+                                        <th>Food</th>
+                                        <th>OT</th>
+                                        <th>&gt;OT</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>-</th>
+                                        <th>Total Emp.</th>
+                                    </tr>
+                                    <tr class="head2" t-foreach="total_all(o.employee_id, o.company_id, o.date_from, o.date_to)" t-as="tot">
+                                        <td colspan="8" style="text-align: left;"><strong><span t-esc="tot['section_code']"/></strong></td>
+                                        <td><span t-esc="tot['late_tot']"/></td>
+                                        <td><span t-esc="tot['leave_early_tot']"/></td>
+                                        <td><span t-esc="tot['leave_i_tot']"/></td>
+                                        <td><span t-esc="tot['leave_d_tot']"/></td>
+                                        <td><span t-esc="tot['dec_tot']"/></td>
+                                        <td><span t-esc="tot['inc_tot']"/></td>
+                                        <td><span t-esc="tot['ot_one_tot']"/></td>
+                                        <td><span t-esc="tot['ot_one_half_tot']"/></td>
+                                        <td><span t-esc="tot['ot_two_tot']"/></td>
+                                        <td><span t-esc="tot['ot_two_half_tot']"/></td>
+                                        <td><span t-esc="tot['ot_three_tot']"/></td>
+                                        <td><span t-esc="tot['ot_six_tot']"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr class="head3" t-foreach="total_all(o.employee_id, o.company_id, o.date_from, o.date_to)" t-as="tot">
+                                        <td style="border-bottom: none;" width="2%"></td>
+                                        <td colspan="7" style="text-align: left; padding-bottom: 5px; border-bottom: 1px solid grey;">
+                                            <p>
+                                                <span t-field="o.employee_id.employee_no"/> 
+                                                <t t-if="o.employee_id.gender == 'male'">
+                                                Mr.<span t-field="o.employee_id.name"/>
+                                                </t>
+                                                <t t-if="o.employee_id.gender == 'female'">
+                                                Mrs.<span t-field="o.employee_id.name"/>
+                                                </t>
+                                                <t t-if="o.employee_id.gender == False">
+                                                    <span t-field="o.employee_id.name"/>
+                                                </t>
+                                            </p>
+                                        </td>
+                                        <td><span t-esc="tot['late_tot']"/></td>
+                                        <td><span t-esc="tot['leave_early_tot']"/></td>
+                                        <td><span t-esc="tot['leave_i_tot']"/></td>
+                                        <td><span t-esc="tot['leave_d_tot']"/></td>
+                                        <td><span t-esc="tot['dec_tot']"/></td>
+                                        <td><span t-esc="tot['inc_tot']"/></td>
+                                        <td><span t-esc="tot['ot_one_tot']"/></td>
+                                        <td><span t-esc="tot['ot_one_half_tot']"/></td>
+                                        <td><span t-esc="tot['ot_two_tot']"/></td>
+                                        <td><span t-esc="tot['ot_two_half_tot']"/></td>
+                                        <td><span t-esc="tot['ot_three_tot']"/></td>
+                                        <td><span t-esc="tot['ot_six_tot']"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="main_body" t-foreach="emp_att_detail(data['form'])" t-as="detail">
+                                        <td style="border-bottom: none;" width="2%"></td>
+                                        <td style="text-align: left; padding-bottom: 2px; padding-top: 2px;" width="10%;">
+                                            <span t-esc="detail['date']"/>
+                                        </td>
+                                        <td style="text-align: center; padding-bottom: 2px; padding-top: 2px;">
+                                            <span t-esc="detail['schedule']"/>
+                                        </td>
+                                        <td style="text-align: center; padding-bottom: 2px; padding-top: 2px;">
+                                            <span t-esc="detail['type']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['sign_in']"/>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['sign_out']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['late']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['early']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['leave_l']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['leave_d']"/>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['rate_one']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['rate_one_half']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['rate_double']"/>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span t-esc="detail['rate_triple']"/>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td>
+                                            <span></span>
+                                        </td>
+                                        <td style="text-align: right;" colspan="2">
+                                            <span t-esc="detail['info']"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

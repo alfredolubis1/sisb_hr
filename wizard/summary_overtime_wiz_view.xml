@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="employee_summary_report_wiz_form_view" model="ir.ui.view">
+            <field name="name">Employee Summary Overtime</field>
+            <field name="model">employee.summary.overtime</field>
+            <field name="arch" type="xml">
+                <form string="Summary Overtime Report">
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="date_from" required="1"/>
+                            <field name="date_to" required="1"/>
+                            <field name="company_id" required="1"/>
+                        </group>
+                        <footer>
+                        <button name="print_report" string="Print" type="object" class="oe_highlight" />
+                        <!-- <button name="print_irregular_absent_report" string="Print" type="object" class="oe_highlight" attrs="{'invisible': [('options', '!=', 'irregular')]}"/> -->
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_employee_summary_ot_report" model="ir.actions.act_window">
+            <field name="name">Employee Summary Overtime</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.summary.overtime</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_summary_report_wiz_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+         <menuitem name="Summary Overtime Report" action="action_employee_summary_ot_report" id="menu_summary_overtime_report" parent="overtime_report_menu" sequence="2"/>
+    </data>
+</openerp>

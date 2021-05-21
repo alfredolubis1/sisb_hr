@@ -1,0 +1,508 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <record id="report_employee_probation_completion_paperformat" model="report.paperformat">
+            <field name="name">Employee Transfer Paper Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+        <record id="report_employee_probation_completion_paperformat_dup" model="report.paperformat">
+            <field name="name">Probation Completion Letter Paper Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+        <!-- Probation Completion Letter -->
+        <report
+            id="action_report_sisb_employee_probation_completion_report" 
+            model="hr.employee" 
+            string="Probation Completion Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.sisb_probation_completion_report" 
+            file="sisb_hr.sisb_probation_completion_report" 
+            menu="False"
+        />
+        
+        <record id="action_report_sisb_employee_probation_completion_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_employee_probation_completion_paperformat_dup"/>
+        </record>
+
+        <!-- Personnel Transfer Notification Form -->
+        <report
+            id="action_report_sisb_employee_personal_transfer_notification_form" 
+            model="hr.employee.transfer" 
+            string="Personnel Transfer Notification Form"
+            report_type="qweb-pdf"
+            name="sisb_hr.personel_tf_notification_form" 
+            file="sisb_hr.personel_tf_notification_form" 
+            menu="False"
+        />
+        
+        <record id="action_report_sisb_employee_personal_transfer_notification_form" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_employee_probation_completion_paperformat"/>
+        </record>
+
+        <!-- Generate ON Board Item -->
+        <report
+            id="action_generate_on_board_item" 
+            model="hr.employee" 
+            string="ON Boarding List Item"
+            report_type="qweb-pdf"
+            name="sisb_hr.generate_on_board_item" 
+            file="sisb_hr.generate_on_board_item" 
+            menu="False"
+        />
+        
+        <record id="action_generate_on_board_item" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_employee_probation_completion_paperformat_dup"/>
+        </record>
+
+        <!-- Generate Reference Letter -->
+        <report
+            id="action_generate_reference_letter" 
+            model="hr.employee" 
+            string="ON Boarding List Item"
+            report_type="qweb-pdf"
+            name="sisb_hr.generate_reference_letter" 
+            file="sisb_hr.generate_reference_letter" 
+            menu="False"
+        />
+        
+        <record id="action_generate_reference_letter" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_employee_probation_completion_paperformat_dup"/>
+        </record>
+
+        <!-- Generate Reference Letter -->
+        <report
+            id="action_generate_reference_letter_with_salary" 
+            model="hr.employee" 
+            string="ON Boarding List Item"
+            report_type="qweb-pdf"
+            name="sisb_hr.generate_reference_letter_with_salary" 
+            file="sisb_hr.generate_reference_letter_with_salary" 
+            menu="False"
+        />
+        
+        <record id="action_generate_reference_letter_with_salary" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_employee_probation_completion_paperformat_dup"/>
+        </record>
+
+         <!-- Staff Transfer Checklist Form -->
+        <report
+            id="action_report_sisb_employee_staff_transfer_checklist_form" 
+            model="hr.employee.transfer" 
+            string="Staff Transfer Checklist"
+            report_type="qweb-pdf"
+            name="sisb_hr.staff_tf_checklist_form" 
+            file="sisb_hr.staff_tf_checklist_form" 
+            menu="False"
+        />
+        
+        <record id="action_report_sisb_employee_staff_transfer_checklist_form" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="report_employee_probation_completion_paperformat"/>
+        </record>
+
+
+        <record id="attendance_summary_report_paperformat" model="report.paperformat">
+           <field name="name">Employee Attendance Summary Paper Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">8</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+            id="sisb_action_report_daily_attendance" 
+            model="hr.attendance" 
+            string="Attendance Summary Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.employee_attendance_summary_report" 
+            file="sisb_hr.employee_attendance_summary_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_action_report_daily_attendance" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="attendance_summary_report_paperformat"/>
+        </record>
+
+        <!-- Probation Appraisals Letter -->
+        <report
+            id="action_report_sisb_employee_probation_appraisals_report" 
+            model="hr.employee" 
+            string="Probation Appraisals Letter Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.sisb_probation_appraisals_report" 
+            file="sisb_hr.sisb_probation_appraisals_report" 
+            menu="False"
+        />
+        
+        <record id="action_report_sisb_employee_probation_appraisals_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="attendance_summary_report_paperformat"/>
+        </record>
+        <!-- ####################################################################### -->
+
+
+        <!-- Default Paper Format For All Attendance Report -->
+        <record id="sisb_hr_employee_default_report_paperformat" model="report.paperformat">
+           <field name="name">Employee Attendance Summary Detail Paper Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+        <!-- Summary Attendance Report With Term 1(Absent, Late, Leave Early, All Leaves), Term 2 , Term3 -->
+        <report
+            id="sisb_action_summary_report_attendance" 
+            model="hr.attendance" 
+            string="Employee Attendance Summary Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.sisb_employee_summary_attendance_report" 
+            file="sisb_hr.sisb_employee_summary_attendance_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_action_summary_report_attendance" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="sisb_hr_employee_default_report_paperformat"/>
+        </record>
+        <!-- ############################################################################################# -->
+
+
+        <!-- Summary Detail Attendance Report(Only Show Record) -->
+        <report
+            id="sisb_action_summary_report_detail_attendance" 
+            model="hr.attendance" 
+            string="Employee Individual Detail Summary Attendance Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.sisb_employee_detail_summary_attendance_report" 
+            file="sisb_hr.sisb_employee_detail_summary_attendance_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_action_summary_report_detail_attendance" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="sisb_hr_employee_default_report_paperformat"/>
+        </record>
+        <!-- ################################################################################################# -->
+
+
+        <!-- Employee Absent Report -->
+        <record id="sisb_hr_employee_default_absent_report_paperformat" model="report.paperformat">
+           <field name="name">Employee Absent Report Paperformat</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+            id="sisb_employee_regular_absent_report" 
+            model="hr.attendance" 
+            string="Employee Absent Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.sisb_employee_absent_report" 
+            file="sisb_hr.sisb_employee_absent_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_employee_regular_absent_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="sisb_hr_employee_default_absent_report_paperformat"/>
+        </record>
+        <!-- ########################################################## -->
+
+        <!-- Employee Irregular Absent Report -->
+        <report
+            id="sisb_employee_irregular_absent_report" 
+            model="hr.attendance" 
+            string="Employee Absent Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.employee_irregular_absent_report" 
+            file="sisb_hr.employee_irregular_absent_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_employee_irregular_absent_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="sisb_hr_employee_default_absent_report_paperformat"/>
+        </record>
+        <!-- ########################################################## -->
+
+
+        <!-- Leave Summary Report -->
+        <record id="leave_report_paperformat" model="report.paperformat">
+           <field name="name">Leave Summary Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">Letter</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+            id="sisb_leave_summary_report" 
+            model="hr.holidays" 
+            string="Leave asking Summary Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.leave_summary_percompany" 
+            file="sisb_hr.leave_summary_percompany" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_leave_summary_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_report_paperformat"/>
+        </record>
+
+        <report
+            id="sisb_individual_leave_history_report" 
+            model="hr.holidays" 
+            string="Leave asking Summary Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.individual_leave_summary" 
+            file="sisb_hr.individual_leave_summary" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_individual_leave_history_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_report_paperformat"/>
+        </record>
+        <!-- ########################################################## -->
+
+        <!-- Leave Accumulative Report -->
+        <record id="leave_accumulative_report_paperformat" model="report.paperformat">
+           <field name="name">Leave Accumulative Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">Legal</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">45</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">40</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+            id="sisb_leave_accumulative_report" 
+            model="leave.accumulative.wizard" 
+            string="Leave Accumulative Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.leave_accumulative_per_allocated" 
+            file="sisb_hr.leave_accumulative_per_allocated" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_leave_accumulative_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_accumulative_report_paperformat"/>
+        </record>
+        <!-- ########################################################## -->
+
+        <!-- Individual Report Attendance Detail -->
+        <record id="employee_individual_detail_report_paperformat" model="report.paperformat">
+           <field name="name">Individual Report Paperformat</field>
+            <field name="default" eval="True"/>
+            <field name="format">Letter</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">37</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">33</field>
+            <field name="dpi">90</field>
+        </record>
+        
+        <!-- Individual Report Attendance Detail -->
+        <report
+            id="employee_individual_attendance_detail_report_action" 
+            model="hr.attendance" 
+            string="Employee Attendance Summary Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.employee_individual_attendance_detail_report" 
+            file="sisb_hr.employee_individual_attendance_detail_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="employee_individual_attendance_detail_report_action" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="employee_individual_detail_report_paperformat"/>
+        </record>
+        <!-- ################################################################################################## -->
+
+        <!-- Lateness / Early Checkout Report -->
+        <report
+            id="lateness_early_co_report_action"
+            model="hr.attendance"
+            string="Lateness Early Checkout Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.lateness_early_checkout_report"
+            file="sisb_hr.lateness_early_checkout_report"
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="lateness_early_co_report_action" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="employee_individual_detail_report_paperformat"/>
+        </record>
+        <!-- ################################################################################################## -->
+
+        <!-- Individual Report Overtime Detail -->
+        <report
+            id="employee_individual_overtime_detail_report_action" 
+            model="hr.overtime.request" 
+            string="Employee Individual Detail Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.employee_individual_detail_ot" 
+            file="sisb_hr.employee_individual_detail_ot" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="employee_individual_overtime_detail_report_action" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="employee_individual_detail_report_paperformat"/>
+        </record>
+        <!-- ################################################################################################## -->
+
+        <!-- Summary Overtime Report -->
+        <report
+            id="overtime_summary_report" 
+            model="hr.overtime.request" 
+            string="Overtime Summary Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.employee_summary_overtime" 
+            file="sisb_hr.employee_summary_overtime" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="overtime_summary_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_report_paperformat"/>
+        </record>
+        <!-- ########################### -->
+
+        <!-- Summary Overtime Report -->
+        <report
+            id="overtime_work_inspection_report" 
+            model="hr.overtime.request" 
+            string="Overtime Work Inspection Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.employee_overtime_work_inspection" 
+            file="sisb_hr.employee_overtime_work_inspection" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="overtime_work_inspection_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="employee_individual_detail_report_paperformat"/>
+        </record>
+        <!-- ########################### -->
+
+
+
+        <!-- Employee Movement Report -->
+
+        <!-- Individual Report -->
+        <report 
+            id="employee_movement_report" 
+            model="hr.employee.transfer" 
+            string="Employee Individual Detailed Movement Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.employee_individual_detailed_movement_report" 
+            file="sisb_hr.employee_individual_detailed_movement_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="employee_movement_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_report_paperformat"/>
+        </record>
+
+        <!-- Summary Report -->
+        <report 
+            id="summary_employee_detail_movement_report" 
+            model="hr.employee.transfer" 
+            string="Summary Employee Movement Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.summary_employee_movement_report" 
+            file="sisb_hr.summary_employee_movement_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="summary_employee_detail_movement_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_report_paperformat"/>
+        </record>
+        <!-- ######################## -->
+
+        <!-- Years Of Service Report -->
+        <report 
+            id="sisb_years_of_service_report" 
+            model="hr.employee" 
+            string="Summary Employee Movement Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.years_of_service_report" 
+            file="sisb_hr.years_of_service_report" 
+            menu="False"
+            attachment_use="False"
+        />
+        <record id="sisb_years_of_service_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_report_paperformat"/>
+        </record>
+        <!-- ####################### -->
+
+
+        <!-- Employee Timesheet Report -->
+        <report id="sisb_employee_timesheet_report"
+            model="hr.attendance"
+            string="Employee Timesheet Report"
+            report_type="qweb-pdf"
+            name="sisb_hr.generate_timesheet_report"
+            file="sisb_hr.generate_timesheet_report"
+            menu="False"
+            attachment_use="False"/>
+
+        <record id="sisb_employee_timesheet_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="leave_report_paperformat"/>
+        </record>
+        <!-- ######################### -->
+    </data>
+</openerp>

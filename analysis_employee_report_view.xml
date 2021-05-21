@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sisb_view_report_all_employee_bar" model="ir.ui.view">
+            <field name="name">employee.report.graph.bar</field>
+            <field name="model">employee.report</field>
+            <field name="arch" type="xml">
+                <graph type="bar" orientation="horizontal" grouped="True">
+                    <field name="company_id" type="col"/>
+                    <field name="state" type="row"/>
+                    <field name="name" type="row"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record id="action_report_all_employee_bar" model="ir.actions.act_window">
+            <field name="name">All Employee Analysis</field>
+            <field name="res_model">employee.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="sisb_hr.sisb_view_report_all_employee_bar"></field>
+            <field name="context">{}</field>
+            <field name="help"></field>
+        </record>
+
+        <menuitem 
+        id="employee_last_under30_day_report" 
+        name="Employee Contract And Probation End under 30 days" 
+        action="action_report_all_employee_bar" 
+        parent="sisb_hr_general_report_menu" 
+        sequence="1"/>
+
+
+        <record id="employee_demographic_bar_graph" model="ir.ui.view">
+            <field name="name">Employee Demograph Gender Per Company</field>
+            <field name="model">employee.demographic</field>
+            <field name="arch" type="xml">
+                <graph type="bar" orientation="horizontal" stacked="True">
+                    <field name="gender" type="col"/>
+                    <field name="company_id" type="row"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record id="action_employee_demographic_bar_graph" model="ir.actions.act_window">
+            <field name="name">Employee Demographic</field>
+            <field name="res_model">employee.demographic</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="sisb_hr.employee_demographic_bar_graph"></field>
+            <field name="context">{}</field>
+            <field name="help"></field>
+        </record>
+
+        <record id="employee_demographic_age_bar_graph" model="ir.ui.view">
+            <field name="name">Employee Demograph Age Per Company</field>
+            <field name="model">demographic.age</field>
+            <field name="arch" type="xml">
+                <graph type="bar" orientation="horizontal" stacked="True">
+                    <field name="age_range" type="col"/>
+                    <field name="country_id" type="col"/>
+                    <field name="gender" type="col"/>
+                    <field name="marital_status" type="col"/>
+                    <field name="company_id" type="row"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record id="employee_demographic_age_search_view" model="ir.ui.view">
+            <field name="name">demographic.age.search</field>
+            <field name="model">demographic.age</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                        <filter name="group_by_age" string="Age" context="{'group_by':'age_range'}"/>
+                        <filter name="group_by_company" string="Company" context="{'group_by':'company_id'}"/>
+                        <filter name="group_by_nationality" string="Nationality" context="{'group_by':'country_id'}"/>
+                        <filter name="group_by_marital_state" string="Marital Status" context="{'group_by':'marital_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_employee_demographic_age_bar_graph" model="ir.actions.act_window">
+            <field name="name">Employee Demographic</field>
+            <field name="res_model">demographic.age</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="sisb_hr.employee_demographic_age_bar_graph"></field>
+            <field name="search_view_id" ref="sisb_hr.employee_demographic_age_search_view"/>
+            <field name="context">{'search_default_group_by_company': 1}</field>
+            <field name="help"></field>
+        </record>
+
+        <menuitem 
+        id="employee_demographic_report" 
+        name="Employee Demographic Report" 
+        action="action_employee_demographic_age_bar_graph" 
+        parent="sisb_hr_general_report_menu" 
+        sequence="2"/>
+
+
+
+        <record id="employee_demographic_marital_status_bar_graph" model="ir.ui.view">
+            <field name="name">Employee Demographic Marital Status</field>
+            <field name="model">demographic.marital.status</field>
+            <field name="arch" type="xml">
+                <graph type="bar" orientation="horizontal" stacked="True">
+                    <field name="marital_status" type="col"/>
+                    <field name="company_id" type="row"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record id="action_employee_demographic_marital_status_bar_graph" model="ir.actions.act_window">
+            <field name="name">Employee Demographic Marital Status</field>
+            <field name="res_model">demographic.marital.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="sisb_hr.employee_demographic_marital_status_bar_graph"></field>
+            <field name="context">{}</field>
+            <field name="help"></field>
+        </record>
+
+
+
+        <!-- <record model="ir.ui.view" id="all_employee_dash_view">
+            <field name="name">Employee Information Dashboard</field>
+            <field name="model">board.board</field>
+            <field name="arch" type="xml">
+                <form string="Admission Dashboard">
+                    <board style="3-1">
+                        <column>
+                            <action name="%(sisb_hr.action_employee_demographic_age_bar_graph)d" 
+                                string="Employee Demographic"/>
+                            <action name="%(sisb_hr.action_report_all_employee_bar)d" 
+                                string="Employee Contract And Probation End under 30 days"/>
+                        </column>
+                    </board>
+                </form>
+            </field>
+        </record> -->
+
+        <!--My Dashboard Action-->
+        <!-- <record model="ir.actions.act_window" id="all_employee_dash_action">
+            <field name="name">Employee Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="all_employee_dash_view"/>
+            <field name="help" type="html">
+              <div class="oe_empty_custom_dashboard">
+                  <p>
+                    <b>Your personal dashboard is empty.</b>
+                  </p><p>
+                    To add your first report into this dashboard, go to any
+                    menu, switch to list or graph view, and click <i>'Add to
+                    Dashboard'</i> in the extended search options.
+                  </p><p>
+                    You can filter and group data before inserting into the
+                    dashboard using the search options.
+                  </p>
+              </div>
+            </field>
+        </record>
+
+        <menuitem name="Human Resources"
+            id="hr.menu_hr_root"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
+            sequence="90" action="all_employee_dash_action"/> -->
+    </data>
+</openerp>

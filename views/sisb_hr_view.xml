@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- <menuitem id="menu_hr_ik_reporting" name="Reporting" groups="base.group_hr_manager" parent="hr.menu_hr_root" sequence="40"/>
+        
+        <record id="menu_hr_ik_reporting" model="ir.ui.menu">
+            <field  eval="[(6,0,[])]" name="groups_id"/>
+        </record> -->
+        
+        <menuitem name="Human Resources"
+            id="hr.menu_hr_root"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
+            sequence="90"/>
+        <!-- <menuitem id="hr.menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager,ik_hrms_custom.group_hr,ik_hrms_custom.group_administrator" sequence="50"/> -->
+        <!-- <menuitem parent="hr_holidays.menu_open_ask_holidays" id="hr_holidays.menu_request_approve_allocation" action="hr_holidays.request_approve_allocation" groups="base.group_hr_manager,ik_hrms_custom.group_hr,ik_hrms_custom.group_administrator"/> -->
+        
+
+    </data>
+</openerp>

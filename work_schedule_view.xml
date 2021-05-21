@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+
+        <menuitem id="work_time_conf" name="Shift" parent="hr.menu_hr_root" groups="sisb_hr.make_invisible" sequence="1000"/>
+
+
+
+        <record id="employee_schedule_tree_view" model="ir.ui.view">
+            <field name="name">employee.schedule.tree.view</field>
+            <field name="model">employee.schedule</field>
+            <field name="arch" type="xml">
+                <tree string="Working Time">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="date_from" />
+                    <field name="date_to"/>
+                    <field name="schedule_type_id"/>
+                    <field name="company_id"/>
+                    <field name="default_timezone" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="employee_schedule_form_view" model="ir.ui.view">
+            <field name="name">employee.schedule.form.view</field>
+            <field name="model">employee.schedule</field>
+            <field name="arch" type="xml">
+                <form string="Schedule">
+                    <header>
+                        <button name="call_wizard" type="object" class="oe_highlight" string="Add Schedule Manual"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group col="4" colspan="4">
+                                <field name="name"/>
+                                <newline/>
+                                <field name="employee_id" required="True" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="department_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="date_from" />
+                                <field name="date_to"/>
+                                <field name="schedule_type_id"/>
+                                <field name="company_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="default_timezone" invisible="1"/>
+                            </group>
+                            <group col="4" colspan="4" string="Daily Schedule List">
+                                <field name="sched_detail_ids" widget="one2many_list" nolabel="1">
+                                    <tree string="Daily Schedule List" editable="bottom">
+                                        <field name="date"/>
+                                        <field name="start_hour" widget="float_time"/>
+                                        <field name="start_break_hour" widget="float_time"/>
+                                        <field name="end_break_hour" widget="float_time"/>
+                                        <field name="late_tolerance" widget="float_time"/>
+                                        <field name="end_hour" widget="float_time"/>
+                                        <field name="employee_id"/>
+                                        <field name="schedule_id"/>
+                                        <field name="default_timezone" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_my_schedule_action" model="ir.actions.act_window">
+            <field name="name">My Schedule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('employee_id.user_id.id','=',uid)]</field>
+        </record>
+        <record id="employee_my_schedule_action_tree" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="employee_schedule_tree_view"/>
+            <field name="act_window_id" ref="employee_my_schedule_action"/>
+        </record>
+        <record id="employee_my_schedule_action_form" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_schedule_form_view"/>
+            <field name="act_window_id" ref="employee_my_schedule_action"/>
+        </record>
+        <menuitem id="menu_hr_employee_my_schedule" action="employee_my_schedule_action" parent="work_time_conf"
+                  sequence="1" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+
+
+        <record id="all_employee_schedule_action" model="ir.actions.act_window">
+            <field name="name">All Schedule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+        </record>
+        <record id="all_employee_schedule_action_tree" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="employee_schedule_tree_view"/>
+            <field name="act_window_id" ref="all_employee_schedule_action"/>
+        </record>
+        <record id="all_employee_schedule_action_form" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_schedule_form_view"/>
+            <field name="act_window_id" ref="all_employee_schedule_action"/>
+        </record>
+        <menuitem id="menu_hr_all_employee_schedule" action="all_employee_schedule_action" parent="work_time_conf"
+                  sequence="2" groups="base.group_hr_manager"/>
+        
+
+
+        <record id="working_time_conf_tree_view" model="ir.ui.view">
+            <field name="name">working.time.conf.tree.view</field>
+            <field name="model">working.time.conf</field>
+            <field name="arch" type="xml">
+                <tree string="Working Time">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <!-- <field name="state"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="working_time_conf_form_view" model="ir.ui.view">
+            <field name="name">working.time.conf.form.view</field>
+            <field name="model">working.time.conf</field>
+            <field name="arch" type="xml">
+                <form string="Employee Group">
+                    <!-- <header>
+                        <button name="set_work_schedule" string="Set Schedule" states="draft" class="oe_highlight" type="object"/>
+                        <button name="renew_work_schedule" string="Renew Schedule" states="assign" class="oe_highlight" type="object"/>
+                        <field name="state" statusbar_visible="draft,assign" widget="statusbar"/>
+                    </header> -->
+                    <sheet>
+                        <group col="4">
+                            <field name="name" required="1" attrs="{'readonly': [('state','=','assign')]}"/>
+                            <field name="company_id" attrs="{'readonly': [('state','=','assign')]}"/>
+                            <field name="default_timezone" required="1" attrs="{'readonly': [('state','=','assign')]}"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group>
+                            <group col="4" colspan="4" string="Employee List">
+                                <field name="employee_ids" colspan="4" nolabel="1" attrs="{'readonly': [('state','=','assign')]}" domain="[('active','=',True),('department_id', '=', department_id)]">
+                                    <tree string="Employees">
+                                        <field name="name"/>
+                                        <field name="department_id"/>
+                                        <field name="active"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <!-- <group col="4" colspan="4" string="Work time Configuration">
+                                <button name="%(action_import_employee)d" string="Import Schedule" type="action" class="oe_highlight"/>
+                                <button name="open_schedule_template_download_wizard" string="Export Template" type="object" class="oe_highlight" attrs="{'invisible': [('state','=','assign')]}"/>
+                                <newline/>
+                                <field name="wk_time_structure_ids" col="4" colspan="4" widget="one2many_list" nolabel="1" attrs="{'readonly': [('state','=','assign')]}">
+                                    <tree string="Work Time Configuration" editable="bottom">
+                                        <field name="date_from" required="True"/>
+                                        <field name="date_to" required="True"/>
+                                        <field name="wk_time_structure_id" domain="[('company_id','=',parent.company_id)]" options="{'no_create': True,'no_open': True}" required="True"/>
+                                    </tree>
+                                </field>
+                            </group> -->
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="working_time_conf_action" model="ir.actions.act_window">
+            <field name="name">Work Shift</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">working.time.conf</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem id="menu_hr_working_time_conf" name="Work Shift" parent="work_time_conf"
+                  sequence="3" groups="base.group_hr_user"/>
+
+        <menuitem id="menu_hr_working_time_employee_group" name="Employee's Group" action="working_time_conf_action" parent="menu_hr_working_time_conf"
+                  sequence="2" groups="base.group_hr_user"/>
+
+        <menuitem id="menu_hr_working_time_set_shift" name="Group Shift" action="" parent="menu_hr_working_time_conf"
+                  sequence="1" groups="base.group_hr_user"/>
+
+
+        <!-- <record id="work_time_structure_tree_view" model="ir.ui.view">
+            <field name="name">work.time.structure.tree.view</field>
+            <field name="model">work.time.structure</field>
+            <field name="arch" type="xml">
+                <tree string="Work Time">
+                    <field name="name"/>
+                    <field name="shift_code"/>
+                    <field name="start_hour" widget="float_time"/>
+                    <field name="end_hour" widget="float_time"/>
+                    <field name="start_break_hour" widget="float_time"/>
+                    <field name="end_break_hour" widget="float_time"/>
+                    <field name="late_tolerance" widget="float_time"/>
+                    <field name="shift_option"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_time_structure_form_view" model="ir.ui.view">
+            <field name="name">work.time.structure.form.view</field>
+            <field name="model">work.time.structure</field>
+            <field name="arch" type="xml">
+                <form string="Work Time">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <field name="shift_code"/>
+                            <field name="company_id" required="1" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="shift_option" required="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Shift Detail">
+                                <group col="4" colspan="4" string="Shift Detail">
+                                    <field name="punch_in" widget="float_time"/>
+                                    <field name="late_tolerance" widget="float_time" required="True"/>
+                                    <field name="start_hour" widget="float_time" required="True"/>
+                                    <field name="end_hour" widget="float_time" required="1"/>
+                                    <field name="start_break_hour" widget="float_time"/>
+                                    <field name="end_break_hour" widget="float_time"/>
+                                    <field name="total_wk_hour" widget="float_time"/>
+                                    <field name="total_break" widget="float_time"/>
+                                    <field name="punch_out" widget="float_time"/>
+                                </group>
+                            </page>
+                            <page string="Work Day">
+                                <group string="Work Day" col="4" colspan="4">
+                                    <field name="day_of_wewks_ids" colspan="4" nolabel="1" required="1">
+                                        <tree editable="bottom">
+                                            <field name="day_of_week" string="Day of Week" required="1"/>
+                                            <field name="options"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <separator string="Notes" colspan="4"/>
+                                <field name="notes" colspan="4" nolabel="1" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="work_time_structure_search_view">
+            <field name="name">work.time.structure.search.view</field>
+            <field name="model">work.time.structure</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <group string="Group By">
+                        <filter name="group_by_company" string="Company"
+                                context="{'group_by': 'company_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="working_time_structure_action" model="ir.actions.act_window">
+            <field name="name">Shift Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">work.time.structure</field>
+            <field name="view_type">form</field>
+            <field name="context">{}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_hr_working_time_structure" name="Shift Structure" action="working_time_structure_action" parent="work_time_conf"
+                  sequence="4" groups="base.group_hr_manager"/> -->
+
+
+
+        <record id="employee_schedule_line_form_view" model="ir.ui.view">
+            <field name="name">employee.schedule.line.form.view</field>
+            <field name="model">employee.schedule.line</field>
+            <field name="arch" type="xml">
+                <form string="Employee Schedule Detail">
+                    <group col="4" colspan="4" string="Schedule Detail">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="start_hour" widget="float_time"/>
+                        <field name="end_hour" widget="float_time"/>
+                        <field name="start_break_hour" widget="float_time"/>
+                        <field name="end_break_hour" widget="float_time"/>
+                        <field name="late_tolerance" widget="float_time"/>
+                        <field name="default_timezone"/>
+                        <field name="date"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

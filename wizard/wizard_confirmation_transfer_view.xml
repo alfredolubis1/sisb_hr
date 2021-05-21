@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<openerp>
+    <data>
+    
+    <record id="sisb_transfer_employee" model="ir.ui.view">
+            <field name="name">Transfer Confirmation</field>
+            <field name="model">employee.transfer.confirmation</field>
+            <field name="arch" type="xml">
+                <form string="Import Employee's">
+                    <group>
+                        <separator string="Some Received item is not ticked as returned, are you sure want to process this transfer?" colspan="4"/>
+                            <!-- <h1>
+                                Are You Sure To transfer this employee without configure Boarding List First
+                            </h1>
+                        </label> -->
+                    </group>
+                    <footer>
+                        <button name="transfer_employee" string="Transfer" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>            
+		        </form>
+            </field>
+        </record>
+
+        <record id="action_sisb_transfer_employee" model="ir.actions.act_window">
+            <field name="name">Transfer Confirmation</field>
+            <field name="res_model">employee.transfer.confirmation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_transfer_employee"/>
+            <field name="target">new</field>
+        </record>
+            
+    	<!--<act_window name="Import Lines" res_model="wizard.import" src_model="sale.order" view_mode="form" target="new" key2="client_action_multi" id="action_sale_line_import" groups="group_wizard_import_line"/>-->
+        </data>
+</openerp>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	<record id="student_handbook_report_form_view" model="ir.ui.view">
+		<field name="name">Student Handbook Report</field>
+		<field name="model">student.handbook.report</field>
+		<field name="arch" type="xml">
+			<form string="Student Handbook Report">
+				<group>
+                                    <field name="date_print" required="True"/>
+                                    <field name="section" required="True"/>
+				</group>
+				<footer>
+					<button name="print_report" icon="gtk-print" string="Print" type="object" class="oe_highlight"/>
+					or
+					<button string="Cancel" class="oe_link" special="cancel"/>
+				</footer>
+
+			</form>
+		</field>
+	</record>
+
+	<record id="action_student_handbook_report" model="ir.actions.act_window">
+		<field name="name">Student Handbook Report</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">student.handbook.report</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+
+	<record model="ir.values" id="student_nk_report_values">
+		<field name="model_id" ref="pathlight_sisb.model_student_application"/>
+		<field name="name">Student Handbook Report</field>
+		<field name="key2">client_print_multi</field>
+		<field name="value" eval="'ir.actions.act_window,' + str(ref('action_student_handbook_report'))" />
+		<field name="key">action</field>
+		<field name="model">student.application</field>
+	</record>
+
+    </data>
+</openerp>

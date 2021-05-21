@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="leave_early_wiz_form_view" model="ir.ui.view">
+            <field name="name">leave.early.wizard.form</field>
+            <field name="model">leave.early.wizard</field>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Leave Early Reason">
+                    <group col="4" colspan="4">
+                        <field name="reason_id" colspan="4" required="True" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="other_reason" colspan="4" attrs="{'invisible': [('get_reason', '=', False)], 'required': [('get_reason', '=', True)]}"/>
+                        <field name="total_leave_early" widget="float2_time" readonly="1"/>
+                        <field name="get_reason" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="passing_value"  type="object" string="Save"  class="oe_highlight"/>
+                        or
+                        <button name="attendance_cancel" string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_leave_early_wiz_form_view" model="ir.actions.act_window">
+            <field name="name">Type in your reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">leave.early.wizard</field>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+        <record id="action_leave_early_wiz_form_view2" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="leave_early_wiz_form_view"/>
+            <field name="act_window_id" ref="action_leave_early_wiz_form_view"/>
+        </record>
+    </data>
+</openerp>

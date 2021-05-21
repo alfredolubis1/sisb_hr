@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="sisb_employee_summary_attendance_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="sisb_hr.sisb_hr_report_layout">
+                        <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width: 100%;
+                            table-layout: fixed;
+                        }
+
+                        .h_table {
+                            padding: 10px;
+                            font-size: 17px;
+                        }
+
+                        .hd_body td {
+                            padding: 7px;
+                            text-align: left;
+                            border-top: thin solid black;
+                            border-bottom: thin solid black;
+                            font-size: 15px;
+                        }
+
+                        .body1 td {
+                            font-size: 13px;
+                            padding: 5px;
+
+                        }
+                        </style>
+                            <div class="col-xs-12">
+                                <center>
+                                    <div>
+                                        <strong><h4><b><span t-field="o.employee_id.company_id.name"/> Attendance Report</b></h4></strong>
+                                        <strong><h4> <b>Academic Year <span t-field="o.academic_year_id.name"/></b></h4></strong>
+                                    </div>
+                                </center>
+                                <br/>
+                                <p style="font-size:14px;">
+                                    <t t-if="o.employee_id.employee_no != '/'">
+                                        <span t-field="o.employee_id.employee_no"/>   <span t-field="o.employee_id.name"/>
+                                    </t> 
+                                    <t t-if="o.employee_id.employee_no == '/'">
+                                        <span t-field="o.employee_id.name"/>
+                                    </t>
+                                    <span t-field="o.employee_id.department_id.name" style="padding-left: 5em;"/>
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y %H:%M')" style="float: right;"/>
+                                </p>
+
+                                <table class="main_table">
+                                    <tr class="h_table">
+                                        <th align="center" style="text-align: center;" colspan="2">Term 1</th>
+                                        <th align="center" style="text-align: center;" colspan="2">Term 2</th>
+                                        <th align="center" style="text-align: center;" colspan="2">Term 3</th>
+                                    </tr>
+                                    <tr class="hd_body">
+                                        <td>Type</td>
+                                        <td style="text-align: right;">Time</td>
+                                        <td style="border-left: 1px solid black;">Type</td>
+                                        <td style="text-align: right;">Time</td>
+                                        <td style="border-left: 1px solid black;">Type</td>
+                                        <td style="text-align: right;">Time</td>
+                                    </tr>
+                                    <t t-foreach="st_term(data['form'])" t-as="value">
+                                        <tr>
+                                            <td colspan="2" style="text-align: center; padding: 10px;"><b><u><span t-esc="value['term1_week_range']"/></u></b></td>
+                                            <td colspan="2" style="border-left: 1px solid black; text-align: center; padding: 10px;"><b><u><span t-esc="value['term2_week_range']"/></u></b></td>
+                                            <td colspan="2" style="border-left: 1px solid black; text-align: center; padding: 10px;"><b><u><span t-esc="value['term3_week_range']"/></u></b></td>
+                                            <!-- <td colspan="2" style="border-left: 1px solid black;"></td>
+                                            <td colspan="2" style="border-left: 1px solid black;"></td> -->
+                                        </tr>
+
+                                        <tr class="body1" t-foreach="value['all_type']" t-as="val_up">
+                                            <td>
+                                                <span t-esc="val_up"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-set="term1_val" t-value="[val for val in value['term1_list'] if val[0] == val_up]"/>
+                                                <t t-if="term1_val[0][1] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                                <t t-if="term1_val[0][1] != 0">
+                                                    <span t-esc="term1_val[0][1]"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-left: 1px solid black;">
+                                                <span t-esc="val_up"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-set="term2_val" t-value="[val for val in value['term2_list'] if val[0] == val_up]"/>
+                                                <t t-if="term2_val[0][1] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                                <t t-if="term2_val[0][1] != 0">
+                                                    <span t-esc="term2_val[0][1]"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-left: 1px solid black;">
+                                                <span t-esc="val_up"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-set="term3_val" t-value="[val for val in value['term3_list'] if val[0] == val_up]"/>
+                                                <t t-if="term3_val[0][1] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                                <t t-if="term3_val[0][1] != 0">
+                                                    <span t-esc="term3_val[0][1]"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr class="body1" t-foreach="value['all_leave_type_name']" t-as="val_down">
+                                            <td>
+                                                <span t-esc="val_down"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-set="leave_term1" t-value="[leave for leave in value['first_term_leave'] if leave[0] == val_down]"/>
+                                                <t t-if="leave_term1[0][1] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                                <t t-if="leave_term1[0][1] != 0">
+                                                    <span t-esc="leave_term1[0][1]"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-left: 1px solid black;">
+                                                <span t-esc="val_down"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-set="leave_term2" t-value="[leave for leave in value['second_term_leave'] if leave[0] == val_down]"/>
+                                                <t t-if="leave_term2[0][1] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                                <t t-if="leave_term2[0][1] != 0">
+                                                    <span t-esc="leave_term2[0][1]"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-left: 1px solid black;">
+                                                <span t-esc="val_down"/>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-set="leave_term3" t-value="[leave for leave in value['third_term_leave'] if leave[0] == val_down]"/>
+                                                <t t-if="leave_term3[0][1] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                                <t t-if="leave_term3[0][1] != 0">
+                                                    <span t-esc="leave_term3[0][1]"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align: center; padding: 10px;"><span t-esc="value['term1_date_range']"/></td>
+                                            <td colspan="2" style="text-align: center; padding: 10px; border-left: 1px solid black;"><span t-esc="value['term2_date_range']"/></td>
+                                            <td colspan="2" style="text-align: center; padding: 10px; border-left: 1px solid black;"><span t-esc="value['term3_date_range']"/></td>
+                                        </tr>
+                                        <tr class="second_table">
+                                            <td style="text-align: center; border-top: 1px solid black; padding: 5px;" colspan="3" ><strong><u>Total</u></strong></td>
+                                            <td style="border-top: 1px solid black; border-left: 1px solid black; padding: 5px;" colspan="3"><i>Acknowledge By</i></td>
+                                        </tr>
+                                        <tr class="body1">
+                                            <td>
+                                                <span>Absent</span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-if="value['absent'] != 0">
+                                                    <span t-esc="value['absent']"/>
+                                                </t>
+                                                <t t-if="value['absent'] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <span>Times</span>
+                                            </td>
+                                            <td style="border-left: 1px solid black; text-align: center;" colspan="3">
+                                                <span>............................................</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="body1">
+                                            <td>
+                                                <span>Late</span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-if="value['late'] != 0">
+                                                    <span t-esc="value['late']"/>
+                                                </t>
+                                                <t t-if="value['late'] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <span>Times</span>
+                                            </td>
+                                            <td style="border-left: 1px solid black; text-align: center;" colspan="3">
+                                                <span><i>(Staff)</i></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="body1">
+                                            <td>
+                                                <span>Leave Early</span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-if="value['leave_early'] != 0">
+                                                    <span t-esc="value['leave_early']"/>
+                                                </t>
+                                                <t t-if="value['leave_early'] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <span>Times</span>
+                                            </td>
+                                            <td style="border-left: 1px solid black;" colspan="3">
+                                                <span><i>Approved By</i></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="body1">
+                                            <td>
+                                                <span>Not Clock In</span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-if="value['not_c_in'] != 0">
+                                                    <span t-esc="value['not_c_in']"/>
+                                                </t>
+                                                <t t-if="value['not_c_in'] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <span>Times</span>
+                                            </td>
+                                            <td style="border-left: 1px solid black; text-align: center;" colspan="3">
+                                                <span>............................................</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="body1">
+                                            <td>
+                                                <span>Not Clock Out</span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <t t-if="value['not_c_out'] != 0">
+                                                    <span t-esc="value['not_c_out']"/>
+                                                </t>
+                                                <t t-if="value['not_c_out'] == 0">
+                                                    <span> - </span>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <span>Times</span>
+                                            </td>
+                                            <td style="text-align:center; border-left: 1px solid black;" colspan="3">
+                                                <span><i>(P./VP./DP.)</i></span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

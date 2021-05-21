@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="sisb_employee_detail_summary_attendance_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="sisb_hr.sisb_hr_report_layout">
+                        <div class="page">
+                        <style type="text/css">
+                        .main_table {
+                            width: 100%;
+                            font-size: 12px;
+                        }
+
+                        .main_body td {
+                            text-align: left;
+                            border-bottom: 1px solid black;
+                            padding: 8px;
+                        }
+
+                        .main_table th {
+                            border-bottom-style: double;
+                            border-width: 3px;
+                            border-top: thin solid black;
+                            padding: 10px;
+                        }
+
+                        .red_value {
+                            color: red;
+                        }
+                        </style>
+                            <div class="col-xs-12">
+                                <center>
+                                    <div>
+                                        <strong><h4><b><span t-field="o.employee_id.company_id.name"/> Individual Detail Attendance Report</b></h4></strong>
+                                        <strong><h4><b>Academic Year <span t-field="o.academic_year_id.name"/></b></h4></strong>
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                        <p style="font-size:16px;"><b>From <span t-esc="time.strftime('%d %B %Y', 
+                                            time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                        </b><b>To <span t-esc="time.strftime('%d %B %Y', 
+                                            time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;"><b>Date<span t-esc="time.strftime('%d %B %Y', 
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                    </div>
+                                </center>
+                                <div style="font-size:14px;">
+                                    <p style="display: inline;">
+                                        <span><strong>Department</strong></span>
+                                        <span><strong> : </strong></span>
+                                        <strong><span t-field="o.employee_id.department_id.name"/></strong>
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')" style="float: right;"/>
+                                    </p>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <table class="main_table">  
+                                <thead>
+                                    <tr>
+                                        <th colspan="2"><span t-field="o.employee_id.employee_no"/> 
+                                            <t t-if="o.employee_id.gender == 'male'">
+                                                Mr.<span t-field="o.employee_id.name"/>
+                                            </t>
+                                            <t t-if="o.employee_id.gender == 'female'">
+                                                Mrs.<span t-field="o.employee_id.name"/>
+                                            </t>
+                                            <t t-if="o.employee_id.gender == False">
+                                                <span t-field="o.employee_id.name"/>
+                                            </t>
+                                        </th>
+                                        <th>Clock in</th>
+                                        <th>Late</th>
+                                        <th>Clock Out</th>
+                                        <th>Leave Early</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="detail_att(data['form'])" t-as="detail">
+                                        <tr>
+                                            <td colspan="7" style="text-align: left; padding-left: 70px; padding-top:2px;"><b><span t-esc="detail['week']"/></b></td>
+                                        </tr>
+                                        <tr class="main_body">
+                                            <td><span t-esc="detail['day_name']"/></td>
+                                            <td><span t-esc="detail['date']"/></td>
+                                            <td style="text-align: center;"><span t-esc="detail['time_in']"/></td>
+                                            <td class="red_value"><span t-esc="detail['late']"/></td>
+                                            <td style="text-align: center;"><span t-esc="detail['time_out']"/></td>
+                                            <td class="red_value"><span t-esc="detail['leave_early']"/></td>
+                                            <t t-if="detail['reason'] == 'Absent'">
+                                                <td class="red_value"><span t-esc="detail['reason']"/></td>
+                                            </t>
+                                            <t t-if="detail['reason'] != 'Absent'">
+                                                <td><span t-esc="detail['reason']"/></td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

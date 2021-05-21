@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="email_request_for_boarding_list" model="email.template">
+			<field name="name">ON Boarding Request</field>
+			<field name="model_id" ref="sisb_hr.model_req_onboard_wiz"/>
+			<field name="email_from">${(smtp_user or '')|safe}</field>
+			<field name="email_to" >${(object.department_id.email or '')|safe}</field>
+			<field name="subject">Boarding Item Request</field>
+			<field name="body_html"><![CDATA[
+			<p>Hello </p>
+			<p>Employee ${object.employee_id.name} is request for below item:</p>
+			% for item in ctx['request_list']:
+				<span>${loop.index0 + 1}. ${item}</span><br/>
+			% endfor						
+			<p>Kindly to Proccess the request.</p>
+			<p>Thank you !</p>
+			<!-- <p>Click <a href="${url}" style="color:blue;font-weight:bold;">here</a> to see Applicant Form!</p> -->
+			<br/>
+            <p>This is a Computer Generated email, <u>DO NOT REPLY TO THIS EMAIL</u></p>]]></field>
+        </record>
+    </data>
+</openerp>

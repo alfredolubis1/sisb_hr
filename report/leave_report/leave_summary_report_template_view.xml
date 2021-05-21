@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="leave_summary_percompany">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                            <div>
+                                <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                <strong>
+                                    <h4>
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                            <p style="font-size:16px;"><b>Leave asking Summary report <span t-esc="time.strftime('%d %B %Y', 
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                            </b> - <b><span t-esc="time.strftime('%d %B %Y', 
+                                                time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;"><b> Leave asking Summary report Date : <span t-esc="time.strftime('%d %B %Y', 
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                    </h4>
+                                </strong>
+                            </div>
+                        </center>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <br/>
+                            <span class="text-right"><span style="text-align: right;" class="page"/></span>
+                        </div>
+                        <hr style="border-top: 1px dashed grey"/>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                            .main_table {
+                                width: 100%;
+                            }
+
+                            .main_table th {
+                                font-weight: normal;
+                                font-size: 10px;
+                                padding-top: 10px;
+                                border-bottom: 1px dashed black;
+                                border-top: 1px dashed grey;
+                                text-align: center;
+                                table-layout: fixed;
+                            }
+
+                            .main_table td {
+                                font-size: 10px;
+                                padding: 8px;
+                                text-align: center;
+                            }
+
+                            .last_limit:last-child {
+                                border-bottom: 1px solid black;
+                            }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Leave</th>
+                                        <th>Date</th>
+                                        <th>To</th>
+                                        <th>Time</th>
+                                        <th>To</th>
+                                        <th>TotalTime</th>
+                                        <th>Doc No.</th>
+                                        <th>Record Date</th>
+                                        <th>Type Leave</th>
+                                        <th>Note</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td style="height: 20px; text-align: left; padding-top: 10px; padding-bottom: 0px;" colspan="12">
+                                        <b><span t-esc="get_section_code(o.company_id)"/></b>
+                                    </td>
+                                </tr>
+                                <tbody>
+                                    <t t-foreach="get_leave(data['form'])" t-as="s_leave">
+                                        <tr>
+                                            <td style="border-top: 1px solid black;"></td>
+                                            <td style="border-top: 1px solid black; text-align: left;" colspan="6"><span t-esc="s_leave['employee_name']"/></td>
+                                            <td style="border-top: 1px solid black; text-align: left;" colspan="4"><span t-esc="s_leave['date_join']"/></td>
+                                        </tr>
+                                        <tr t-foreach="get_employee(s_leave['employee_id'], o.date_from, o.date_to)" t-as="line" class="last_limit">
+                                            <td></td>
+                                            <td style="text-align: left;"><span t-esc="line['leave_name']"/></td>
+                                            <td><span t-esc="line['leave_start']"/></td>
+                                            <td><span t-esc="line['leave_end']"/></td>
+                                            <td><span t-esc="line['leave_part_start']"/></td>
+                                            <td><span t-esc="line['leave_part_end']"/></td>
+                                            <td><span t-esc="line['leave_total']"/></td>
+                                            <td></td>
+                                            <td><span t-esc="line['leave_creation_date']"/></td>
+                                            <td><span t-esc="line['leave_type']"/></td>
+                                            <td><span t-esc="line['leave_desc']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="individual_leave_summary">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
+                        <t t-call="sisb_hr.sisb_hr_report_layout"/>
+                        <center>
+                            <div>
+                                <strong><h4><b><span t-field="o.company_id.name"/></b></h4></strong>
+                                <strong>
+                                    <h4>
+                                        <t t-if="data['form']['date_from'] != data['form']['date_to']">
+                                            <p style="font-size:16px;"><b>Individual Leave History Report <span t-esc="time.strftime('%d %B %Y', 
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/>
+                                            </b> - <b><span t-esc="time.strftime('%d %B %Y', 
+                                                time.strptime(data['form']['date_to'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                        <t t-if="data['form']['date_from'] == data['form']['date_to']">
+                                            <p style="font-size:16px;"><b> Individual Leave History Report Date : <span t-esc="time.strftime('%d %B %Y', 
+                                                time.strptime(data['form']['date_from'], '%Y-%m-%d'))"/></b></p>
+                                        </t>
+                                    </h4>
+                                </strong>
+                            </div>
+                        </center>
+                        <div style="position: absolute; right: 0; top: 80px; font-size:13px;">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%b/%Y')"/>
+                            <br/>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M')"/>
+                            <br/>
+                            <br/>
+                            <span class="text-right"><span style="text-align: right;" class="page"/></span>
+                        </div>
+                        <hr style="border-top: 1px dashed grey"/>
+                    </div>
+                    <div class="page">
+                        <style type="text/css">
+                            .main_table {
+                                width: 100%;
+                            }
+
+                            .main_table th {
+                                font-weight: normal;
+                                font-size: 10px;
+                                padding-top: 10px;
+                                border-bottom: 1px dashed black;
+                                border-top: 1px dashed grey;
+                                text-align: center;
+                                table-layout: fixed;
+                            }
+
+                            .main_table td {
+                                font-size: 10px;
+                                padding: 8px;
+                                text-align: center;
+                            }
+
+                            .last_limit:last-child {
+                                border-bottom: 1px solid black;
+                            }
+                        </style>
+                        <div class="col-xs-12">
+                            <table class="main_table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Leave</th>
+                                        <th>Date</th>
+                                        <th>To</th>
+                                        <th>Time</th>
+                                        <th>To</th>
+                                        <th>TotalTime</th>
+                                        <th>Doc No.</th>
+                                        <th>Record Date</th>
+                                        <th>Type Leave</th>
+                                        <th>Note</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td style="height: 20px; text-align: left; padding-top: 10px; padding-bottom: 0px;" colspan="12">
+                                        <b><span t-esc="get_section_code(o.company_id)"/></b>
+                                    </td>
+                                </tr>
+                                <tbody>
+                                    <t t-foreach="get_leave(data['form'])" t-as="s_leave">
+                                        <tr>
+                                            <td style="border-top: 1px solid black;"></td>
+                                            <td style="border-top: 1px solid black; text-align: left;" colspan="6"><span t-esc="s_leave['employee_name']"/></td>
+                                            <td style="border-top: 1px solid black; text-align: left;" colspan="4"><span t-esc="s_leave['date_join']"/></td>
+                                        </tr>
+                                        <tr t-foreach="get_employee(s_leave['employee_id'], o.date_from, o.date_to)" t-as="line" class="last_limit">
+                                            <td></td>
+                                            <td style="text-align: left;"><span t-esc="line['leave_name']"/></td>
+                                            <td><span t-esc="line['leave_start']"/></td>
+                                            <td><span t-esc="line['leave_end']"/></td>
+                                            <td><span t-esc="line['leave_part_start']"/></td>
+                                            <td><span t-esc="line['leave_part_end']"/></td>
+                                            <td><span t-esc="line['leave_total']"/></td>
+                                            <td></td>
+                                            <td><span t-esc="line['leave_creation_date']"/></td>
+                                            <td><span t-esc="line['leave_type']"/></td>
+                                            <td><span t-esc="line['leave_desc']"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

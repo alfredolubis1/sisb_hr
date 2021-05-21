@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sisb_view_attend_all_employee_report" model="ir.ui.view">
+            <field name="name">Daily Report by Employee</field>
+            <field name="model">attend.summary.report.all.employee</field>
+            <field name="arch" type="xml">
+            <form string="Print Attendance Daily Report">
+                <group string="Select start date and end date of attendance list that will be print" col="4">
+                    <field name="start_date" on_change="onchange_date_from(start_date,end_date)"/>
+                    <field name="end_date" on_change="onchange_date_to(start_date,end_date)"/>
+                    <field name="action"/>
+                </group>
+                
+                <notebook>
+                    <page string="Employee List">
+                        <field name="employee_s" nolabel="1"/>
+                    </page>    
+                </notebook>
+                <div class="oe_chatter" style="display: none;">
+                        <field name="message_follower_ids"  widget="mail_followers" groups="base.group_user" invisible="1"/>
+                        <field name="message_ids"  widget="mail_thread"/>
+                </div>
+                <footer>
+                    <button name="print_attendance_all_employee" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button name="send_report_emp" string="Send by Email" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+        <record id="sisb_action_attendance_all_employee_report" model="ir.actions.act_window">
+            <field name="name">Daily Report by Employee</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">attend.summary.report.all.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sisb_view_attend_all_employee_report"/>
+            <field name="target">new</field>
+        </record>
+        
+        
+        <record id="view_my_attendance_report" model="ir.ui.view">
+            <field name="name">My Daily Report</field>
+            <field name="model">attend.summary.report.all.employee</field>
+            <field name="arch" type="xml">
+            <form string="Print Attendance Daily Report">
+                <group string="Select start date and end date of attendance list that will be print" col="4">
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="action"/>
+                </group>
+                
+                <notebook>
+                    <page string="Employee List">
+                        <field name="employee_s" nolabel="1"  domain="[('user_id.id', '=',uid)]"/>
+                    </page>    
+                </notebook>
+                <div class="oe_chatter" >
+                        <field name="message_follower_ids"  widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids"  widget="mail_thread"/>
+                </div>
+                <footer>
+                    <button name="print_attendance_all_employee" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button name="send_report_emp" string="Send by Email" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+         <record id="sisb_open_view_my_daily_report" model="ir.actions.act_window">
+            <field name="name">My Daily Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">attend.summary.report.all.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_my_attendance_report"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem name="Attendance Report" id="menu_sisb_attendance_report" parent="hr_attendance.menu_hr_attendance" sequence="30" groups="base.group_hr_manager"/>
+        <!-- <menuitem name="My Daily Report" action="sisb_open_view_my_daily_report" id="menu_sisb_my_daily_attendance_report" parent="menu_sisb_attendance_report" sequence="1"/>
+        <menuitem name="My Daily Report" action="sisb_action_attendance_all_employee_report" id="menu_sisb_employees_daily_attendance_report" parent="menu_sisb_attendance_report" sequence="2"/> -->
+
+        <!-- <menuitem name="Daily Report" id="daily_report" parent="ik_hrms_custom.menu_hr_ik_reporting" sequence="1"/>
+        <menuitem name="My Daily Report" action="open_view_my_daily_report" id="menu_ik_my_daily_report" parent="daily_report" sequence="1"/>
+        <menuitem id="menu_view_attend_report_all_employee" action="action_attend_all_employee_report"
+                  parent="daily_report" groups="base.group_hr_manager,ik_hrms_custom.group_hr,ik_hrms_custom.group_administrator" sequence="2"/> -->
+        
+        
+        
+        
+        <!-- <record id="ik_hrms_custom_template_email_daily_report" model="email.template">
+            <field name="name">Send by Email</field>
+            <field name="email_from">${(smtp_user or '')|safe}</field>
+            <field name="subject">Attendance Report</field>
+            <field name="partner_to"></field>
+            <field name="model_id" ref="ik_hrms_custom.model_attend_report_all_employee"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+    <p>To whom it may concern: <p>
+    <br/>
+    <p>Here is the attendance list report for:</p>
+    <p><b>Employee </b>: ${object.employee_name}</p>
+    <p><b>Period </b> : ${object.start_date_display} <span>-</span> ${object.end_date_display} </p>
+    <br/>           
+    <p>Thank you</p>
+    <p>Administrator</p>
+
+</div>
+            ]]></field>
+        </record> -->
+    </data>
+</openerp>
